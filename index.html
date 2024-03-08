@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assests/css/reset.css" />
+    <link rel="stylesheet" href="assests/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3" crossorigin="anonymous">
+
+    <title>Your Blog</title>
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header fixed">
+      <div class="content">
+        <div class="body">
+          <!-- Logo -->
+          <!-- <img src="./assests/img/Lesson..svg" alt="Lesson." class="logo"  /> -->
+          <!-- Nav -->
+          <nav class="navbar">
+            <ul>
+              <li class="active">
+                <a href="#" title="Home"><i class="fas fa-home"></i></a>
+              </li>
+              <li>
+                <a href="#" title="Search"><i class="fas fa-search"></i></a>
+              </li>
+              <li>
+                <a href="#" title="Blog"><i class="fas fa-edit"></i></a>
+              </li>
+              <li>  
+                <a href="#" title="Notification" onclick="toggleNotifications()"
+                  ><i class="fas fa-bell"></i
+                ></a>
+              </li>
+              <li>
+                <a href="#" title="Message"><i class="fas fa-envelope"></i></a>
+              </li>
+            </ul>
+            <ul class="nav-bottom">
+              <li>
+                <a href="#" title="Profile"><i class="fas fa-user"></i></a>
+              </li>
+              <li>
+                <a href="#" title="Settings"><i class="fa-solid fa-gear setting"></i></a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <!-- Notifications -->
+    <div class="notifications">
+      <!-- Your notifications content goes here -->
+      <h2>DCM tui m</h2>
+      <p>No new notifications.</p>
+  </div>
+    <!-- Font Awesome Icons (You can include this from a CDN) -->
+    <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+
+    <script>
+      function toggleNotifications() {
+        const notifications = document.querySelector(".notifications");
+        notifications.style.display =
+          notifications.style.display === "block" ? "none" : "block";
+      }
+    </script>
+  </body>
+</html>
