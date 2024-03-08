@@ -14,8 +14,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
-  display: flex;
-  justify-content: space-between;
+  /* display: flex; */
+  /* justify-content: space-between; */
 }
 
 /* Navbar */
@@ -43,8 +43,6 @@ body {
   padding: 25px;
   transition: background-color 0.3s ease;
   border-radius: 10px;
-
-  
 }
 
 .navbar a:hover {
@@ -53,6 +51,7 @@ body {
   border-color: #2e80ce;
   transform: translateY(-8px);
   border-radius: 10px;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.5);
 }
 
 .navbar i {
@@ -68,8 +67,27 @@ body {
     margin-top: calc(100vh - 430px - (66px * 3));
 }
 
+.navbar_items .nav_noti,.nav_mess{
+  position: relative;
+}
+
+.navbar_items .badge{
+  color: #fff;
+  background: red;
+  position: absolute;
+  font-size: 12px;
+  top:17px;
+  right: 11px;
+  border-radius: 5px;
+  padding: 2px 4px;
+  line-height: 1;
+}
 
 
+.navbar_items .nav_mess .badge{
+  top:17px;
+  right: 16px;
+}
 
 
 

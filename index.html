@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assests/css/reset.css" />
     <link rel="stylesheet" href="assests/css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3"
+      crossorigin="anonymous"
+    />
 
     <title>Your Blog</title>
-    <style>
-
-    </style>
+    <style></style>
   </head>
   <body>
     <!-- Header -->
@@ -21,7 +24,7 @@
           <!-- <img src="./assests/img/Lesson..svg" alt="Lesson." class="logo"  /> -->
           <!-- Nav -->
           <nav class="navbar">
-            <ul>
+            <ul class="navbar_items">
               <li class="active">
                 <a href="#" title="Home"><i class="fas fa-home"></i></a>
               </li>
@@ -31,21 +34,31 @@
               <li>
                 <a href="#" title="Blog"><i class="fas fa-edit"></i></a>
               </li>
-              <li>  
-                <a href="#" title="Notification" onclick="toggleNotifications()"
-                  ><i class="fas fa-bell"></i
-                ></a>
+              <li>
+                <a
+                  href="#"
+                  title="Notification"
+                  class="nav_noti"
+                  onclick="toggleNotifications()"
+                  ><i class="fas fa-bell nav_noti_icon"></i>
+                  <span class="badge">12</span></a
+                >
               </li>
               <li>
-                <a href="#" title="Message"><i class="fas fa-envelope"></i></a>
+                <a href="#" title="Message" class="nav_mess"
+                  ><i class="fas fa-envelope"></i>
+                  <span class="badge">3</span></a
+                >
               </li>
             </ul>
-            <ul class="nav-bottom">
+            <ul class="navbar_items nav-bottom">
               <li>
                 <a href="#" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li>
-                <a href="#" title="Settings"><i class="fa-solid fa-gear setting"></i></a>
+                <a href="#" title="Settings"
+                  ><i class="fa-solid fa-gear setting"></i
+                ></a>
               </li>
             </ul>
           </nav>
@@ -55,11 +68,23 @@
     <!-- Notifications -->
     <div class="notifications">
       <!-- Your notifications content goes here -->
-      <h2>DCM tui m</h2>
-      <p>No new notifications.</p>
-  </div>
+    </div>
+
+    <!-- Content -->
+    <main>
+      <section class="posts">
+        <div class="container">
+          <a href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+      </section>
+      <section></section>
+    </main>
+
     <!-- Font Awesome Icons (You can include this from a CDN) -->
-    <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/c9f23d41c7.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
 
     <script>
