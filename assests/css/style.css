@@ -13,7 +13,13 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: orange;
+  background: rgb(168, 211, 255);
+  background: linear-gradient(
+    155deg,
+    rgba(168, 211, 255, 1) 100%,
+    rgba(111, 183, 255, 1) 45%,
+    rgba(46, 128, 206, 1) 0%
+  );
   /* display: flex; */
   /* justify-content: space-between; */
 }
@@ -22,7 +28,7 @@ body {
 
 .navbar {
   height: 100vh;
-  width: 100px;
+  width: 90px;
   position: fixed;
   top: 0;
   left: 0;
@@ -67,6 +73,10 @@ body {
   margin-top: calc(100vh - 430px - (66px * 3));
 }
 
+.navbar_items{
+  width: 100%;
+}
+
 .navbar_items .nav_noti,
 .nav_mess {
   position: relative;
@@ -78,7 +88,7 @@ body {
   position: absolute;
   font-size: 12px;
   top: 17px;
-  right: 11px;
+  right: 21px;
   border-radius: 5px;
   padding: 2px 4px;
   line-height: 1;
@@ -86,7 +96,7 @@ body {
 
 .navbar_items .nav_mess .badge {
   top: 17px;
-  right: 16px;
+  right: 25px;
 }
 
 /* Responsive Design */
@@ -119,7 +129,7 @@ body {
   margin-bottom: 25px;
   padding: 30px 30px;
   padding-bottom: 35px;
-  width: 1170px;
+  width: 1090px;;
   max-width: 100%;
   background-color: #f3f3f3;
 }
@@ -182,7 +192,6 @@ body {
 .post-items {
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
 }
 
 .card-border {
@@ -190,8 +199,8 @@ body {
 }
 
 .container {
-  width: calc(100vw - 200px);
-  align-items: center;
+  /* align-items: center; */
+  margin-left: 150px;
 }
 
 .post .view-blog {
@@ -213,3 +222,143 @@ body {
   justify-content: space-between;
   align-items: baseline;
 }
+
+.blog-container {
+  display: flex;
+  margin-top: 60px;
+}
+
+.blog-user-info {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.right-side1{
+  line-height: 1.2;
+
+}
+
+.right-side1 .rs-desc-pro {
+  background: rgb(168, 211, 255);
+  background: linear-gradient(
+    155deg,
+    rgba(168, 211, 255, 1) 0%,
+    rgba(111, 183, 255, 1) 35%,
+    rgba(46, 128, 206, 1) 100%
+  );
+  padding: 24px;
+  text-align: center;
+  color: #f3f3f3;
+
+  border-radius: 10px 10px 0px 0px;
+}
+
+.right-side1 .rs-banner {
+  margin: 0px 0 8px;
+  font-size: 20px;
+}
+
+.right-side1 .rs1-desc{
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.right-side1 .rs-search{
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 54px;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.input-search{
+  margin-left: 18px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 90px;
+}
+
+.right-side-2{
+  background-color: red;
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: #f3f3f3;
+
+}
+
+.right-side-2 .rs2-nav{
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 5px;
+  color: rgba(46, 128, 206, 1);
+}
+
+.right-side-2 .rs2-nav p{
+  padding: 6px;
+  display: block;
+}
+
+.right-side-2 .rs2-nav .nav-underline{
+  border-bottom: 1px solid rgba(46, 128, 206, 1);
+}
+
+.rs2-container{
+  padding: 10px;
+}
+.rs2-profile{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.rs2-pro-img{
+  margin: 10px 0 15px;
+  width: 100px;
+  height: 100px;
+  background-image: url(../img/diego-sanchez-h_3Y0zb8Gmk-unsplash.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  background-position: center center;
+  background-size: 110%;
+}
+
+.rs2-pro-name{
+  margin-bottom: 15px;
+}
+
+.rs2-info-list{
+  display: flex;
+  flex-direction: row;
+  font-size: 13px;
+  color: #525f82;
+  width: 100%;
+  margin-left: 62px;
+  height: 50px;
+  align-items: center;
+}
+
+.rs2-info-list p{
+  align-self: baseline;
+  white-space: pre-line;
+  /* width: 35px; */
+  word-wrap: wrap;
+  margin: 10px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.rs2-info-list p:nth-child(2){
+  border-right: 1px solid;
+  border-left: 1px solid;
+  margin: 10px 0;
+  padding: 0 10px;
+}
+
+.rs2-pro-info{
+
+
+}
+
