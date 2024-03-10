@@ -10,7 +10,6 @@
 }
 
 body {
-
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
@@ -60,38 +59,35 @@ body {
   margin-bottom: 5px;
 }
 
-.navbar .setting{
-    font-size: 18px;
+.navbar .setting {
+  font-size: 18px;
 }
 
 .navbar .nav-bottom {
-    margin-top: calc(100vh - 430px - (66px * 3));
+  margin-top: calc(100vh - 430px - (66px * 3));
 }
 
-.navbar_items .nav_noti,.nav_mess{
+.navbar_items .nav_noti,
+.nav_mess {
   position: relative;
 }
 
-.navbar_items .badge{
+.navbar_items .badge {
   color: #fff;
   background: red;
   position: absolute;
   font-size: 12px;
-  top:17px;
+  top: 17px;
   right: 11px;
   border-radius: 5px;
   padding: 2px 4px;
   line-height: 1;
 }
 
-
-.navbar_items .nav_mess .badge{
-  top:17px;
+.navbar_items .nav_mess .badge {
+  top: 17px;
   right: 16px;
 }
-
-
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -115,7 +111,7 @@ body {
   }
 }
 
-.header{
+.header {
   /* display: none; */
 }
 /* Post blog */
@@ -130,7 +126,6 @@ body {
 
 .post-header {
   margin-bottom: 20px;
-  
 }
 
 .text-center {
@@ -165,33 +160,56 @@ body {
   user-select: none;
 }
 
-.post-content{
+.post-content {
   margin: 6px 0px 10px;
+
+  line-height: 1.8;
 }
 
-.post-tags{
+.post-tags {
   margin-top: 15px;
+  display: inline-block;
 }
 
-.tag.badge{
+.tag.badge {
   margin-left: 20px;
-  padding: 2px 4px;
+  padding: 4px 12px;
   border-radius: 3px;
   background-color: #2e80ce;
-  color:#f3f3f3 ;
+  color: #f3f3f3;
 }
 
-.post-items{
+.post-items {
   display: flex;
   flex-direction: column;
   margin-top: 60px;
 }
 
-.card-border{
+.card-border {
   border-radius: 10px;
 }
 
-.container{
+.container {
   width: calc(100vw - 200px);
   align-items: center;
+}
+
+.post .view-blog {
+  background-color: #2e80ce;
+  display: inline-block;
+  padding: 6px 16px;
+  margin-top: 15px;
+  margin-right: 55px;
+  color: #f3f3f3;
+  border-radius: 3px;
+}
+
+.post .hover:hover {
+  opacity: 50%;
+}
+
+.post-redirect-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
