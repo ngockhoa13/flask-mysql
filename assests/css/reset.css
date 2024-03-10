@@ -128,3 +128,6 @@ table {
     border-spacing: 0;
 }
 /* l click roi shift click */
+a{
+    text-decoration: none;
+}
