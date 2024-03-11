@@ -231,7 +231,8 @@ body {
 .blog-user-info {
   margin-left: 40px;
   margin-right: 40px;
-}
+  position: fixed;
+  }
 
 .right-side1{
   line-height: 1.2;
@@ -334,30 +335,29 @@ body {
 
 .rs2-info-list{
   display: flex;
-  flex-direction: row;
   font-size: 13px;
   color: #525f82;
   width: 100%;
-  margin-left: 62px;
   height: 50px;
-  align-items: center;
+  justify-content: center;
+  margin-left: -16px;
 }
 
 .rs2-info-list p{
   align-self: baseline;
   white-space: pre-line;
-  /* width: 35px; */
-  word-wrap: wrap;
+  line-height: 2;
   margin: 10px;
   line-height: 1.2;
   text-align: center;
+  padding: 0 10px;
 }
 
 .rs2-info-list p:nth-child(2){
   border-right: 1px solid;
   border-left: 1px solid;
   margin: 10px 0;
-  padding: 0 10px;
+  padding: 0 20px;
 }
 
 .rs2-pro-info{
