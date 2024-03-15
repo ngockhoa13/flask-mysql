@@ -13,15 +13,11 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background: rgb(168, 211, 255);
-  background: linear-gradient(
-    155deg,
-    rgba(168, 211, 255, 1) 100%,
-    rgba(111, 183, 255, 1) 45%,
-    rgba(46, 128, 206, 1) 0%
-  );
-  /* display: flex; */
-  /* justify-content: space-between; */
+  overflow: auto;
+}
+
+.none{
+  display: none;
 }
 
 /* Navbar */
@@ -32,11 +28,16 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #343a40;
+  background-color: rgba(52, 58, 64, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 0;
+}
+
+.navbar:hover{
+
+  background-color: rgba(52, 58, 64, 1);
 }
 
 .navbar a {
@@ -125,7 +126,7 @@ body {
   /* display: none; */
 }
 /* Post blog */
-.post {
+.post, .create-blog {
   margin-bottom: 25px;
   padding: 30px 30px;
   padding-bottom: 35px;
@@ -134,7 +135,7 @@ body {
   background-color: #f3f3f3;
 }
 
-.post-header {
+.post-header, .create-post-header {
   margin-bottom: 20px;
 }
 
@@ -142,7 +143,7 @@ body {
   text-align: center !important;
 }
 
-.post-title {
+.post-title, .create-post-title {
   font-size: 26px;
   letter-spacing: 0.5px;
   transition: all 0.35s ease;
@@ -189,7 +190,7 @@ body {
   color: #f3f3f3;
 }
 
-.post-items {
+.post-items,.create-blog-container {
   display: flex;
   flex-direction: column;
 }
@@ -228,10 +229,10 @@ body {
   margin-top: 60px;
 }
 
-.blog-user-info {
+.blog-user-info, .notification {
   margin-left: 40px;
   margin-right: 40px;
-  position: fixed;
+  max-width: 370.667px;
   }
 
 .right-side1{
@@ -240,13 +241,7 @@ body {
 }
 
 .right-side1 .rs-desc-pro {
-  background: rgb(168, 211, 255);
-  background: linear-gradient(
-    155deg,
-    rgba(168, 211, 255, 1) 0%,
-    rgba(111, 183, 255, 1) 35%,
-    rgba(46, 128, 206, 1) 100%
-  );
+  background-color: rgba(52, 58, 64, 0.8);
   padding: 24px;
   text-align: center;
   color: #f3f3f3;
@@ -257,11 +252,13 @@ body {
 .right-side1 .rs-banner {
   margin: 0px 0 8px;
   font-size: 20px;
+  font-weight: 700;
 }
 
 .right-side1 .rs1-desc{
   font-size: 13px;
   opacity: 0.8;
+  font-weight: 400;
 }
 
 .right-side1 .rs-search{
@@ -281,11 +278,9 @@ body {
 }
 
 .right-side-2{
-  background-color: red;
   margin-top: 20px;
   border-radius: 10px;
   background-color: #f3f3f3;
-
 }
 
 .right-side-2 .rs2-nav{
@@ -318,7 +313,7 @@ body {
   margin: 10px 0 15px;
   width: 100px;
   height: 100px;
-  background-image: url(../img/diego-sanchez-h_3Y0zb8Gmk-unsplash.jpg);
+  background-image: url(../img/avatar.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 100%;
@@ -365,3 +360,100 @@ body {
 
 }
 
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url(../img/defalut_background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: rotate(180deg);
+  background-position: right;
+
+  opacity: 0.8;
+}
+
+/* Create - blog */
+.create-content{
+  width: 100%;
+  height: 200px;
+}
+
+.add-tag-badge {
+  padding: 4px 12px;
+  border-radius: 3px;
+  background-color: #2e80ce;
+  color: #f3f3f3;
+  line-height: 1;
+}
+
+.noti-header{
+  padding: 24px;
+  text-align: center;
+  color: #f3f3f3;
+  background-color:  rgba(52, 58, 64, 0.8);
+  ;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.noti-header .noti-banner {
+  margin: 0px 0 8px;
+  font-size: 20px;
+}
+
+.noti-header .noti-desc{
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.noti-banner span{
+  font-weight: 700;
+}
+
+.noti-desc{
+  font-size: 13px;
+  font-weight: 400;
+}
+.noti-items{
+  padding-top: 10px;
+  background-color: #f3f3f3;
+
+}
+.noti-ava{
+  height: 60px;
+  width: 60px;
+  background-image: url(../img/avatar.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  background-position: center center;
+  background-size: 110%;
+  margin-right: 15px;
+}
+
+.noti-content{
+  max-width: 270px;
+  text-align:justify;
+  line-height: 1.1;
+}
+.noti-item{
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.noti-item:hover{
+  cursor: pointer;
+}
+
+hr{
+  background-color: rgb(38, 38, 38) ;
+  background: #dadde1;
+  
+}

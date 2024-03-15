@@ -11,17 +11,16 @@
       integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3"
       crossorigin="anonymous"
     />
+    <script src="./assests/js/index.js"></script>
 
-    <title>Your Blog</title>
+    <title>Open U</title>
     <style></style>
   </head>
-  <body>
+  <body class="scrollbar">
     <!-- Header -->
     <header class="header fixed">
       <div class="content">
         <div class="body">
-          <!-- Logo -->
-          <!-- <img src="./assests/img/Lesson..svg" alt="Lesson." class="logo"  /> -->
           <!-- Nav -->
           <nav class="navbar">
             <ul class="navbar_items">
@@ -32,11 +31,11 @@
                 <a href="#" title="Search"><i class="fas fa-search"></i></a>
               </li>
               <li>
-                <a href="#" title="Blog"><i class="fas fa-edit"></i></a>
+                <a href="#blog" title="Blog"><i class="fas fa-edit"></i></a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="#notification"
                   title="Notification"
                   class="nav_noti"
                   onclick="toggleNotifications()"
@@ -69,10 +68,10 @@
     <div class="notifications">
       <!-- Your notifications content goes here -->
     </div>
-
+    <div class="background"></div>
     <main class="blog-container">
-      <!-- Blog area -->
-      <section>
+      <!-- Blog-home area -->
+      <section class="home-page none">
         <div class="post-items container">
           <!-- Item 1 -->
           <article class="post card-border" id="post-1145">
@@ -260,7 +259,35 @@
           </article>
         </div>
       </section>
+      <!-- Blog-create -->
+      <section class="blog-page">
+        <div class="create-blog-container container">
+          <!-- Item 1 -->
+          <div class="create-blog card-border">
+            <header class="create-post-header text-center">
+              <a class="create-post-title" href="https://goodapple.top/archives/1145"
+                >Create your own post</a
+              >
+            </header>
 
+            <textarea class="create-content">
+              
+            </textarea>
+
+            <!-- Icon react -->
+            <div class="post-redirect-btn">
+              <div class="post-tags">
+                <a href="#" target="_blank" class="tag add-tag-badge hover">Add tag <i class="fa fa-tags" aria-hidden="true"></i></a>
+
+                
+                <a href="#" target="_blank" class="tag badge hover">Create</a>
+              </div>
+              <a class="view-blog hover" href="#">View</a>
+            </div>
+          </div>
+        </div>
+      </section>
+        
       <!-- Profile -->
       <section>
         <aside class="blog-user-info">
@@ -307,6 +334,41 @@
                   <p class="rs2-pr-job">Job
                     Stu</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+        <!-- Notification -->
+        <aside class="notification">
+          <div class="noti-container">
+            <div class="noti-header">
+              <div class="noti-banner">
+                <span>Notification</span>
+              </div>
+              <span class="noti-desc"
+                >Let's check out what's new</span
+              >
+            </div>
+            <div class="noti-items">
+              <!-- noti1 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
+              </div>
+              <hr>
+              <!-- noti2 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
+              </div>
+              <hr>
+              <!-- noti3 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
               </div>
             </div>
           </div>
