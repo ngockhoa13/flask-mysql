@@ -11,7 +11,6 @@
       integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3"
       crossorigin="anonymous"
     />
-    <script src="./assests/js/index.js"></script>
 
     <title>Open U</title>
     <style></style>
@@ -24,21 +23,20 @@
           <!-- Nav -->
           <nav class="navbar">
             <ul class="navbar_items">
-              <li class="active">
+              <li class="active nav_home">
                 <a href="#" title="Home"><i class="fas fa-home"></i></a>
               </li>
               <li>
                 <a href="#" title="Search"><i class="fas fa-search"></i></a>
               </li>
               <li>
-                <a href="#blog" title="Blog"><i class="fas fa-edit"></i></a>
+                <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
               </li>
               <li>
                 <a
                   href="#notification"
                   title="Notification"
                   class="nav_noti"
-                  onclick="toggleNotifications()"
                   ><i class="fas fa-bell nav_noti_icon"></i>
                   <span class="badge">12</span></a
                 >
@@ -52,7 +50,7 @@
             </ul>
             <ul class="navbar_items nav-bottom">
               <li>
-                <a href="#" title="Profile"><i class="fas fa-user"></i></a>
+                <a href="profile.html" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li>
                 <a href="#" title="Settings"
@@ -339,7 +337,7 @@
           </div>
         </aside>
         <!-- Notification -->
-        <aside class="notification">
+        <aside class="notification none">
           <div class="noti-container">
             <div class="noti-header">
               <div class="noti-banner">
@@ -354,21 +352,28 @@
               <div class="noti-item">
                 <div class="noti-ava">
                 </div>
-                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
               </div>
               <hr>
               <!-- noti2 -->
               <div class="noti-item">
                 <div class="noti-ava">
                 </div>
-                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
               </div>
               <hr>
               <!-- noti3 -->
               <div class="noti-item">
                 <div class="noti-ava">
                 </div>
-                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, officiis. Nemo ipsa magnam odio, alias possimus provident praesentium porro quos sapiente aperiam! Iure dolore neque et suscipit voluptates iusto nulla.</div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
+              </div>
+              <hr>
+              <!-- noti4 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
               </div>
             </div>
           </div>
@@ -382,6 +387,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+    <script src="./assests/js/index.js"></script>
 
     <script>
       function toggleNotifications() {
