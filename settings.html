@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - OpenU</title>
+    <link rel="stylesheet" href="./assests/css/style.css" />
+    <link rel="stylesheet" href="./assests/css/reset.css" />
+  </head>
+  <body>
+    <div class="set-page-container">
+      <header class="setting-header">
+        <span class="setting-banner">Settings</span>
+        <div class="donate"><i class="fa-solid fa-list-check"></i> Donate</div>
+      </header>
+      <main class="setting-body">
+        <section class="nav-setting">
+          <div class="nav-setting-container">
+            <div class="general">General</div>
+            <div class="notes">Notes</div>
+            <div class="set-notifications">Notifications</div>
+          </div>
+        </section>
+        <section class="setting-container">
+          <div class="setting-mode">General</div>
+          <div class="setting-area">
+            <div class="set-area-left">
+              <div>
+                <label for="inputname">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  minlength="1"
+                  maxlength="80"
+                  id="inputname"
+                  placeholder="Your full name"
+                  required=""
+                  value="Thinh Đang"
+                />
+              </div>
+              <!--  username -->
+              <div class="username-input">
+                <label for="inputusername">Username</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="inputusername"
+                  minlength="1"
+                  maxlength="80"
+                  placeholder="Your username"
+                  required=""
+                  pattern="^(?!-)[a-zA-Z0-9-]+$"
+                />
+                <span class="rule-input"
+                  >Allow a-Z, 0-9 and dash not at beginning.</span
+                >
+              </div>
+
+              <!-- email -->
+              <div>
+                <label for="inputname">Email</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="inputname"
+                  minlength="1"
+                  maxlength="80"
+                  placeholder="Your email"
+                  required=""
+                />
+              </div>
+
+              <!-- password -->
+              <div>
+                <label for="inputname">Password</label>
+                <input
+                  type="text"
+                  name="name"
+                  minlength="1"
+                  maxlength="80"
+                  id="inputname"
+                  required=""
+                  value="*********"
+                />
+              </div>
+
+              <div>
+                <label for="inputBio">Bio</label>
+                <textarea
+                  class="bio-area"
+                  rows="5"
+                  maxlength="160"
+                  placeholder="Tell about yourself..."
+                  name="bio"
+                  id="inputBio"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="set-area-right">
+              <div class="setting-ava"></div>
+              <label class="choose-photo"
+                >Choose photo<input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  id="inputavatar"
+                  style="display: none"
+              /></label>
+              <div class="reset-pass"><span>Reset password</span></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/c9f23d41c7.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
