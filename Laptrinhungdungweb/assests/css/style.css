@@ -820,3 +820,16 @@ hr {
   height: 200px;
     width: 600px;
 }
+
+.choose-photo:hover{
+  background-color: #adb5bd;
+}
+
+.reset-pass:hover{
+  background-color: #adb5bd;
+}
+
+.n2o-filter:hover{
+  background-color: white;
+  color: black;
+}
