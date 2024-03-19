@@ -56,6 +56,10 @@
                 <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
                 ></a>
               </li>
+              <li>
+                <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+                ></a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -68,7 +72,7 @@
     <div class="background"></div>
     <main class="blog-container">
       <!-- Blog-home area -->
-      <section class="home-page none">
+      <section class="home-page ">
         <div class="post-items container">
           <!-- Item 1 -->
           <article class="post card-border" id="post-1145">
@@ -257,7 +261,7 @@
         </div>
       </section>
       <!-- Blog-create -->
-      <section class="blog-page">
+      <section class="blog-page none">
         <div class="create-blog-container container">
           <!-- Item 1 -->
           <div class="create-blog card-border">

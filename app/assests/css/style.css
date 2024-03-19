@@ -64,7 +64,7 @@ body {
 }
 
 .navbar .nav-bottom {
-  margin-top: calc(100vh - 430px - (66px * 3));
+  margin-top: calc(100vh - 537px - (66px * 3));
 }
 
 .navbar_items {
@@ -732,7 +732,7 @@ hr {
 .setting-body {
   display: flex;
   padding: 60px;
-  padding-top: 90px;
+  padding-top: 45px;
   background-color: #222a28;
 }
 

@@ -28,6 +28,18 @@ def getDB():
 
 # Register route
 @app.route("/")
+def lmao():
+    if session.get("loggedin")==True:
+        cursor= getDB()
+        id = cursor.execute("SELECT id from user WHERE id = ?",(session.get('id'),)).fetchone()
+        if id:
+            return redirect('/home')
+        return redirect('/login')
+    return redirect('/login')
+    
+
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     message = ""
@@ -59,12 +71,12 @@ def register():
                     os.makedirs(user_upload_folder)
 
                 message = "Registration successful"
-                return redirect('/home')
+                return redirect('/login')
     # Catch error
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
-        return "You broke the server :(", 400
-
+        return render_template("login.html", message = "Error!!!")
+    
     return render_template("register.html", message=message)
 
 
@@ -100,17 +112,36 @@ def login():
         return render_template("login.html")
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
-        return "You broke the server :(", 400
+        return render_template("login.html", message = "Error!!!")
 
 
 @app.route("/home")
 def home():
-    return render_template('index.html')
+    if session.get('loggedin') == True:
+        cursor = getDB()
+        id = cursor.execute("SELECT id FROM user WHERE id = ?",(session.get('id'),)).fetchone()
+        if id:        
+            return render_template('index.html')
+        return redirect('/login')
+    else:
+        return redirect('/login')
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
-
+    if session.get('loggedin') == True:
+        cursor = getDB()
+        id = cursor.execute("SELECT id FROM user WHERE id = ?",(session.get('id'),)).fetchone()
+        if id:        
+            return render_template('profile.html')
+        return redirect('/login')
+    else:
+        return redirect('/login')
+    
+@app.route('/logout')
+def logout():
+    session.pop('loggedin')
+    session.pop('id')
+    return redirect('/login')
 
 
 @app.route('/settings', methods=["GET", "POST"])
@@ -119,7 +150,8 @@ def settings():
     print(id)
     cursor, conn = getDB()
     user_info = cursor.execute("SELECT name, username, password, emailAddr FROM user WHERE id = ?",(id,)).fetchone()
-
+    
+        
     name, username, hashed_password, emailAddr = user_info
 
     if request.method == "GET":
