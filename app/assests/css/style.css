@@ -674,15 +674,25 @@ hr {
 
 /* Settings */
 .set-page-container {
-  padding: 10px 0 10px 60px;
   height: 100vh;
   width: 100vw;
-  background-color: #333;
+  /* position: relative; */
+  background-color: #222a28;
 }
+
 .setting-header {
   display: flex;
   align-items: center;
-  padding-top: 20px;
+  padding: 10px 0px 20px 40px;
+  background-image: url(../img/mountain.png );
+  background-position: bottom;
+  background-repeat: repeat-x;
+  filter: hue-rotate(145deg) saturate(0.6);
+    left: 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1;
 }
 
 .setting-header .donate {
@@ -699,19 +709,31 @@ hr {
   color: #bebebe;
 }
 
+.setting-banner, .donate{
+  display: block;
+  padding: 20px 20px 20px 20px;
+
+}
+
+.setting-banner:hover, .donate:hover{
+  cursor:pointer;
+}
+
 .setting-ava {
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   background-image: url(https://lh3.googleusercontent.com/a/ACg8ocJrJyD18UA8NXfbaikTNxNnyRwLgkt2KTXsA3_9-Zw=s96-c);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 110%;
+  object-fit: cover;
 }
 
 .setting-body {
   display: flex;
-  margin-top: 60px;
+  padding: 60px;
+  padding-top: 90px;
+  background-color: #222a28;
 }
 
 .nav-setting {
@@ -756,6 +778,8 @@ hr {
   margin-top: 0;
   margin-bottom: 30px;
   border-bottom: 2px solid #4f4f4f;
+  background: #1b322c;
+  padding: 19px 15px 21px 21px;
 }
 
 .set-area-left div label {
@@ -770,7 +794,7 @@ hr {
   margin-bottom: 20px;
   border: 1px solid #6d6d6d;
   display: block;
-  background-color: #333;
+  background-color: #394643 ;
   padding: 12px 12px;
   border-radius: 3px;
   width: 600px;
@@ -787,6 +811,10 @@ hr {
 
 .set-area-right {
   margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
 }
 
 .choose-photo,
@@ -797,10 +825,28 @@ hr {
   margin: 10px 0px;
   font-size: 16px;
   border: 1px solid #fff;
-  background-color: #333;
+  background-color: #39ac91;
+  font-size: 18px;
+  font-weight: 500;
   color: #fff;
   text-align: center;
   border-radius: 3px;
+}
+
+.save-change{
+  border: 1px solid #fff;
+  background-color: #39ac91;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 3px;
+  text-align: center;
+  margin-top: 40px;
+  padding: 8px 14px;
+}
+
+.choose-photo{
+  margin-top: 40px;
 }
 
 .choose-photo input{
@@ -812,7 +858,7 @@ hr {
 .bio-area{
   font-size: 16px;
     border: 1px solid #6d6d6d;
-    background-color: #333;
+    background-color: #394643;
     color: #fff;
 }
 
@@ -823,11 +869,11 @@ hr {
 }
 
 .choose-photo:hover{
-  background-color: #adb5bd;
+  background-color: #66ffdb;
 }
 
 .reset-pass:hover{
-  background-color: #adb5bd;
+  background-color: #66ffdb;
 }
 
 .n2o-filter:hover{

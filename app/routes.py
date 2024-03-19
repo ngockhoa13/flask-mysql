@@ -142,14 +142,10 @@ def settings():
             file.save(file_path)
 
             # Resize the image
-            resized_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'resized_' + filename)
-            with Image.open(file_path) as img:
-                img_resized = img.resize((130, 150))
-                img_resized.save(resized_file_path)
 
             # Add code to update the user's profile picture in the database (if needed)
             flash('File uploaded successfully')
-            return render_template('settings.html', profile_pic='resized_' + filename)  # Redirect to the settings page
+            return render_template('settings.html', profile_pic= filename)  # Redirect to the settings page
         
         else:
             flash('Invalid file format.')
