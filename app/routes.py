@@ -116,6 +116,7 @@ def profile():
 @app.route('/settings', methods=["GET", "POST"])
 def settings():
     id = session['id']
+    print(id)
     cursor, conn = getDB()
     user_info = cursor.execute("SELECT name, username, password, emailAddr FROM user WHERE id = ?",(id,)).fetchone()
 
@@ -125,14 +126,6 @@ def settings():
         return render_template('settings.html', name=name, username=username, email=emailAddr)
     
     elif request.method == "POST":
-        
-
-
-
-
-
-
-
 
         if 'file' not in request.files:
             flash('No file part')

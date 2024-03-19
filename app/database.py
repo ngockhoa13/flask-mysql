@@ -6,6 +6,7 @@ conn = sqlite3.connect('openu.db')
 # Create tables
 conn.execute('''CREATE TABLE user (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    name VARCHAR(20),
     username VARCHAR(20) NOT NULL,
     emailAddr VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(60) NOT NULL
