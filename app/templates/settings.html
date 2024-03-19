@@ -53,12 +53,10 @@
                         </div>
                         <div class="set-area-right">
                             <div class="setting-ava">
-                                {% if profile_pic %}
-                                <img src="{{ url_for('static', filename='static/users_uploads/' + profile_pic) }}" alt="Profile Picture">
-                                {% endif %}
                             </div>
                             <label class="choose-photo">
-                                Choose photo<input type="file" accept="image/*" name="file" id="inputavatar">
+                              <span>Choose photo</span>  
+                              <input type="file" accept="image/*" name="file" id="inputavatar">
                             </label>
                             <div class="reset-pass"><span>Reset password</span></div>
                         </div>
@@ -68,6 +66,15 @@
             </section>
         </main>
     </div>
+    {% if profile_pic %}  
+      <style>
+        .setting-ava
+        {
+          background-image: url("{{ url_for('static', filename='users_uploads/' + profile_pic) }}");
+        }
+      </style>
+
+    {% endif %}
     <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
 </body>
 </html>
