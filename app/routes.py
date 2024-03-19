@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request, send_file, send_from_directory
-from Laptrinhungdungweb import app
+from app import app
 import os
 import sqlite3  
 import bcrypt
