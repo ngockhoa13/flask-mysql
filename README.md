@@ -18,23 +18,24 @@
 
 # *Giới thiệu ứng dụng:*
     
-- Cho phép người dùng tạo tài khoản và dùng nó để đăng tải các blog, post một cách công khai (`public`) hoặc chỉ ở chế độ riêng tư (`private`). 
-
-- Cho phép tìm kiếm, xem và tương tác các blog, post của người dùng khác.
-
-- Kết bạn, nhắn tin với bạn bè.
+Là một mạng xã hội cho phép người dùng đăng tải các blog, post một cách công khai (`public`) hoặc chỉ ở chế độ riêng tư (`private`). Ngoài ra có thể tìm kiếm, xem và tương tác các blog, post của người dùng khác cũng như kết nối, nhắn tin với bạn bè.
 
 
-# *Sơ đồ chức năng:*
+# *Sơ đồ ứng dụng:*
 <img src="tải xuống-1.jpg" alt="drawing" width="700" height="400"/>
 
+# *Mô tả chức năng*
+- Mỗi người dùng tạo và sử dụng 1 tài khoản
+- Đăng bài viết công khai hoặc viết nhật ký riêng tư: có thể chứa văn bản, ảnh, video...
+- Quản lý hồ sơ cá nhân: bao gồm thêm,xóa và chỉnh sửa ảnh đại diện, thông tin cá nhân và các bài viết đã tạo. Có thể tùy chỉnh cài đặt và quyền riêng tư.
+- Tính năng tìm kiếm mọi người và khám phá các nội dụng từ cộng đồng.
 # *Công nghệ sử dụng:*
 
-- HTML,CSS đối với Front-end
+- HTML,CSS,JS đối với Front-end
 
 - Python đối với Back-end
 
-- SQLite cho database
+- SQLite cho tạo và quản lý database
 
 - Framework: Flask
 
