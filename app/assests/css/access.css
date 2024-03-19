@@ -11625,7 +11625,7 @@ body.js-nav2--active {
   max-width: 425px;
 }
 .t-section .u-section--bg-normal {
-  background-color: #66ffdb !important;
+  background-color: #39ac91 !important;
 }
 .t-section .u-section--color-hover:active,
 .t-section .u-section--color-hover:focus,
@@ -24141,7 +24141,7 @@ body.js-nav2--active {
 }
 @media (min-width: 900px) {
   .header-nav-v4__link:before {
-    background-color: #66ffdb;
+    background-color: #39ac91;
     border-radius: 10000px;
     bottom: -2px;
     content: "";
