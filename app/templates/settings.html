@@ -1,113 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - OpenU</title>
-    <link rel="stylesheet" href="../assests/css/style.css" />
-    <link rel="stylesheet" href="../assests/css/reset.css" />
-  </head>
-  <body style="overflow-x: hidden">
+    <link rel="stylesheet" href="../assests/css/style.css">
+    <link rel="stylesheet" href="../assests/css/reset.css">
+</head>
+<body style="overflow-x: hidden">
     <div class="set-page-container">
-      <header class="setting-header">
-        <span class="setting-banner">Settings</span>
-        <div class="donate"><i class="fa-solid fa-list-check"></i> Donate</div>
-      </header>
-      <main class="setting-body">
-        <section class="nav-setting">
-          <div class="nav-setting-container">
-            <div class="general">General</div>
-            <div class="notes">Notes</div>
-            <div class="set-notifications">Notifications</div>
-          </div>
-        </section>
-        <section class="setting-container">
-          <div class="setting-mode">General</div>
-          <form action="/settings" method="post" enctype="multipart/form-data">
-            <div class="setting-area">
-              <div class="set-area-left">
-                <div>
-                  <label for="inputname">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    minlength="1"
-                    maxlength="80"
-                    id="inputname"
-                    placeholder="Your full name"
-                    value="Thinh Đang"
-                  />
+        <header class="setting-header">
+            <span class="setting-banner">Settings</span>
+            <div class="donate"><i class="fa-solid fa-list-check"></i> Donate</div>
+        </header>
+        <main class="setting-body">
+            <section class="nav-setting">
+                <div class="nav-setting-container">
+                    <div class="general">General</div>
+                    <div class="notes">Notes</div>
+                    <div class="set-notifications">Notifications</div>
                 </div>
-                <!--  username -->
-                <div class="username-input">
-                  <label for="inputusername">Username</label>
-                  <input
-                    type="text"
-                    name="username"
-                    id="inputusername"
-                    minlength="1"
-                    maxlength="80"
-                    placeholder="Your username"
-                    pattern="^(?!-)[a-zA-Z0-9-]+$"
-                  />
-                  <span class="rule-input"
-                    >Allow a-Z, 0-9 and dash not at beginning.</span
-                  >
-                </div>
-                <!-- email -->
-                <div>
-                  <label for="inputemail">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="inputemail"
-                    minlength="1"
-                    maxlength="80"
-                    placeholder="Your email"
-                  />
-                </div>
-                <!-- password -->
-                <div>
-                  <label for="inputpassword">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    minlength="1"
-                    maxlength="80"
-                    id="inputpassword"
-                    value="*********"
-                  />
-                </div>
-                <div>
-                  <label for="inputBio">Bio</label>
-                  <textarea
-                    class="bio-area"
-                    rows="5"
-                    maxlength="160"
-                    placeholder="Tell about yourself..."
-                    name="bio"
-                    id="inputBio"
-                  ></textarea>
-                </div>
-              </div>
-              <div class="set-area-right">
-                <div class="setting-ava"></div>
-                <label class="choose-photo">
-                  <span>Choose photo</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="file"
-                    id="inputavatar"
-                  />
-                </label>
-                <div class="reset-pass"><span>Reset password</span></div>
-              </div>
-            </div>
-            <button class="save-change" type="submit">Save Changes</button>
-          </form>
-        </section>
-      </main>
+            </section>
+            <section class="setting-container">
+                <div class="setting-mode">General</div>
+                <form action="/settings" method="post" enctype="multipart/form-data">
+                    <div class="setting-area">
+                        <div class="set-area-left">
+                            <div>
+                                <label for="inputname">Name</label>
+                                <input type="text" name="name" minlength="1" maxlength="80" id="inputname" placeholder="Your full name" value="{{ name }}">
+                            </div>
+                            <!--  username -->
+                            <div class="username-input">
+                                <label for="inputusername">Username</label>
+                                <input type="text" name="username" id="inputusername" minlength="1" maxlength="80" placeholder="Your username" pattern="^(?!-)[a-zA-Z0-9-]+$" value="{{ username }}">
+                                <span class="rule-input">Allow a-Z, 0-9 and dash not at beginning.</span>
+                            </div>
+                            <!-- email -->
+                            <div>
+                                <label for="inputemail">Email</label>
+                                <input type="email" name="email" id="inputemail" minlength="1" maxlength="80" placeholder="Your email" value="{{ email }}">
+                            </div>
+                            <!-- password -->
+                            <div>
+                                <label for="inputpassword">Password</label>
+                                <input type="password" name="password" minlength="1" maxlength="80" id="inputpassword" value="*********">
+                            </div>
+                            <div>
+                                <label for="inputBio">Bio</label>
+                                <textarea class="bio-area" rows="5" maxlength="160" placeholder="Tell about yourself..." name="bio" id="inputBio"></textarea>
+                            </div>
+                        </div>
+                        <div class="set-area-right">
+                            <div class="setting-ava"></div>
+                            <label class="choose-photo">
+                                <span>Choose photo</span>
+                                <input type="file" accept="image/*" name="file" id="inputavatar">
+                            </label>
+                            <div class="reset-pass"><span>Reset password</span></div>
+                        </div>
+                    </div>
+                    <button class="save-change" type="submit">Save Changes</button>
+                </form>
+            </section>
+        </main>
     </div>
     {% if profile_pic %}
     <style>
@@ -115,11 +71,7 @@
         background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + profile_pic) }}");
       }
     </style>
-
-    {% endif %}
-    <script
-      src="https://kit.fontawesome.com/c9f23d41c7.js"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    {% endif %} 
+    <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
+</body>
 </html>
