@@ -6,7 +6,7 @@ import bcrypt
 import uuid
 from werkzeug.utils import secure_filename
 from PIL import Image
-
+#Import required library
 
 
 
@@ -27,19 +27,6 @@ def getDB():
 
 
 # Register route
-@app.route("/")
-def lmao():
-    if session.get("loggedin")==True:
-        cursor= getDB()
-        id = cursor.execute("SELECT id from user WHERE id = ?",(session.get('id'),)).fetchone()
-        if id:
-            return redirect('/home')
-        return redirect('/login')
-    return redirect('/login')
-    
-
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     message = ""
@@ -60,6 +47,11 @@ def register():
                 hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
                 print(hashed_password)
 
+                # Create sessions
+                session['loggedin'] = True
+                session['id'] = id
+
+
                 # Adding data to db
                 query = "INSERT INTO user (id, username, emailAddr, password) VALUES (?, ?, ?, ?)"
                 cursor.execute(query, (id, username, emailAddr, hashed_password))
@@ -71,12 +63,12 @@ def register():
                     os.makedirs(user_upload_folder)
 
                 message = "Registration successful"
-                return redirect('/login')
+                return redirect('/home')
     # Catch error
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
-        return render_template("login.html", message = "Error!!!")
-    
+        return "You broke the server :(", 400
+
     return render_template("register.html", message=message)
 
 
@@ -112,14 +104,15 @@ def login():
         return render_template("login.html")
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
-        return render_template("login.html", message = "Error!!!")
+        return "You broke the server :(", 400
 
-
+@app.route("/")
 @app.route("/home")
 def home():
     if session.get('loggedin') == True:
-        cursor = getDB()
-        id = cursor.execute("SELECT id FROM user WHERE id = ?",(session.get('id'),)).fetchone()
+        cursor, conn = getDB()
+        id = session['id']
+        id = cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
             return render_template('index.html')
         return redirect('/login')
@@ -136,29 +129,58 @@ def profile():
         return redirect('/login')
     else:
         return redirect('/login')
-    
-@app.route('/logout')
-def logout():
-    session.pop('loggedin')
-    session.pop('id')
-    return redirect('/login')
+
 
 
 @app.route('/settings', methods=["GET", "POST"])
 def settings():
-    id = session['id']
-    print(id)
+    id = session.get('id')
+    if not id:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    # Retrieve data
     cursor, conn = getDB()
-    user_info = cursor.execute("SELECT name, username, password, emailAddr FROM user WHERE id = ?",(id,)).fetchone()
-    
+    user_info = cursor.execute("SELECT name, username, emailAddr FROM user WHERE id = ?", (id,)).fetchone()
+
+    # Setting the data of user to output to screen
+    name, username, emailAddr = user_info
+
+
+    profile_pic = None
+
+    # Change the upload folder to inside the user id
+    user_upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], id)
+
+    if request.method == "POST":
         
-    name, username, hashed_password, emailAddr = user_info
+        # Check if the user sent updated information for name, username, or email
+        if 'name' in request.form:
+            new_name = request.form['name']
+            cursor.execute("UPDATE user SET name = ? WHERE id = ?", (new_name, id))
+            conn.commit()
+            name = new_name
 
-    if request.method == "GET":
-        return render_template('settings.html', name=name, username=username, email=emailAddr)
+        if 'username' in request.form:
+            new_username = request.form['username']
+            cursor.execute("UPDATE user SET username = ? WHERE id = ?", (new_username, id))
+            conn.commit()
+            username = new_username
+
+        if 'email' in request.form:
+            new_email = request.form['email']
+            cursor.execute("UPDATE user SET emailAddr = ? WHERE id = ?", (new_email, id))
+            conn.commit()
+            emailAddr = new_email
+
+        if 'password' in request.form:
+            new_password = request.form['password']
+            new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+            cursor.execute("UPDATE user SET password = ? WHERE id = ?", (new_hashed_password, id))
+            conn.commit()
+            password = new_hashed_password
     
-    elif request.method == "POST":
 
+        # Check if the user upload a requests with a profile pic
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -169,16 +191,32 @@ def settings():
 
         if file and allowed_file(file.filename):
             # Save the uploaded file
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            filename = secure_filename('avatar.jpg')
+            file_path = os.path.join(user_upload_folder, filename)
             file.save(file_path)
+            profile_pic = id + '/' + filename
+            print(profile_pic)
 
-            # Resize the image
-
-            # Add code to update the user's profile picture in the database (if needed)
             flash('File uploaded successfully')
-            return render_template('settings.html', profile_pic= filename)  # Redirect to the settings page
+            return render_template('settings.html', name=name, username=username, email=emailAddr, profile_pic=profile_pic)  # Redirect to the settings page
         
         else:
             flash('Invalid file format.')
             return redirect(request.url)
+        
+
+    avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
+    avatar_path_full = avatar_path + '/avatar.jpg'
+    print(avatar_path_full)     
+    if os.path.exists(avatar_path):
+        profile_pic = id + '/' + 'avatar.jpg'
+
+    # Render the page with the user info that we retrieve
+    return render_template('settings.html', name=name, username=username, email=emailAddr, profile_pic=profile_pic)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin')
+    session.pop('id')
+    return redirect('/login')
