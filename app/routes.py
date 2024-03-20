@@ -122,8 +122,10 @@ def home():
 @app.route('/profile')
 def profile():
     if session.get('loggedin') == True:
-        cursor = getDB()
-        id = cursor.execute("SELECT id FROM user WHERE id = ?",(session.get('id'),)).fetchone()
+        cursor,conn = getDB()
+        id = session['id']
+        
+        id = cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
             return render_template('profile.html')
         return redirect('/login')
