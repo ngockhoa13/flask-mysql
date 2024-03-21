@@ -196,6 +196,13 @@ body {
   border-radius: 10px;
 }
 
+label {
+  color: #39ac91;
+  font-size: 25px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
 .container {
   /* align-items: center; */
   margin-left: 150px;
