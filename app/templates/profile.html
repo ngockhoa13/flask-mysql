@@ -48,20 +48,20 @@
             {% for title, authorname in blog_info %}
               <div class="item-header">
                 <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+                <!-- Checkbox for Published -->
+                <div class="published-checkbox">
+                  <label for="published">Published</label>
+                  <input type="checkbox" id="published" name="published">
+                </div>
+                <!-- End of Checkbox for Published -->
                 <span><i class="fa-solid fa-pencil"></i></span>
               </div>
               <div class="item-desc">
                 <div class="user-avatar post-ava"></div>
                 <span class="item-user-name">{{authorname}}</span>
-                <span class="view-mode"
-                  ><i class="fa-solid fa-eye"></i> VIEW MODE</span
-                >
-                <span class="like-mode"
-                  ><i class="fa-regular fa-heart"></i> LIKE</span
-                >
-                <span class="bookmark"
-                  ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
-                >
+                <span class="view-mode"><i class="fa-solid fa-eye"></i> VIEW MODE</span>
+                <span class="like-mode"><i class="fa-regular fa-heart"></i> LIKE</span>
+                <span class="bookmark"><i class="fa-regular fa-bookmark"></i> BOOKMARK</span>
               </div>
             {% endfor %}
           </div>

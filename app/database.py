@@ -19,7 +19,7 @@ conn.execute('''CREATE TABLE blogPosts (
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL, 
     imagepath VARCHAR(255),
-    private BOOLEAN,
+    publish BOOLEAN,
     FOREIGN KEY(userID) REFERENCES user(id)
 )''')
 
