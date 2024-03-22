@@ -5,8 +5,7 @@ import sqlite3
 import bcrypt
 import uuid
 from werkzeug.utils import secure_filename
-from PIL import Image
-#Import required library
+#Import required library      
 
 
 
@@ -26,7 +25,7 @@ def getDB():
     return cursor, conn
 
 
-# Register route
+# Register route -----------------------------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     message = ""
@@ -73,7 +72,7 @@ def register():
 
 
 
-# Login route
+# Login route -----------------------------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     try:
@@ -106,42 +105,57 @@ def login():
         print(f"ERROR: {error}", flush=True)
         return "You broke the server :(", 400
 
+
 @app.route("/")
 @app.route("/home")
 def home():
     if session.get('loggedin') == True:
         cursor, conn = getDB()
         id = session['id']
-        id = cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+        cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
-            return render_template('index.html')
+            blog_info = cursor.execute("SELECT title, content FROM blogPosts ORDER BY RANDOM() LIMIT 5").fetchall()
+
+            #print(blog_info)
+            return render_template('index.html', blog_info=blog_info)
         return redirect('/login')
     else:
         return redirect('/login')
 
+
+
+
+# Profile route -----------------------------------------------
 @app.route('/profile')
 def profile():
     if session.get('loggedin') == True:
         cursor,conn = getDB()
         id = session['id']
         
-        id = cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+        cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
-            return render_template('profile.html')
+            blog_info = cursor.execute("SELECT title, authorname FROM blogPosts WHERE userID = ?",(id,)).fetchall()
+
+            print(blog_info)
+
+            return render_template('profile.html', blog_info=blog_info)
         return redirect('/login')
     else:
         return redirect('/login')
 
 
-
+# Settings user information route -------------------------------
 @app.route('/settings', methods=["GET", "POST"])
 def settings():
     id = session.get('id')
-    if not id:
-        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
-
-    # Retrieve data
     cursor, conn = getDB()
+    
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's id doesn't exist
+    
+
     user_info = cursor.execute("SELECT name, username, emailAddr FROM user WHERE id = ?", (id,)).fetchone()
 
     # Setting the data of user to output to screen
@@ -216,9 +230,47 @@ def settings():
     # Render the page with the user info that we retrieve
     return render_template('settings.html', name=name, username=username, email=emailAddr, profile_pic=profile_pic)
 
-
+# Logout route -----------------------------------------------
 @app.route('/logout')
 def logout():
     session.pop('loggedin')
     session.pop('id')
     return redirect('/login')
+
+
+# Called to when create blog ----------------------------------
+@app.route("/save_blog", methods=["GET", "POST"])
+def save_blog():
+
+    id = session.get('id')
+    cursor, conn = getDB()
+    
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's id doesn't exist
+
+    # Retrieve data from database based on the id
+    user_info = cursor.execute("SELECT id, username FROM user WHERE id = ?", (id,)).fetchone()
+    username = user_info[1]
+
+
+
+    if (request.method == "POST"):
+        try:
+            blogTitle = request.json.get('blogTitle')
+            blogContent = request.json.get('blogContent')
+
+            # Execute and save the database
+            cursor.execute("INSERT INTO blogPosts (userID, title, content, authorname) VALUES (?, ?, ?, ?)", (id, blogTitle, blogContent, username,))
+            conn.commit()
+            conn.close()
+
+            return "Blog successfully upload!"
+        
+        except Exception as error:
+            print(f"ERROR: {error}", flush=True)
+            return "You broke the server :(", 400
+        
+    else:
+        return None

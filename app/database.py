@@ -12,16 +12,18 @@ conn.execute('''CREATE TABLE user (
     password VARCHAR(60) NOT NULL
 )''')
 
-#conn.execute('''CREATE TABLE blogPost (
-#    id INTEGER PRIMARY KEY NOT NULL,
-#    username VARCHAR(20) NOT NULL,
-#    emailAddr VARCHAR(150) UNIQUE NOT NULL,
-#    title VARCHAR(100) NOT NULL,
-#    content VARCHAR(1000) NOT NULL, 
-#    userID INTERGER,
-#    FOREIGN KEY(userID) REFERENCES user(id)
-#)''')
-#
+conn.execute('''CREATE TABLE blogPosts (
+    id INTEGER PRIMARY KEY NOT NULL,
+    userID TEXT,
+    authorname VARCHAR(20),
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL, 
+    imagepath VARCHAR(255),
+    private BOOLEAN,
+    FOREIGN KEY(userID) REFERENCES user(id)
+)''')
+
+
 #conn.execute('''CREATE TABLE notifications (
 #    id INTEGER PRIMARY KEY NOT NULL,
 #    nameProd VARCHAR(100) NOT NULL,
