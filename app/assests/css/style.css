@@ -620,8 +620,13 @@ hr {
   width: inherit;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
-
+.published-checkbox{
+  position: absolute;
+  top: 0;
+  left: 100px;
+}
 .item-header .fa-pencil {
   margin-right: 30px;
 }
