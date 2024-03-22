@@ -3,7 +3,7 @@
 
 ## *Ứng dụng mạng xã hội:* OpenU
 
-## Team 7:
+## Team 15:
 22520645 - Nguyễn Phan Hữu Khánh
 
 22521399 - Đặng Chí Thịnh
