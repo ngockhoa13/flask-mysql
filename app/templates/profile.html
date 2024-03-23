@@ -45,13 +45,13 @@
         <div class="pro-post-items">
           <!-- Item1 -->
           <div class="pro-post-item">
-            {% for title, authorname in blog_info %}
+            {% for id, title, authorname in blog_info %}
               <div class="item-header">
                 <span>{{title}}<i class="fa-solid fa-lock"></i></span>
                 <!-- Checkbox for Published -->
                 <div class="published-checkbox">
                   <label for="published">Published</label>
-                  <input type="checkbox" id="published" name="published">
+                  <input type="checkbox" id="published" name="published"  onchange="updatePublished('{{ id }}')">
                 </div>
                 <!-- End of Checkbox for Published -->
                 <span><i class="fa-solid fa-pencil"></i></span>
@@ -69,6 +69,8 @@
       </div>
     </div>
 
+
+    <script src="../assests/js/index.js"></script>
     <script
       src="https://kit.fontawesome.com/c9f23d41c7.js"
       crossorigin="anonymous"

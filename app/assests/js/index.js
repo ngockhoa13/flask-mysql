@@ -66,3 +66,19 @@ document.querySelector('.nav_home').addEventListener('click',function(){
     document.querySelector('.home-page').classList.remove('none');
     blog_page.classList.add('none');
 })
+
+function updatePublished(blogID) {
+    // Get the checkbox element
+    var checkbox = document.getElementById("published");
+
+    // Check if the checkbox is checked
+    var isChecked = checkbox.checked;
+
+    // Make AJAX request to update published status`2
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/update_published", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Send the blog ID and published status in the request body
+    xhr.send(JSON.stringify({ blogID: blogID, published: isChecked }));
+}

@@ -114,7 +114,7 @@ def home():
         id = session['id']
         cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
-            blog_info = cursor.execute("SELECT title, content FROM blogPosts ORDER BY RANDOM() LIMIT 5").fetchall()
+            blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
 
             #print(blog_info)
             return render_template('index.html', blog_info=blog_info)
@@ -134,7 +134,7 @@ def profile():
         
         cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:        
-            blog_info = cursor.execute("SELECT title, authorname FROM blogPosts WHERE userID = ?",(id,)).fetchall()
+            blog_info = cursor.execute("SELECT id, title, authorname FROM blogPosts WHERE userID = ?",(id,)).fetchall()
 
             print(blog_info)
 
@@ -274,3 +274,28 @@ def save_blog():
         
     else:
         return None
+    
+
+# Route will be called when update publish or not
+@app.route("/update_published", methods=["POST"])
+def published():
+    id = session.get('id')
+    cursor, conn = getDB()
+    
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's id doesn't exist
+
+    try:
+        blogID = request.json.get('blogID')
+        published = request.json.get('published')
+        
+        cursor.execute("UPDATE blogPosts SET publish = ? WHERE id = ?", (published, blogID))
+        conn.commit()
+        conn.close()
+        return 'Updated'
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "You broke the server :(", 400
