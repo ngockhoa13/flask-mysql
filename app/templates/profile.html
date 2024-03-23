@@ -6,7 +6,6 @@
     <title>Profile</title>
     <link rel="stylesheet" href="../assests/css/style.css" />
     <link rel="stylesheet" href="../assests/css/reset.css" />
-
   </head>
   <body>
     <div class="pro-container">
@@ -14,7 +13,9 @@
         <div class="logo"></div>
         <div class="user-avatar"></div>
         <span class="user-name">Thinh Dang</span>
-        <div class="edit-profile"><a href="{{ url_for('settings')}}">Edit info</a></div>
+        <div class="edit-profile">
+          <a href="{{ url_for('settings')}}">Edit info</a>
+        </div>
         <span class="time-joined">Joined on Mar 12, 2024</span>
       </div>
       <div class="post-container">
@@ -25,7 +26,9 @@
           </div>
           <div>Published notes</div>
           <div>Liked notes</div>
-          <div class="back-btn"><a href="{{ url_for('home')}}">Back to home</a></div>
+          <div class="back-btn">
+            <a href="{{ url_for('home')}}">Back to home</a>
+          </div>
         </div>
         <!-- Filter -->
         <div class="post-filter">
@@ -35,7 +38,11 @@
           </div>
           <div class="search-post filter-item">
             <i class="fa-solid fa-magnifying-glass search-icon"></i
-            ><input type="text" class="search-notes-profile" placeholder="Search notes..." />
+            ><input
+              type="text"
+              class="search-notes-profile"
+              placeholder="Search notes..."
+            />
           </div>
           <div class="n2o-filter filter-item">
             New to old <i class="fa-solid fa-angle-down"></i>
@@ -46,23 +53,29 @@
           <!-- Item1 -->
           <div class="pro-post-item">
             {% for title, authorname in blog_info %}
-              <div class="item-header">
-                <span>{{title}}<i class="fa-solid fa-lock"></i></span>
-                <!-- Checkbox for Published -->
-                <div class="published-checkbox">
-                  <label for="published">Published</label>
-                  <input type="checkbox" id="published" name="published">
-                </div>
-                <!-- End of Checkbox for Published -->
-                <span><i class="fa-solid fa-pencil"></i></span>
-              </div>
-              <div class="item-desc">
-                <div class="user-avatar post-ava"></div>
-                <span class="item-user-name">{{authorname}}</span>
-                <span class="view-mode"><i class="fa-solid fa-eye"></i> VIEW MODE</span>
-                <span class="like-mode"><i class="fa-regular fa-heart"></i> LIKE</span>
-                <span class="bookmark"><i class="fa-regular fa-bookmark"></i> BOOKMARK</span>
-              </div>
+            <div class="item-header">
+              <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+              <span><i class="fa-solid fa-pencil"></i></span>
+            </div>
+            <!-- Checkbox for Published -->
+            <div class="published-checkbox">
+              <label for="published" class="published">Published</label>
+              <input type="checkbox" id="published" name="published" />
+            </div>
+            <!-- End of Checkbox for Published -->
+            <div class="item-desc">
+              <div class="user-avatar post-ava"></div>
+              <span class="item-user-name">{{authorname}}</span>
+              <span class="view-mode"
+                ><i class="fa-solid fa-eye"></i> VIEW MODE</span
+              >
+              <span class="like-mode"
+                ><i class="fa-regular fa-heart"></i> LIKE</span
+              >
+              <span class="bookmark"
+                ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
+              >
+            </div>
             {% endfor %}
           </div>
         </div>

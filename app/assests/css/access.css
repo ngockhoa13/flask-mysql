@@ -10879,13 +10879,7 @@ body.js-nav2--active {
   outline: none;
   padding: 0;
 }
-.beatmap-discussions__toolbar-item--link {
-  border-radius: 4px;
-  color: #fff;
-  font-size: 12px;
-  padding: 5px 10px;
-  text-decoration: none;
-}
+
 .beatmap-discussions__toolbar-item--link:active,
 .beatmap-discussions__toolbar-item--link:focus,
 .beatmap-discussions__toolbar-item--link:hover {
@@ -26258,6 +26252,7 @@ body.js-nav2--active {
 .store-order-item__name {
   grid-area: name;
 }
+
 .store-order-item__subtext {
   color: hsl(var(--hsl-c2));
   font-size: 80%;
@@ -29508,6 +29503,7 @@ a.user-group-badge:hover {
 .modal-content--no-shadow {
   box-shadow: none !important;
 }
+
 @media (min-width: 900px) {
   .modal-dialog\@sm {
     margin-top: 90px;
