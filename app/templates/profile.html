@@ -61,12 +61,8 @@
             <!-- Checkbox for Published -->
             <div class="published-checkbox">
               <label for="published">Published</label>
-              <input
-                type="checkbox"
-                id="published"
-                name="published"
-                onchange="updatePublished('{{ id }}')"
-              />
+              <input type="checkbox" id="published{{ id }}" name="published" onchange="updatePublished('{{ id }}')">
+
             </div>
             <!-- End of Checkbox for Published -->
             <div class="item-desc">
