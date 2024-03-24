@@ -27,7 +27,7 @@
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
               <li>
-                <a href="#" title="Search"><i class="fas fa-search"></i></a>
+                <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
               </li>
               <li>
                 <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
@@ -187,6 +187,7 @@
               ></label>
               <input
                 class="input-search"
+                onclick="focusInput()"
                 type="text"
                 id="search-val"
                 name="search-val"

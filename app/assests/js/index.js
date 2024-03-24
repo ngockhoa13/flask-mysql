@@ -180,3 +180,13 @@ function updatePublished(blogID) {
 }
 
 
+// Search function
+function focusInput() {
+  var inputElement = document.querySelector('.input-search'); 
+  inputElement.focus();
+  document.querySelector(".menu-item-icon").classList.add('none');
+}
+document.querySelector('.input-search').addEventListener('blur', function() {
+  document.querySelector(".menu-item-icon").classList.remove('none');
+
+});
