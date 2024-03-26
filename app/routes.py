@@ -14,6 +14,11 @@ from werkzeug.utils import secure_filename
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 print(curr_dir)
 
+def is_valid_random_string(random_string):
+    # Check if the random string matches the expected format (you can adjust this based on your requirements)
+    return len(random_string) == 32 and all(c in '0123456789abcdef' for c in random_string)
+
+
 # Checks file extension
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
@@ -133,12 +138,14 @@ def profile():
         id = session['id']
         
         cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
-        if id:        
-            blog_info = cursor.execute("SELECT id, title, authorname FROM blogPosts WHERE userID = ?",(id,)).fetchall()
-
+        if id:   
+            userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
+            username = userName
+            blog_info = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ?",(id,)).fetchall()
+            
             print(blog_info)
 
-            return render_template('profile.html', blog_info=blog_info)
+            return render_template('profile.html', username=username, blog_info=blog_info)
         return redirect('/login')
     else:
         return redirect('/login')
@@ -299,3 +306,23 @@ def published():
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return "You broke the server :(", 400
+    
+
+# Routes to render out each individual blog when press on the title of a blog
+@app.route('/blog/<int:blog_id><string:random_string>')
+def view_blog(blog_id, random_string):
+    # Validate the random string to ensure it matches the expected format
+    if not is_valid_random_string(random_string):
+        return render_template('error.html', message='Invalid URL'), 400
+
+    cursor, conn = getDB()
+
+    # Fetch the blog post from the database based on the provided blog_id
+    blog_post = cursor.execute("SELECT title, content FROM blogPosts WHERE id = ?", (blog_id,)).fetchone()
+
+    # Check if the blog post exists
+    if blog_post:
+        return "hello skibidi"
+    else:
+        # If the blog post does not exist, render an error page or redirect to another page
+        return "lmao", 404
