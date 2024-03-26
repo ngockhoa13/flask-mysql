@@ -140,7 +140,8 @@ def profile():
         cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:   
             userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
-            username = userName
+            username = userName[0]
+            print(username)
             blog_info = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ?",(id,)).fetchall()
             
             print(blog_info)
