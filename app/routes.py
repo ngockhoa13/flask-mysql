@@ -172,10 +172,10 @@ def settings():
         return redirect(url_for('login'))  # Redirect to login page if user's id doesn't exist
     
 
-    user_info = cursor.execute("SELECT name, username, emailAddr FROM user WHERE id = ?", (id,)).fetchone()
+    user_info = cursor.execute("SELECT name, username, emailAddr, password FROM user WHERE id = ?", (id,)).fetchone()
 
     # Setting the data of user to output to screen
-    name, username, emailAddr = user_info
+    name, username, emailAddr, hashed_password = user_info
 
 
     profile_pic = None
@@ -202,14 +202,21 @@ def settings():
             new_email = request.form['email']
             cursor.execute("UPDATE user SET emailAddr = ? WHERE id = ?", (new_email, id))
             conn.commit()
-            emailAddr = new_email
+            emailAddr = new_email   
 
         if 'password' in request.form:
             new_password = request.form['password']
-            new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
-            cursor.execute("UPDATE user SET password = ? WHERE id = ?", (new_hashed_password, id))
-            conn.commit()
-            password = new_hashed_password
+            if new_password:
+                if bcrypt.checkpw(new_password.encode('utf-8'), hashed_password):
+                    flash('Please provide a password different from your old one!')
+                    return redirect(request.url)
+                else:    
+                    new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+                    cursor.execute("UPDATE user SET password = ? WHERE id = ?", (new_hashed_password, id))
+                    conn.commit()
+                    password = new_hashed_password
+            else:
+                pass
     
 
         # Check if the user upload a requests with a profile pic
