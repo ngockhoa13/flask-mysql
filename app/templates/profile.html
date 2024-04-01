@@ -87,6 +87,13 @@
 
       </div>
     </div>
+    {% if profile_pic %}
+    <style>
+      .user-avatar {
+        background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + profile_pic) }}");
+      }
+    </style>
+    {% endif %} 
 
     <script src="../assests/js/index.js"></script>
     <script

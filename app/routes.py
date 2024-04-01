@@ -102,9 +102,9 @@ def login():
 
                     return redirect('/home')   
                 else:
-                     return render_template('login.html', message="Wrong Email or Password")
-            
-            return render_template('login.html', message="Wrong Email or Password")
+                     return render_template('login.html', message="Wrong Email or Password aa")
+            else:
+                return render_template('login.html', message="Wrong Email or Password gg")
         return render_template("login.html")
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
@@ -146,7 +146,15 @@ def profile():
             
             print(blog_info)
 
-            return render_template('profile.html', username=username, blog_info=blog_info)
+            # Render avatar for 
+            avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
+            avatar_path_full = avatar_path + '/avatar.jpg'
+            print(avatar_path_full)     
+            if os.path.exists(avatar_path):
+                profile_pic = id + '/' + 'avatar.jpg'
+
+
+            return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic)
         return redirect('/login')
     else:
         return redirect('/login')
@@ -323,7 +331,7 @@ def view_blog(blog_id, random_string):
 
     # Check if the blog post exists
     if blog_post:
-        return "hello skibidi"
+        return "hello"
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return "lmao", 404
