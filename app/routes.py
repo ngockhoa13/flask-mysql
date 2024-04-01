@@ -176,6 +176,7 @@ def settings():
 
     # Setting the data of user to output to screen
     name, username, emailAddr, hashed_password = user_info
+    print(hashed_password)
 
 
     profile_pic = None
@@ -207,10 +208,11 @@ def settings():
         if 'password' in request.form:
             new_password = request.form['password']
             if new_password:
+
                 if bcrypt.checkpw(new_password.encode('utf-8'), hashed_password):
-                    flash('Please provide a password different from your old one!')
+                    print('Please provide a password different from your old one!')
                     return redirect(request.url)
-                else:    
+                else:   
                     new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
                     cursor.execute("UPDATE user SET password = ? WHERE id = ?", (new_hashed_password, id))
                     conn.commit()
