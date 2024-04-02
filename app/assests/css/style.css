@@ -1106,3 +1106,144 @@ hr {
   color: rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+
+/* Message box */
+
+.chat-container{
+  min-width: 1080px;
+  width: 1430px;
+  padding: 5px 0px 0px 40px;
+  margin-left: 150px;
+}
+
+.chat-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header h3{
+  font-size: 30px;
+}
+.chat-header span{
+  margin-right: 60px;
+}
+
+.chat-messing{
+  margin-top: 30px;
+  
+}
+
+.inbox-mess{
+  display: flex;
+  background-color:yellow;
+}
+
+.inbox-peo{
+  width: 560px;
+  
+}
+
+#new_chat_btn{
+  margin-left: 97px;
+  position: absolute;
+  top: 7px;
+  right: 8px;
+}
+
+.inbox-peo-header{
+  display: flex;
+  height: 35px;
+  align-items: center;
+  background-color: black;  
+  position: relative;
+}
+
+.mess{
+  /* width: 60%; */
+  background-color: #fff;
+  width: 870px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 150px);
+}
+
+.inbox-recent{
+  margin-right: 30px;
+}
+
+.inbox-search-wrap{
+  display: flex;
+ 
+  align-items: center;
+}
+
+.inbox-search-wrap i {
+  font-size: 22px;
+}
+
+.inbox-search-wrap input {
+  height: 27px;
+  width: 190px;
+  margin-right: 35px;
+  
+}
+
+.inbox-peo-list{
+  background-color: orange;
+}
+
+.inbox-ava{
+  width: 40px;
+  height: 40px;
+  background-image: url(../img/avatar.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  background-position: center center;
+  background-size: 110%;
+  margin-right: 20px;
+}
+
+.inbox-peo-mem{
+  display: flex;
+  align-items: center;
+  background-color: red;
+  margin-top: 20px;
+  padding: 20px 30px;
+}
+
+/* .mess-his{
+  padding: ;
+} */
+
+.type-mess{
+  border-top: 1px solid #c4c4c4;
+    position: relative;
+}
+
+.type-mess input{
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 48px;
+  width: 100%;
+  overflow: visible;
+}
+
+.type-mess button{
+  background: #05728f none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  height: 33px;
+  position: absolute;
+  right: 4px;
+  top: 3px;
+  width: 33px;
+}

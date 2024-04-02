@@ -188,5 +188,4 @@ function focusInput() {
 }
 document.querySelector('.input-search').addEventListener('blur', function() {
   document.querySelector(".menu-item-icon").classList.remove('none');
-
 });
