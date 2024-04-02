@@ -1120,6 +1120,7 @@ hr {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #f3f3f3;
 }
 
 .chat-header h3{
@@ -1131,32 +1132,38 @@ hr {
 
 .chat-messing{
   margin-top: 30px;
-  
 }
 
 .inbox-mess{
+  border-radius: 8px;
   display: flex;
-  background-color:yellow;
 }
 
 .inbox-peo{
   width: 560px;
-  
+  background-color: rgba(48, 57, 61,0.7 );
 }
 
 #new_chat_btn{
   margin-left: 97px;
   position: absolute;
-  top: 7px;
+  top: 13px;
   right: 8px;
 }
 
 .inbox-peo-header{
   display: flex;
-  height: 35px;
+  height: 50px;
   align-items: center;
-  background-color: black;  
+  background-color: rgb(48 57 61);
   position: relative;
+  border-radius: 5px 0px 0px 0px;
+}
+
+.inbox-peo-header p{
+  font-size: 20px;
+  color: #f3f3f3;
+  margin-left: 30px;
 }
 
 .mess{
@@ -1168,6 +1175,8 @@ hr {
   flex-direction: column;
   justify-content: space-between;
   height: calc(100vh - 150px);
+  border-radius: 0 5px 5px 0;
+  border: medium none;
 }
 
 .inbox-recent{
@@ -1192,7 +1201,6 @@ hr {
 }
 
 .inbox-peo-list{
-  background-color: orange;
 }
 
 .inbox-ava{
@@ -1210,9 +1218,12 @@ hr {
 .inbox-peo-mem{
   display: flex;
   align-items: center;
-  background-color: red;
+  background-color: #fff;
   margin-top: 20px;
-  padding: 20px 30px;
+  padding: 30px 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
 /* .mess-his{
@@ -1244,6 +1255,53 @@ hr {
   height: 33px;
   position: absolute;
   right: 4px;
-  top: 3px;
+  top: 8px;
   width: 33px;
+}
+
+.chatbox-bg{
+  z-index: -1;
+  background-image: url(../img/blur.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* transform: rotate(180deg); */
+  background-position: right;
+
+  opacity: 0.9;
+}
+
+.input-search2 {
+  display: block;
+  appearance: none;
+  outline: 0;
+  border: 1px solid fade(white, 40%);
+  background-color: fade(white, 20%);
+  width: 250px;
+  border-radius: 6px;
+  padding: 10px  0px 5px;
+  margin-left:25px; 
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  
+  color: white;
+  
+  transition-duration: 0.25s;
+  font-weight: 300;
+  
+  &:hover{
+    background-color: fade(white, 40%);
+  }
+  
+  &:focus{
+    background-color: white;
+    
+    color:  #359f87;
+  }
+}
+
+.inbox-username{
+  color:  #359f87;
+
 }

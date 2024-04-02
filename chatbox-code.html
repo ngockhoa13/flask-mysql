@@ -13,7 +13,7 @@
     crossorigin="anonymous"
   />
   </head>
-  <body>
+  <body class="chatbox-bg">
     <header class="header fixed">
       <div class="content">
         <div class="body">
@@ -24,7 +24,7 @@
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
               <li>
-                <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
+                <a href="#" onclick="" title="Search"><i class="fas fa-search"></i></a>
               </li>
               <li>
                 <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
@@ -77,7 +77,7 @@
                   ><i class="menu-item-icon fa fa-search mr-0"></i
                 ></label>
                 <input
-                  class="input-search"
+                  class="input-search2"
                   type="text"
                   id="inbox-search"
                   name="inbox-search"
@@ -109,29 +109,49 @@
                   >
                 </div>
               </div>
+              <!-- mem3 -->
+              <div class="inbox-peo-mem">
+                <div class="inbox-ava"></div>
+                <div class="inbox-info">
+                  <h3 class="inbox-username">Khoas</h3>
+                  <span class="inbox-desc"
+                    >Lorem ipsum dolor, sit amet consectetur adipisicing</span
+                  >
+                </div>
+              </div>
+              <!-- mem4 -->
+              <div class="inbox-peo-mem">
+                <div class="inbox-ava"></div>
+                <div class="inbox-info">
+                  <h3 class="inbox-username">Khoas</h3>
+                  <span class="inbox-desc"
+                    >Lorem ipsum dolor, sit amet consectetur adipisicing</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
           <div class="mess">
             <div class="mess-his">dsadas</div>
             <div class="type-mess">
               <input type="text" class="message" placeholder="Type a message" />
-              <button><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <button><i class="fa-regular fa-paper-plane"></i></button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <script>
-      var aa = document.querySelector('.input-search');
+    <!-- <script>
+      var aa = document.querySelector('.input-search2');
       aa.addEventListener("click",function(){
-          var inputElement = document.querySelector('.input-search'); 
+          var inputElement = document.querySelector('.input-search2'); 
           inputElement.focus();
           document.querySelector(".menu-item-icon").classList.add('none');
       })
-      document.querySelector('.input-search').addEventListener('blur', function() {
+      document.querySelector('.input-search2').addEventListener('blur', function() {
         document.querySelector(".menu-item-icon").classList.remove('none');
       });
-    </script> 
+    </script>  -->
     <script
       src="https://kit.fontawesome.com/c9f23d41c7.js"
       crossorigin="anonymous"
