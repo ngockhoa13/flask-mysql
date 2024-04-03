@@ -1,11 +1,13 @@
-from flask import render_template, url_for, flash, redirect, request, send_file, send_from_directory, session
-from app import app
+from flask import render_template, url_for, flash, redirect, request, send_file, send_from_directory, session, jsonify
+from app import app, socket
 import os
 import sqlite3  
 import bcrypt
 import uuid
 from werkzeug.utils import secure_filename
+import re
 #Import required library      
+
 
 
 
@@ -325,8 +327,9 @@ def published():
         print(f"ERROR: {error}", flush=True)
         return "You broke the server :(", 400
     
-
+#-------------------------------- Will look later -----------------------------------------------
 # Routes to render out each individual blog when press on the title of a blog
+'''
 @app.route('/blog/<int:blog_id><string:random_string>')
 def view_blog(blog_id, random_string):
     # Validate the random string to ensure it matches the expected format
@@ -344,3 +347,64 @@ def view_blog(blog_id, random_string):
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return "lmao", 404
+'''
+#-----------------------------------------------------------------------------------------------   
+
+# Routes for generating new chat by searching for users
+from flask import jsonify
+
+@app.route('/new_chat', methods=["POST"])
+def new_chat():
+    id = session.get('id')
+    cursor, conn = getDB()
+    
+    # Check if id exists in the database
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if the user's id doesn't exist
+    
+    try:
+        if request.method == "POST":
+            if 'search_input' in request.form:
+                search_input = request.form['search_input']
+                # Check if the input matches the format of an email address
+                if re.match(r'^[\w\.-]+@[\w\.-]+$', search_input):
+                    # Search for the user in the database based on the provided email address
+                    recipient_info = cursor.execute("SELECT id, username, emailAddr FROM user WHERE emailAddr = ?", (search_input,)).fetchone()
+                else:
+                    # Search for the user in the database based on the provided username
+                    recipient_info = cursor.execute("SELECT id, username, emailAddr FROM user WHERE username = ?", (search_input,)).fetchone()
+                    
+                if recipient_info:
+                    recipient_id, recipient_username, recipient_email = recipient_info
+                    # Check if a chat already exists between the current user and the recipient
+                    chat_exists = cursor.execute("SELECT id FROM chat WHERE (userID1 = ? AND userID2 = ?) OR (userID1 = ? AND userID2 = ?)", (id, recipient_id, recipient_id, id)).fetchone()
+                    if chat_exists:
+                        return jsonify({'error': 'Chat already exists'}), 400
+                    else:
+                        # Proceed with creating a new chat
+                        # First, insert the new chat into the database
+                        
+                        chat_id = str(uuid.uuid4())
+
+                        cursor.execute("INSERT INTO chat (id, userID1, userID2) VALUES (?, ?, ?)", (chat_id, id, recipient_id))
+                        conn.commit()
+                        # Retrieve the chat ID of the newly created chat
+                        new_chat_id = cursor.lastrowid
+
+                        
+                        # Create room id equal to message id to make eassier query nd understanding
+                        chat_roomID = chat_id
+                        cursor.execute("INSERT INTO messages (room_id) VALUES (?)", (chat_roomID))
+
+
+                        return jsonify({'success': 'New chat created successfully', 'chat_id': new_chat_id}), 200
+                else:
+                    return jsonify({'error': 'User not found'}), 404
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500
+
+@app.route('/new_chat_form', methods=["GET", "POST"])
+def new_chat_form():
+    return render_template('test_chatHTML.html')

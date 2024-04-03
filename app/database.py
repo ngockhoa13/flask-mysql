@@ -24,14 +24,36 @@ conn.execute('''CREATE TABLE blogPosts (
 )''')
 
 
-#conn.execute('''CREATE TABLE notifications (
-#    id INTEGER PRIMARY KEY NOT NULL,
-#    nameProd VARCHAR(100) NOT NULL,
-#    priceProd FLOAT NOT NULL,
-#    description TEXT NOT NULL,
-#    sellerID INTEGER,
-#    FOREIGN KEY(sellerID) REFERENCES seller(id)
-#)''')
+
+# Table for saving the user's current chat
+conn.execute('''CREATE TABLE chat (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    userID1 TEXT NOT NULL,
+    userID2 TEXT NOT NULL,
+    FOREIGN KEY(userID1) REFERENCES user(id),
+    FOREIGN KEY(userID2) REFERENCES user(id),
+    UNIQUE(userID1, userID2) 
+)''')
+
+
+# Tables for sacing whats to be the room chat id
+conn.execute('''CREATE TABLE messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id VARCHAR(50) UNIQUE NOT NULL
+)''')
+
+
+conn.execute('''CREATE TABLE chat_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    sender_id INTEGER NOT NULL,
+    sender_username VARCHAR(50) NOT NULL,
+    room_id VARCHAR(50) NOT NULL,
+    FOREIGN KEY(room_id) REFERENCES messages(room_id)
+)''')
+
+
 
 # Close the connection
 conn.close()
