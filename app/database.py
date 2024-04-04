@@ -39,7 +39,8 @@ conn.execute('''CREATE TABLE chat (
 # Tables for sacing whats to be the room chat id
 conn.execute('''CREATE TABLE messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room_id VARCHAR(50) UNIQUE NOT NULL
+    room_id VARCHAR(50) UNIQUE NOT NULL,
+    FOREIGN KEY(room_id) REFERENCES chat(id)
 )''')
 
 

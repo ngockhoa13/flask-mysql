@@ -394,7 +394,8 @@ def new_chat():
                         
                         # Create room id equal to message id to make eassier query nd understanding
                         chat_roomID = chat_id
-                        cursor.execute("INSERT INTO messages (room_id) VALUES (?)", (chat_roomID))
+                        cursor.execute("INSERT INTO messages (room_id) VALUES (?)", (chat_roomID,))
+                        conn.commit()
 
 
                         return jsonify({'success': 'New chat created successfully', 'chat_id': new_chat_id}), 200
@@ -405,6 +406,75 @@ def new_chat():
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
 
+# Routes for testing adding new chat (sẽ bỏ đi khi UI xong để sử dụng chức năng tìm kiếm trong route chat chính)
 @app.route('/new_chat_form', methods=["GET", "POST"])
 def new_chat_form():
     return render_template('test_chatHTML.html')
+
+
+# Routes for chat (tất cả việc chat hay render list chat và tìm kiếm người dùng ở đây)
+@app.route('/chat/', methods=["GET", "POST"])
+def allChat():
+    id = session.get('id')
+    cursor, conn = getDB()
+    
+    # Check if id exists in the database
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if the user's id doesn't exist
+
+
+    try:
+        # Get the room ID for when user press into one will render it out
+        room_id = request.args.get("rid", None)
+
+        # Query all the chat using the current user ID to render out on the page
+        chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? OR userID2 = ?", (id, id)).fetchall()
+        print(chat_list)
+
+
+        if chat_list:
+            data = []
+
+            chat_roomID, userID1, userID2 = chat_list
+            try:
+
+                # Đang bị rối đoạn này ----------------------------------------------
+                # Get all the message
+                messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+
+                # Get the last messages to render out on the chat list(giống hiện tin nhắn gần nhất của mess)
+                latest_message = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1", (chat_roomID,)).fetchone()
+                #---------------------------------------------------------------------
+
+                # Query all the data (vẫn khó hiểu quá hình dung mà ko hiểu) -----------------------
+
+                #----------------------------------------------------------------
+            except (AttributeError, IndexError):
+                # Set variable to this when no messages have been sent to the room
+                latest_message = "This place is empty. No messages ..."
+        
+
+            id, content, timestamp, sender_id, sender_username, room_id = messages
+        
+                
+                # Add the query to data
+            data.append({   
+                "username": sender_username,
+                "room_id": chat_roomID,
+                "last_message": latest_message,
+            })
+
+        else:
+            chat_list = None
+
+        messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+
+        return render_template('chatbox-code.html', )
+
+
+
+    
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500
+
