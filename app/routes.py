@@ -446,18 +446,16 @@ def allChat():
                 latest_message = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1", (chat_roomID,)).fetchone()
                 #---------------------------------------------------------------------
 
-                # Query all the data (vẫn khó hiểu quá hình dung mà ko hiểu) -----------------------
 
-                #----------------------------------------------------------------
             except (AttributeError, IndexError):
                 # Set variable to this when no messages have been sent to the room
                 latest_message = "This place is empty. No messages ..."
         
-
+            # Query all the data (vẫn khó hiểu quá hình dung mà ko hiểu) -----------------------
             id, content, timestamp, sender_id, sender_username, room_id = messages
         
                 
-                # Add the query to data
+            # Add the query to data
             data.append({   
                 "username": sender_username,
                 "room_id": chat_roomID,
@@ -468,6 +466,9 @@ def allChat():
             chat_list = None
 
         messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+
+
+        #----------------------------------------------------------------
 
         return render_template('chatbox-code.html', )
 
