@@ -438,8 +438,6 @@ def allChat():
             for chat in chat_list:
                 chat_roomID, userID1, userID2 = chat
                 try:
-
-                    # Đang bị rối đoạn này ----------------------------------------------
                     # Get all the message
                     messages_th = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
 
