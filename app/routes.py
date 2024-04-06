@@ -428,54 +428,82 @@ def allChat():
         room_id = request.args.get("rid", None)
 
         # Query all the chat using the current user ID to render out on the page
-        chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? OR userID2 = ?", (id, id)).fetchall()
+        chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? or userID2 = ?", (id,id)).fetchall()
         print(chat_list)
-
-
+        data = []
+        messages=[]
+        queryname = cursor.execute(f"SELECT id,username from user where id = ?",(id,)).fetchone()
+        myid,ownname = queryname
         if chat_list:
-            data = []
+            for chat in chat_list:
+                chat_roomID, userID1, userID2 = chat
+                try:
 
-            chat_roomID, userID1, userID2 = chat_list
-            try:
+                    # Đang bị rối đoạn này ----------------------------------------------
+                    # Get all the message
+                    messages_th = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
 
-                # Đang bị rối đoạn này ----------------------------------------------
-                # Get all the message
-                messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+                    # Get the last messages to render out on the chat list(giống hiện tin nhắn gần nhất của mess)
+                    latest_message = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1", (chat_roomID,)).fetchone()
+                    #---------------------------------------------------------------------
+                    if userID1 == id:
+                        friend = cursor.execute(f"SELECT username from user where id = ?",(userID2,)).fetchone()
+                    else:
+                        friend = cursor.execute(f"SELECT username from user where id = ?",(userID1,)).fetchone()
+                    for message in messages_th:
+                        var1, var2, var3, var4,var5,var6 = message
+                        messages.append({
+                            "content":var2,
+                            "timestamp":var3,
+                            "sender_username": var5,
+                        }
+                        )
+                        
 
-                # Get the last messages to render out on the chat list(giống hiện tin nhắn gần nhất của mess)
-                latest_message = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1", (chat_roomID,)).fetchone()
-                #---------------------------------------------------------------------
-
-
-            except (AttributeError, IndexError):
-                # Set variable to this when no messages have been sent to the room
-                latest_message = "This place is empty. No messages ..."
-        
-            # Query all the data (vẫn khó hiểu quá hình dung mà ko hiểu) -----------------------
-            id, content, timestamp, sender_id, sender_username, room_id = messages
-        
-                
-            # Add the query to data
-            data.append({   
-                "username": sender_username,
-                "room_id": chat_roomID,
-                "last_message": latest_message,
-            })
+                except (AttributeError, IndexError):
+                    # Set variable to this when no messages have been sent to the room
+                    latest_message = "This place is empty. No messages ..."          
+                    
+                # Add the query to data
+                data.append({
+                    "username": friend,
+                    "room_id": chat_roomID,
+                    "last_message": latest_message,
+                })
 
         else:
             chat_list = None
 
-        messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
-
-
-        #----------------------------------------------------------------
-
-        return render_template('chatbox-code.html', )
-
-
-
-    
+        # messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+        if chat_list == None:
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid)  
+        else:
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid)
+        
+        
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
+from datetime import datetime
+
+@app.template_filter("ftime")
+def ftime(date):
+    # Kiểm tra nếu date là một chuỗi
+    if isinstance(date, str):
+        return date  # Trả về chuỗi nguyên thủy nếu không thể chuyển đổi
+
+    # Chuyển đổi thành số nguyên nếu có thể
+    try:
+        dt = datetime.fromtimestamp(int(date))
+    except ValueError:
+        return str(date)  # Nếu không thể chuyển đổi thì change thành str
+
+    time_format = "%I:%M %p"  # Use  %I for 12-hour clock format and %p for AM/PM
+    formatted_time = dt.strftime(time_format)
+
+    formatted_time += " | " + dt.strftime("%m/%d")
+    return formatted_time
+
+
+
 
