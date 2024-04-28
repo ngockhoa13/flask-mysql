@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="./../assests/css/reset.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-  </head>
+    <script src="./../assests/js/index.js"></script>
+</head>
   <body class="chatbox-bg">
     <header class="header fixed">
       <div class="content">
@@ -23,13 +24,14 @@
                 <a href="#" onclick="" title="Search"><i class="fas fa-search"></i></a>
               </li>
               <li>
-                <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
+                <a href="#" title="Blog" class="nav_edit"><i class="fas fa-edit" onclick="redirectToHome('blog')"></i></a>
               </li>
               <li>
                 <a
                   href="#notification"
                   title="Notification"
                   class="nav_noti"
+                  onclick="redirectToHome('noti')"
                   ><i class="fas fa-bell nav_noti_icon"></i>
                   <span class="badge">12</span></a
                 >
@@ -43,14 +45,14 @@
             </ul>
             <ul class="navbar_items nav-bottom">
               <li>
-                <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
+                <a href="#" title="Profile" onclick="redirectToHome('profile')"><i class="fas fa-user"></i></a>
               </li>
               <li>
-                <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                <a href="#" title="Settings" onclick="redirectToHome('setting')"><i class="fa-solid fa-gear setting" ></i
                 ></a>
               </li>
               <li>
-                <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+                <a href="#" title="Logout" onclick="redirectToHome('logout')"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
                 ></a>
               </li>
             </ul>
@@ -72,17 +74,66 @@
                 <label for="inbox-search"
                   ><i class="menu-item-icon fa fa-search mr-0"></i
                 ></label>
-              <!-- mem1   <input
+                 <input
                   class="input-search2"
                   type="text"
                   id="inbox-search"
                   name="inbox-search"
                   placeholder="Search here"
-                />-->
+                />
               </div>
               <button id="new_chat_btn">
                 <i class="fa fa-plus"></i> New Chat
               </button>
+             <!-- <div class="connected_email">
+                <input type="text" class="input_email" placeholder="your email friend">
+              </div>-->
+              <div id="add_friend" class="none">
+                <div class="close"></div>
+                <form id="connected_email" >
+                  <input type="text" id="input_email" name="search_input"><br><br>
+                  <button type="submit">Add</button>
+                </form>
+                
+              </div>
+              
+              <script>
+                function redirectToHome(e) {
+                  if(e == 'noti'){
+                    window.location.href = "/home#noti";
+
+                  }
+                  else if (e == 'blog'){
+                    window.location.href = "/home#blog";
+
+                  }else if (e== 'settings'){
+                    window.location.href = "/settings";
+                    
+                  }
+                  else if (e == 'logout'){
+                    window.location.href = "/logout";
+                    
+                  }
+                  else if (e == 'profile'){
+                    window.location.href = "/profile";
+
+                  }
+              }
+
+                document.getElementById('new_chat_btn').addEventListener('click',function(){
+                  console.log(123123)
+                  if (document.getElementById("add_friend").classList.contains("none")) {
+                    document.getElementById("add_friend").classList.remove("none");
+                  } else {
+                    document.getElementById("add_friend").classList.add("none");
+                  }
+                })
+                document.querySelector(".close").addEventListener('click',function(){
+                  document.getElementById("add_friend").classList.add("none");
+                })
+            </script>
+
+
             </div>
             <div class="inbox-peo-list">
               <!-- mem1 -->
@@ -104,27 +155,29 @@
           
           <div class="mess">
             <div class="msg_history">
-              {% for j in messages %}
-                {% if j.sender_username==ownname %}
-                <div class="outgoing_msg" id="{{ j.timestamp }}">
-                  <div class="sent_msg">
-                    <p>{{ j.content }}</p>
-                    <span class="time_date">{{ j.timestamp | ftime }}</span>
-                  </div>
-                </div>
-                {% else %}
-                <div class="incoming_msg" id="{{ j.timestamp }}">
-                  <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
-                  </div>
-                  <div class="received_msg">
-                    <div class="received_withd_msg">
+                {% for j in messages %}
+                  {% if j.sender_username==ownname %}
+                  <div class="outgoing_msg" id="{{ j.timestamp }}">
+                    <div class="sent_msg">
                       <p>{{ j.content }}</p>
                       <span class="time_date">{{ j.timestamp | ftime }}</span>
                     </div>
                   </div>
-                </div>
-                {% endif %}
-              {% endfor %}
+                  {% else %}
+                  <div class="incoming_msg" id="{{ j.timestamp }}">
+                    <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                    </div>
+                    <div class="received_msg">
+                      <div class="received_withd_msg">
+                        <p>{{ j.content }}</p>
+                        <span class="time_date">{{ j.timestamp | ftime }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+
             </div>
             <div class="type-mess">
               <div class="input_msg_write">
@@ -139,6 +192,7 @@
           </div>
         </div>
       </div>
+      <div id="toast"></div>
     </div>
     <!-- <script>
       var aa = document.querySelector('.input-search2');
@@ -158,9 +212,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
 
 
+    <script>
+      document.getElementById('connected_email').addEventListener('submit', function(event) {
+        event.preventDefault(); 
 
-
-
+        var formData = new FormData(this); 
+      fetch('/new_chat', {
+          method: 'POST',
+          body: formData 
+      })
+      .then((response) => {
+          if (response.status === 200) {
+              // Xử lý khi tạo cuộc trò chuyện thành công
+            showSuccessToast("New chat created successfully");
+          } else if (response.status === 400) {
+              // Xử lý khi cuộc trò chuyện đã tồn tại hoặc có lỗi xảy ra trong yêu cầu của bạn
+            showErrorToast("Chat already exists");
+          } else if (response.status === 404) {
+            showErrorToast("User not found");
+          } else {
+            showErrorToast("Errorrrr");
+          }
+      })
+      .catch((error) => {
+          console.error("Error:", error);
+          showErrorToast("Something went wrong, try again later!")
+      });
+      
+    });
+    </script>
 
     <script type="text/javascript">
 
@@ -199,7 +279,6 @@
         })
       })
       socket.on('message', function (msg,a="",b="") {
-        console.log("DMCMCMMCMCMCMCMC")
           $('div.msg_history').append(`<div class="incoming_msg">
           <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
           <div class="received_msg">

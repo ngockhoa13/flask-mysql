@@ -123,8 +123,9 @@ def home():
         if id:        
             blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
 
+            user_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id,)).fetchone()
             #print(blog_info)
-            return render_template('index.html', blog_info=blog_info)
+            return render_template('index.html', blog_info=blog_info,user_info = user_info)
         return redirect('/login')
     else:
         return redirect('/login')
@@ -448,14 +449,15 @@ def allChat():
                         friend = cursor.execute(f"SELECT username from user where id = ?",(userID2,)).fetchone()
                     else:
                         friend = cursor.execute(f"SELECT username from user where id = ?",(userID1,)).fetchone()
-                    for message in messages_th:
-                        var1, var2, var3, var4,var5,var6 = message
-                        messages.append({
-                            "content":var2,
-                            "timestamp":var3,
-                            "sender_username": var5,
-                        }
-                        )
+                    if room_id == chat_roomID:
+                        for message in messages_th:
+                            var1, var2, var3, var4,var5,var6 = message
+                            messages.append({
+                                "content":var2,
+                                "timestamp":var3,
+                                "sender_username": var5,
+                            }
+                            )
                         
 
                 except (AttributeError, IndexError):
@@ -471,6 +473,7 @@ def allChat():
 
         else:
             chat_list = None
+        messages = messages if room_id else []
 
         # messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
         if chat_list == None:

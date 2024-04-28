@@ -45,28 +45,28 @@ function toast({ title = "", message = "", type = "info", duration = 3000 }) {
     main.appendChild(toast);
   }
 }
-function showSuccessToast() {
+function showSuccessToast(mesg="Blog saved successfully!") {
   toast({
     title: "Nice!",
-    message: "Blog saved successfully!",
+    message: mesg,
     type: "success",
     duration: 5000,
   });
 }
 
-function showErrorToast() {
+function showErrorToast(mesg = "Failed to save blog. Please try again.") {
   toast({
     title: "Error!",
-    message: "Failed to save blog. Please try again.",
+    message: mesg,
     type: "error",
     duration: 5000,
   });
 }
 
-function showWarning(){
+function showWarning(mesg="Length of the title must be less than 25 characters"){
     toast({
         title: "Error!",
-        message: "Length of the title must be less than 25 characters",
+        message: mesg,
         type: "error",
         duration: 5000,
       });

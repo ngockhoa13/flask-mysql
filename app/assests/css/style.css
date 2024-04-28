@@ -1137,6 +1137,8 @@ hr {
 .inbox-mess{
   border-radius: 8px;
   display: flex;
+  overflow: hidden;
+
 }
 
 .inbox-peo{
@@ -1201,6 +1203,8 @@ hr {
 }
 
 .inbox-peo-list{
+  overflow-y: scroll;
+  height: calc(100% - 50px);
 }
 
 .inbox-ava{
@@ -1218,6 +1222,7 @@ hr {
 .inbox-peo-mem{
   display: flex;
   align-items: center;
+  overflow: hidden;
   background-color: #fff;
   margin-top: 20px;
   padding: 30px 30px;
@@ -1308,7 +1313,9 @@ hr {
 
 
 /*  */
-.msg_history{}
+.msg_history{
+  overflow-y: auto;
+}
 .incoming_msg_img {
   display: inline-block;
   width: 6%;
@@ -1373,4 +1380,65 @@ hr {
   display: block;
   font-size: 12px;
   margin: 8px 0 0;
+}
+
+#connected_email{
+  padding: 20px 30px;
+  position: absolute;
+  top:44px;
+  right: -30px;
+  background-image: url(./../img/blur.png);
+  border-radius: 3px;
+}
+
+.input_email{
+  height: 30px;
+  text-align: center;
+  width: 200px;
+}
+
+/* #connected_email::before{
+    content: "Read this -";
+    background-color: yellow;
+    color: red;
+    font-weight: bold;
+} */
+
+/* .close {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+} */
+
+
+
+.close{
+  height: 5px;
+  width: 5px;
+  position: absolute;
+  top: 46px;
+  right: -30px;
+  padding: 10px;
+  z-index: 2;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  right: 13px;
+  top: 3px;
+  content: ' ';
+  height: 13px;
+  width: 2px;
+  background-color: #39ac91;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
 }
