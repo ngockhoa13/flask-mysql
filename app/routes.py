@@ -6,6 +6,7 @@ import bcrypt
 import uuid
 from werkzeug.utils import secure_filename
 import re
+from urllib.parse import unquote
 #Import required library      
 
 
@@ -16,9 +17,15 @@ import re
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 print(curr_dir)
 
-def is_valid_random_string(random_string):
-    # Check if the random string matches the expected format (you can adjust this based on your requirements)
-    return len(random_string) == 32 and all(c in '0123456789abcdef' for c in random_string)
+#def is_valid_random_string(random_string):
+#    # Check if the random string matches the expected format (you can adjust this based on your requirements)
+#    return len(random_string) == 32 and all(c in '0123456789abcdef' for c in random_string)
+
+#def generate_randString(length):
+#    characters = string.ascii_letters + string.digits
+#    return ''.join(random.choice(characters) for _ in range(length))
+
+
 
 
 # Checks file extension
@@ -326,30 +333,36 @@ def published():
 
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
-        return "You broke the server :(", 400
-    
+        return "You broke the server :(", 400\
+        
+#-----------------------------------------------------------------------------------------------   
 #-------------------------------- Will look later -----------------------------------------------
 # Routes to render out each individual blog when press on the title of a blog
-'''
-@app.route('/blog/<int:blog_id><string:random_string>')
-def view_blog(blog_id, random_string):
-    # Validate the random string to ensure it matches the expected format
-    if not is_valid_random_string(random_string):
-        return render_template('error.html', message='Invalid URL'), 400
 
+@app.route('/blog/<string:blog_title>')
+def view_blog(blog_title):
+    #Url parse title name
+    decode_title = unquote(blog_title)
+    print(decode_title)
+    
+    #Connect to database
     cursor, conn = getDB()
 
     # Fetch the blog post from the database based on the provided blog_id
-    blog_post = cursor.execute("SELECT title, content FROM blogPosts WHERE id = ?", (blog_id,)).fetchone()
+    blog_post = cursor.execute("SELECT title, content FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
+    print(blog_post)
 
     # Check if the blog post exists
     if blog_post:
-        return "hello"
+        title, content = blog_post
+        return render_template('blog.html', title=title, content=content)
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return "lmao", 404
-'''
+
 #-----------------------------------------------------------------------------------------------   
+#-----------------------------------------------------------------------------------------------   
+
 
 # Routes for generating new chat by searching for users
 from flask import jsonify
