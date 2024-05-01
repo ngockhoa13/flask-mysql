@@ -81,7 +81,7 @@
                     {% for title, content in blog_info %}
                     <article class="post card-border" id="post-{{ loop.index }}">
                         <header class="post-header text-center">
-                            <a class="post-title" href="#">{{ title }}</a>
+                            <a class="post-title" href="/blog/{{ title|urlencode }}">{{ title }}</a>
                             <!-- desc post item -->
                             <div class="post-meta">
                         <div class="post-meta-detail post-meta-detail-time">

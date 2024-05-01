@@ -6,7 +6,7 @@ import bcrypt
 import uuid
 from werkzeug.utils import secure_filename
 import re
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
 #Import required library      
 
 
@@ -132,6 +132,7 @@ def home():
 
             user_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id,)).fetchone()
             #print(blog_info)
+
             return render_template('index.html', blog_info=blog_info,user_info = user_info)
         return redirect('/login')
     else:
@@ -358,7 +359,7 @@ def view_blog(blog_title):
         return render_template('blog.html', title=title, content=content)
     else:
         # If the blog post does not exist, render an error page or redirect to another page
-        return "lmao", 404
+        return redirect(url_for('home'))
 
 #-----------------------------------------------------------------------------------------------   
 #-----------------------------------------------------------------------------------------------   
