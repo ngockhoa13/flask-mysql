@@ -21,10 +21,12 @@
       <div class="post-container">
         <div class="nav-post">
           <div>
-            <i class="fa-solid fa-lock"></i> All notes
+            <i class="fa-solid fa-lock"></i> 
+            <a href="#" onclick="showAllNotes()" title="All notes" class="nav_edit"><i class="fas fa-edit"></i>All notes</a>
             <span class="tab-count inside">1</span>
           </div>
-          <div>Published notes</div>
+          <a href="#" onclick="showPublishedNotes()" title="Published notes" class="nav_edit"><i class="fas fa-edit"></i>Published notes</a>
+
           <div>Liked notes</div>
           <div class="back-btn">
             <a href="{{ url_for('home')}}">Back to home</a>
@@ -50,39 +52,77 @@
         </div>
 
 
+        
         <!-- User's post -->
-        <div class="pro-post-items">
-          <!-- Item1 -->
-          <div class="pro-post-item">
-            {% for id, title, authorname, publish in blog_info %}
-            <div class="item-header">
-              <span>{{title}}<i class="fa-solid fa-lock"></i></span>
-            
-              <span><i class="fa-solid fa-pencil"></i></span>
+        <div id="userPostsContainer">
+          <div class="pro-post-items" id="userPosts">
+            <!-- Item1 -->
+            <div class="pro-post-item">
+              {% for id, title, authorname, publish in blog_info %}
+              <div class="item-header">
+                <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+              
+                <span><i class="fa-solid fa-pencil"></i></span>
+              </div>
+              <!-- Checkbox for Published -->
+              <div class="published-checkbox">
+                <label for="published{{ id }}">Published</label>
+                <input type="checkbox" id="published{{ id }}" name="published" onchange="updatePublished('{{ id }}')" {% if publish == 1 %} checked {% endif %}>
+              
+              </div>
+              <!-- End of Checkbox for Published -->
+              <div class="item-desc">
+                <div class="user-avatar post-ava"></div>
+                <span class="item-user-name">{{authorname}}</span>
+                <span class="view-mode"
+                  ><i class="fa-solid fa-eye"></i> VIEW MODE</span
+                >
+                <span class="like-mode"
+                  ><i class="fa-regular fa-heart"></i> LIKE</span
+                >
+                <span class="bookmark"
+                  ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
+                >
+              </div>
+              {% endfor %}
             </div>
-            <!-- Checkbox for Published -->
-            <div class="published-checkbox">
-              <label for="published{{ id }}">Published</label>
-              <input type="checkbox" id="published{{ id }}" name="published" onchange="updatePublished('{{ id }}')" {% if publish == 1 %} checked {% endif %}>
-            
-            </div>
-            <!-- End of Checkbox for Published -->
-            <div class="item-desc">
-              <div class="user-avatar post-ava"></div>
-              <span class="item-user-name">{{authorname}}</span>
-              <span class="view-mode"
-                ><i class="fa-solid fa-eye"></i> VIEW MODE</span
-              >
-              <span class="like-mode"
-                ><i class="fa-regular fa-heart"></i> LIKE</span
-              >
-              <span class="bookmark"
-                ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
-              >
-            </div>
-            {% endfor %}
           </div>
         </div>
+
+        
+
+        <!-- Published notes only -->
+        <div id="publishedNotesContainer" class="none">
+          <div class="pro-post-published-items">
+            <!-- Item1 -->
+            <div class="pro-post-published-item">
+              {% for id, title, authorname, publish in published_blogs %}
+              <div class="item-header">
+                <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+              
+                <span><i class="fa-solid fa-pencil"></i></span>
+              </div>
+              <div class="item-desc">
+                <div class="user-avatar post-ava"></div>
+                <span class="item-user-name">{{authorname}}</span>
+                <span class="view-mode"
+                  ><i class="fa-solid fa-eye"></i> VIEW MODE</span
+                >
+                <span class="like-mode"
+                  ><i class="fa-regular fa-heart"></i> LIKE</span
+                >
+                <span class="bookmark"
+                  ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
+                >
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+
+
+
 
 
       </div>
@@ -100,5 +140,25 @@
       src="https://kit.fontawesome.com/c9f23d41c7.js"
       crossorigin="anonymous"
     ></script>
+    
+    <script>
+      function showPublishedNotes() {
+        var userPostsContainer = document.getElementById('userPostsContainer');
+        var publishedNotesContainer = document.getElementById('publishedNotesContainer');
+        
+        userPostsContainer.classList.add('none');
+        publishedNotesContainer.classList.remove('none');
+      }
+
+      function showAllNotes() {
+        var userPostsContainer = document.getElementById('userPostsContainer');
+        var publishedNotesContainer = document.getElementById('publishedNotesContainer');
+        
+        userPostsContainer.classList.remove('none');
+        publishedNotesContainer.classList.add('none');
+      }
+    </script>
+    
+    
   </body>
 </html>

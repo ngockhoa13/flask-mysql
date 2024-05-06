@@ -551,7 +551,7 @@ hr {
 
 .nav-post,
 .post-filter,
-.pro-post-items {
+.pro-post-items .pro-post-published-items{
   margin: 0px 60px 0px 22px;
 }
 .nav-post {
@@ -640,11 +640,11 @@ hr {
   margin-left: 40px;
 }
 
-.pro-post-items {
+.pro-post-items .pro-post-published-items{
   margin-top: 20px;
 }
 
-.pro-post-item {
+.pro-post-item .pro-post-published-item{
   padding: 20px 0 20px;
   padding-left: 20px;
   border-radius: 4px;

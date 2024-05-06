@@ -160,6 +160,8 @@ def profile():
         profile_pic = None
         cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
         if id:   
+
+            #Retrieve the data: username, blod title, content,...
             userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
             username = userName[0]
             print(username)
@@ -167,7 +169,12 @@ def profile():
             
             print(blog_info)
 
-            # Render avatar for 
+            published_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ? and publish = 1",(id,)).fetchall()
+
+
+
+
+            # Render avatar for the user
             avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
             avatar_path_full = avatar_path + '/avatar.jpg'
             print(avatar_path_full)     
@@ -176,10 +183,11 @@ def profile():
             if profile_pic == None:
                 profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-            return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic)
+            return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs)
         return redirect('/login')
     else:
         return redirect('/login')
+
 
 
 # Settings user information route -------------------------------
