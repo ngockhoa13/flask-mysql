@@ -205,6 +205,13 @@
               </div>
               <div class="rs2-profile">
                 <div class="rs2-pro-img"></div>
+                {% if profile_pic %}
+                <style>
+                 .rs2-pro-img {
+                       background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + profile_pic) }}");
+                  }
+                </style>
+                 {% endif %} 
                 <div class="rs2-pro-name">{{user_info[0]}}</div>
                 <!-- List info -->
                 <div class="rs2-info-list">
