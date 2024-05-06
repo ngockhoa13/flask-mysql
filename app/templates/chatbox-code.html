@@ -79,7 +79,8 @@
                   type="text"
                   id="inbox-search"
                   name="inbox-search"
-                  placeholder="Search here"
+                  placeholder="Search name"
+                  data-search
                 />
               </div>
               <button id="new_chat_btn">
@@ -194,17 +195,29 @@
       </div>
       <div id="toast"></div>
     </div>
-    <!-- <script>
-      var aa = document.querySelector('.input-search2');
-      aa.addEventListener("click",function(){
-          var inputElement = document.querySelector('.input-search2'); 
-          inputElement.focus();
-          document.querySelector(".menu-item-icon").classList.add('none');
-      })
-      document.querySelector('.input-search2').addEventListener('blur', function() {
-        document.querySelector(".menu-item-icon").classList.remove('none');
-      });
-    </script>  -->
+    <script>
+        const listusername =   [
+        {% for i in data %}
+        {
+            "username": {{i["username"][0]|tojson}},
+        }{% if not loop.last %},{% endif %} 
+        {% endfor %}
+         ];
+         var searchInput2 = document.querySelector(".input-search2")
+         searchInput2.addEventListener("input", e => {
+          var isVisible = false
+           const value = e.target.value.toLowerCase()
+           listusername.forEach(name => {
+             isVisible =
+               name.username.toLowerCase().includes(value) 
+               username = name.username
+               const usename_tag = document.querySelector(".inbox-username");
+               const parentNode = usename_tag.parentNode.parentNode;
+               parentNode.classList.toggle("none", !isVisible)
+           })
+
+       })
+    </script> 
     <script
       src="https://kit.fontawesome.com/c9f23d41c7.js"
       crossorigin="anonymous"

@@ -11,7 +11,7 @@ body {
 }
 
 .none {
-  display: none;
+  display: none !important;
 }
 
 /* Navbar */
@@ -330,6 +330,10 @@ label {
 .right-side-2 .rs2-nav p {
   padding: 6px;
   display: block;
+}
+
+.hide{
+  opacity: 0;
 }
 
 .right-side-2 .rs2-nav .nav-underline {
@@ -1278,7 +1282,7 @@ hr {
 
 .input-search2 {
   display: block;
-  appearance: none;
+  /* appearance: none; */
   outline: 0;
   border: 1px solid fade(white, 40%);
   background-color: fade(white, 20%);
@@ -1290,7 +1294,7 @@ hr {
   text-align: center;
   font-size: 18px;
   
-  color: white;
+  color:  #359f87;
   
   transition-duration: 0.25s;
   font-weight: 300;
@@ -1302,7 +1306,7 @@ hr {
   &:focus{
     background-color: white;
     
-    color:  #359f87;
+
   }
 }
 

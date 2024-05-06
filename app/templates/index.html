@@ -114,7 +114,7 @@
                                 <i class="fa fa-tags" aria-hidden="true"></i>
                                 <a href="#" class="tag badge hover">Blog</a>
                             </div>
-                            <a class="view-blog hover" href="#">View</a>
+                            <a class="view-blog hover" href="/blog/{{ title|urlencode }}">View</a>
                         </div>
                     </article>
                     {% endfor %}
@@ -191,7 +191,8 @@
                 type="text"
                 id="search-val"
                 name="search-val"
-                placeholder="Search here"
+                placeholder="Search title"
+                data-search
               /><br />
             </div>
           </div>
@@ -278,7 +279,58 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
     <script src="./../assests/js/index.js"></script>
+    <!-- Search function -->
+    <script >
+      var list_blog = [
+     {% for item in blog_info %}
+     {
+         "title": {{item[0]|tojson}},
+         "content": {{item[1]|tojson}}
+     }{% if not loop.last %},{% endif %}
+     {% endfor %}
+     ];
+     //list_blog.forEach(blog =>{ alert(blog['title'])})
 
+     </script>
+     
+
+    <script >
+    const articleElement = document.createElement("article");
+    articleElement.classList.add("post", "card-border");
+    articleElement.id = "post-1";
+
+    const headerElement = document.createElement("header");
+    headerElement.classList.add("post-header", "text-center");
+
+    const titleLinkElement = document.createElement("a");
+    titleLinkElement.classList.add("post-title");
+    titleLinkElement.textContent = "tesssssssssssssssssssssttttt";
+
+    const postMetaElement = document.createElement("div");
+    postMetaElement.classList.add("post-meta");
+
+    headerElement.appendChild(titleLinkElement);
+    headerElement.appendChild(postMetaElement);
+    articleElement.appendChild(headerElement);
+    
+    document.querySelector(".post-items").appendChild(articleElement);
+    articleElement.classList.add('hide')
+    // Search logic
+      var searchInput = document.querySelector("[data-search]")
+      searchInput.addEventListener("input", e => {
+        var isVisible = false
+        const value = e.target.value.toLowerCase()
+        list_blog.forEach(blog => {
+          isVisible =
+            blog.title.toLowerCase().includes(value) 
+            title = blog.title
+            const link = document.querySelector(`[href="/blog/${title}"]`);
+            const parentNode = link.parentNode.parentNode;
+            parentNode.classList.toggle("none", !isVisible)
+        })
+     })
+     
+     </script>
     <script>
       function toggleNotifications() {
         const notifications = document.querySelector(".notifications");
