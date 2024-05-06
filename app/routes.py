@@ -417,7 +417,7 @@ def new_chat():
                         cursor.execute("INSERT INTO chat (id, userID1, userID2) VALUES (?, ?, ?)", (chat_id, id, recipient_id))
                         conn.commit()
                         # Retrieve the chat ID of the newly created chat
-                        new_chat_id = cursor.lastrowid
+                        new_chat_id = chat_id
 
                         
                         # Create room id equal to message id to make eassier query nd understanding

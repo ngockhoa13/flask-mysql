@@ -122,7 +122,6 @@
               }
 
                 document.getElementById('new_chat_btn').addEventListener('click',function(){
-                  console.log(123123)
                   if (document.getElementById("add_friend").classList.contains("none")) {
                     document.getElementById("add_friend").classList.remove("none");
                   } else {
@@ -200,20 +199,21 @@
         {% for i in data %}
         {
             "username": {{i["username"][0]|tojson}},
+            "room_id":"{{i['room_id']}}"
         }{% if not loop.last %},{% endif %} 
         {% endfor %}
          ];
          var searchInput2 = document.querySelector(".input-search2")
          searchInput2.addEventListener("input", e => {
-          var isVisible = false
+          
            const value = e.target.value.toLowerCase()
            listusername.forEach(name => {
-             isVisible =
+            const isVisible =
                name.username.toLowerCase().includes(value) 
                username = name.username
-               const usename_tag = document.querySelector(".inbox-username");
-               const parentNode = usename_tag.parentNode.parentNode;
-               parentNode.classList.toggle("none", !isVisible)
+               room_id = name.room_id
+               const link = document.querySelector(`[href="/chat?rid=${room_id}"]`)
+               link.classList.toggle("none", !isVisible)
            })
 
        })
@@ -235,23 +235,30 @@
           body: formData 
       })
       .then((response) => {
-          if (response.status === 200) {
-              // Xử lý khi tạo cuộc trò chuyện thành công
+        if (response.status === 200) {
             showSuccessToast("New chat created successfully");
-          } else if (response.status === 400) {
-              // Xử lý khi cuộc trò chuyện đã tồn tại hoặc có lỗi xảy ra trong yêu cầu của bạn
+            return response.json();
+        } else if (response.status === 400) {
             showErrorToast("Chat already exists");
-          } else if (response.status === 404) {
+            throw new Error("Chat already exists");
+        } else if (response.status === 404) {
             showErrorToast("User not found");
-          } else {
+            throw new Error("User not found");
+        } else {
             showErrorToast("Errorrrr");
-          }
-      })
+            throw new Error("Server error");
+        }
+    })
+    .then(data => {
+        const chatId = data.chat_id;
+        socket.emit('join-chat', {
+          rid: chatId
+        })
+    })
       .catch((error) => {
           console.error("Error:", error);
           showErrorToast("Something went wrong, try again later!")
       });
-      
     });
     </script>
 
@@ -287,9 +294,9 @@
       var socket = io.connect('http://' + document.domain + ':' + location.port + '/?rid=' + "{{ room_id }}" );
       //scrollDown()
       socket.on('connect', function () {
-          socket.emit('join-chat', {
-          rid: '{{ room_id }}'
-        })
+          //socket.emit('join-chat', {
+         // rid: '{{ room_id }}'
+       // })
       })
       socket.on('message', function (msg,a="",b="") {
           $('div.msg_history').append(`<div class="incoming_msg">
@@ -304,7 +311,42 @@
         document.getElementById("last-message").innerHTML = msg.message
       })
       socket.on('joined-chat', function (msg) {
-        console.log(msg)
+        // Tạo ra phần tử div chính (inbox-peo-mem)
+        // Tạo phần tử a
+        const linkElement = document.createElement("a");
+        linkElement.href = `/chat?rid=${msg[1]}`; // Đặt giá trị href cho phần tử a
+
+        const inboxPeoMemDiv = document.createElement("div");
+        inboxPeoMemDiv.classList.add("inbox-peo-mem");
+
+        // Tạo ra phần tử div cho hình đại diện (inbox-ava)
+        const inboxAvaDiv = document.createElement("div");
+        inboxAvaDiv.classList.add("inbox-ava");
+
+        // Tạo ra phần tử div cho thông tin người dùng (inbox-info)
+        const inboxInfoDiv = document.createElement("div");
+        inboxInfoDiv.classList.add("inbox-info");
+
+        // Tạo ra phần tử h3 cho tên người dùng (inbox-username)
+        const usernameHeading = document.createElement("h3");
+        usernameHeading.classList.add("inbox-username");
+        usernameHeading.textContent = msg[0][0]; // Nội dung tên người dùng
+
+        // Tạo ra phần tử span cho mô tả (inbox-desc)
+        const descSpan = document.createElement("span");
+        descSpan.classList.add("inbox-desc");
+        descSpan.id = "last-message"; // ID của phần tử span
+
+        // Gắn các phần tử vào nhau theo cấu trúc
+        inboxInfoDiv.appendChild(usernameHeading);
+        inboxInfoDiv.appendChild(descSpan);
+        inboxPeoMemDiv.appendChild(inboxAvaDiv);
+        inboxPeoMemDiv.appendChild(inboxInfoDiv);
+
+        // Thêm phần tử div chính (inbox-peo-mem) vào trong văn bản của trang web
+        linkElement.appendChild(inboxPeoMemDiv)
+        document.querySelector('.inbox-peo-list').appendChild(linkElement);
+
       })
   
       var form = $('#chat_form').on('submit', function (e) {

@@ -18,11 +18,18 @@ def getDB():
 def join_private_chat(data):
     room = data["rid"]
     join_room(room=room)
+    cursor, conn = getDB()
+    userID = cursor.execute("SELECT userID1,userID2 FROM chat WHERE id = ?", (room,)).fetchone()
+    id1, id2 = userID
+    add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id2,)).fetchone()
+    conn.commit()
+    arr_data =[]
+    arr_data.append(add_friend_info)
+    arr_data.append(room)
     socket.emit(
         "joined-chat",
-        {"msg": f"{room} is now online."},
-        room=room,
-        # include_self=False,
+        arr_data,
+        room = data["rid"]
     )
 # Outgoing event handler
 @socket.on("outgoing")
