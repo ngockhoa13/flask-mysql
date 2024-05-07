@@ -511,10 +511,18 @@ def allChat():
         messages = messages if room_id else []
 
         # messages = cursor.execute("SELECT id, content, timestamp, sender_id, sender_username, room_id FROM chat_messages WHERE room_id = ?", (chat_roomID,)).fetchall()
+        profile_pic = None
+        avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
+        avatar_path_full = avatar_path + '/avatar.jpg'
+        print(avatar_path_full)     
+        if os.path.exists(avatar_path_full):
+            profile_pic = id + '/' + 'avatar.jpg'
+        if profile_pic == None:
+            profile_pic = os.path.join("", "../../img/avatar.jpg")
         if chat_list == None:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid)  
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic)  
         else:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid)
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic)
         
         
     except Exception as error:

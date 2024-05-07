@@ -136,7 +136,7 @@
 
             </div>
             <div class="inbox-peo-list">
-              <!-- mem1 -->
+              <!-- member list -->
               {% for i in data %}
               <a href="/chat?rid={{i.room_id}}">
                 <div class="inbox-peo-mem">
@@ -150,6 +150,13 @@
                 </div>
               </a>
               {% endfor %}
+              {% if profile_pic %}
+                <style>
+                 .inbox-ava {
+                       background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + profile_pic) }}");
+                  }
+                </style>
+                 {% endif %} 
             </div>
           </div>
           

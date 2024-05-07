@@ -1380,6 +1380,15 @@ hr {
   color: #fff;
   padding: 5px 10px 5px 12px;
   width: 100%;
+  word-wrap: break-word;
+}
+
+.inbox-desc{
+  width: 232px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .time_date {
