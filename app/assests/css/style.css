@@ -558,6 +558,13 @@ hr {
   display: flex;
   border-bottom: 1px solid #4f4f4f;
 }
+a.nav_edit {
+  color: #fff;
+}
+
+.publish_notes{
+  padding: 7px 4px 8px;
+}
 
 .nav-post div {
   padding: 7px 4px 8px;
