@@ -7,6 +7,8 @@ import uuid
 from werkzeug.utils import secure_filename
 import re
 from urllib.parse import unquote, quote
+from middlewares.loggin import check_session
+from middlewares.file_upload import handle_file_upload
 #Import required library      
 
 
@@ -29,9 +31,9 @@ print(curr_dir)
 
 
 # Checks file extension
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+#def allowed_file(filename):
+#    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 # ConnectDB
 def getDB():
     conn = sqlite3.connect(os.path.join(curr_dir, "openu.db"))
@@ -122,76 +124,78 @@ def login():
 
 @app.route("/")
 @app.route("/home")
+@check_session
 def home():
-    if session.get('loggedin') == True:
-        cursor, conn = getDB()
-        id = session['id']
-        cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
-        if id:        
-            profile_pic = None
-            
-            blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
+    #Check if the ID is actually exist in the database
+    cursor, conn = getDB()
+    id = session['id']
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if id:        
+        
+        profile_pic = None
+        
+        #Retrieve the needed data
+        blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
+        user_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id,)).fetchone()
+        
 
-            user_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id,)).fetchone()
-            
-            avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
-            avatar_path_full = avatar_path + '/avatar.jpg'
-            print(avatar_path_full)     
-            if os.path.exists(avatar_path_full):
-                profile_pic = id + '/' + 'avatar.jpg'
-            if profile_pic == None:
-                profile_pic = os.path.join("", "../../img/avatar.jpg")
-            #print(blog_info)
-            return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic)
+        #Set up the avatar
+        avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
+        avatar_path_full = avatar_path + '/avatar.jpg'
+        print(avatar_path_full)     
+        if os.path.exists(avatar_path_full):
+            profile_pic = id + '/' + 'avatar.jpg'
+        if profile_pic == None:
+            profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-        return redirect('/login')
-    else:
-        return redirect('/login')
+
+        #Return the index template
+        return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic)
+
+    return redirect('/login')
+
 
 
 
 
 # Profile route -----------------------------------------------
 @app.route('/profile')
+@check_session
 def profile():
-    if session.get('loggedin') == True:
-        cursor,conn = getDB()
-        id = session['id']
-        profile_pic = None
-        cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
-        if id:   
+    cursor,conn = getDB()
+    id = session['id']
+    profile_pic = None
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if id:   
 
-            #Retrieve the data: username, blod title, content,...
-            userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
-            username = userName[0]
-            print(username)
-            blog_info = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ?",(id,)).fetchall()
+        #Retrieve the data: username, blod title, content,...
+        userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
+        username = userName[0]
+        print(username)
+        blog_info = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ?",(id,)).fetchall()
             
-            print(blog_info)
-
-            published_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ? and publish = 1",(id,)).fetchall()
-
+        print(blog_info)
+        published_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ? and publish = 1",(id,)).fetchall()
 
 
 
             # Render avatar for the user
-            avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
-            avatar_path_full = avatar_path + '/avatar.jpg'
-            print(avatar_path_full)     
-            if os.path.exists(avatar_path_full):
-                profile_pic = id + '/' + 'avatar.jpg'
-            if profile_pic == None:
-                profile_pic = os.path.join("", "../../img/avatar.jpg")
+        avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
+        avatar_path_full = avatar_path + '/avatar.jpg'
+        print(avatar_path_full)     
+        if os.path.exists(avatar_path_full):
+            profile_pic = id + '/' + 'avatar.jpg'
+        if profile_pic == None:
+            profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-            return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs)
-        return redirect('/login')
-    else:
-        return redirect('/login')
+        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs)
+    return redirect('/login')
 
 
 
 # Settings user information route -------------------------------
 @app.route('/settings', methods=["GET", "POST"])
+@check_session
 def settings():
     id = session.get('id')
     cursor, conn = getDB()
@@ -250,30 +254,36 @@ def settings():
             else:
                 pass
     
+        #Using middlewware for uploading files
+        result = handle_file_upload(request, user_upload_folder, id, name, username, emailAddr, profile_pic)
+        if result:
+            return result 
 
         # Check if the user upload a requests with a profile pic
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+        #if 'file' not in request.files:
+        #    flash('No file part')
+        #    return redirect(request.url)
+        #file = request.files['file']
+        #if file.filename == '':
+        #    flash('No selected file')
+        #    return redirect(request.url)
+#
+        #if file and allowed_file(file.filename):
+        #    # Save the uploaded file
+        #    filename = secure_filename('avatar.jpg')
+        #    file_path = os.path.join(user_upload_folder, filename)
+        #    file.save(file_path)
+        #    profile_pic = id + '/' + filename
+        #    print(profile_pic)
+#
+        #    flash('File uploaded successfully')
+        #    return render_template('settings.html', name=name, username=username, email=emailAddr, profile_pic=profile_pic)  # Redirect to the settings page
+        #
+        #else:
+        #    flash('Invalid file format.')
+        #    return redirect(request.url)
 
-        if file and allowed_file(file.filename):
-            # Save the uploaded file
-            filename = secure_filename('avatar.jpg')
-            file_path = os.path.join(user_upload_folder, filename)
-            file.save(file_path)
-            profile_pic = id + '/' + filename
-            print(profile_pic)
 
-            flash('File uploaded successfully')
-            return render_template('settings.html', name=name, username=username, email=emailAddr, profile_pic=profile_pic)  # Redirect to the settings page
-        
-        else:
-            flash('Invalid file format.')
-            return redirect(request.url)
         
 
     avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
@@ -297,8 +307,8 @@ def logout():
 
 # Called to when create blog ----------------------------------
 @app.route("/save_blog", methods=["GET", "POST"])
+@check_session
 def save_blog():
-
     id = session.get('id')
     cursor, conn = getDB()
     
@@ -335,6 +345,7 @@ def save_blog():
 
 # Route will be called when update publish or not
 @app.route("/update_published", methods=["POST"])
+@check_session
 def published():
     id = session.get('id')
     cursor, conn = getDB()
@@ -362,7 +373,18 @@ def published():
 # Routes to render out each individual blog when press on the title of a blog
 
 @app.route('/blog/<string:blog_title>')
+@check_session
 def view_blog(blog_title):
+    id = session.get('id')
+    cursor, conn = getDB()
+    
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's id doesn't exist
+    
+
+
     #Url parse title name
     decode_title = unquote(blog_title)
     print(decode_title)
@@ -390,13 +412,16 @@ def view_blog(blog_title):
 from flask import jsonify
 
 @app.route('/new_chat', methods=["POST"])
+@check_session
 def new_chat():
     id = session.get('id')
     cursor, conn = getDB()
-    
-    # Check if id exists in the database
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
     if not id:        
-        return redirect(url_for('login'))  # Redirect to login page if the user's id doesn't exist
+        return redirect(url_for('login'))  # Redirect to login page if user's
+    
     
     try:
         if request.method == "POST":
@@ -443,20 +468,22 @@ def new_chat():
         return "Internal Server Error", 500
 
 # Routes for testing adding new chat (sẽ bỏ đi khi UI xong để sử dụng chức năng tìm kiếm trong route chat chính)
-@app.route('/new_chat_form', methods=["GET", "POST"])
-def new_chat_form():
-    return render_template('test_chatHTML.html')
+#@app.route('/new_chat_form', methods=["GET", "POST"])
+#def new_chat_form():
+#    return render_template('test_chatHTML.html')
 
 
 # Routes for chat (tất cả việc chat hay render list chat và tìm kiếm người dùng ở đây)
 @app.route('/chat/', methods=["GET", "POST"])
+@check_session
 def allChat():
     id = session.get('id')
     cursor, conn = getDB()
-    
-    # Check if id exists in the database
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
     if not id:        
-        return redirect(url_for('login'))  # Redirect to login page if the user's id doesn't exist
+        return redirect(url_for('login'))  # Redirect to login page if user's
 
 
     try:
