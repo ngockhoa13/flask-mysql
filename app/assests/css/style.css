@@ -644,7 +644,15 @@ hr {
   margin-top: 20px;
 }
 
-.pro-post-item .pro-post-published-item{
+.pro-post-item {
+  padding: 20px 0 20px;
+  padding-left: 20px;
+  border-radius: 4px;
+  margin-top: 20px;
+  background-color: #333;
+}
+
+.pro-post-published-item{
   padding: 20px 0 20px;
   padding-left: 20px;
   border-radius: 4px;
