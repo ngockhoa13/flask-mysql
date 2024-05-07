@@ -21,7 +21,7 @@
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
               <li>
-                <a href="#" onclick="" title="Search"><i class="fas fa-search"></i></a>
+                <a href="#" onclick="" title="Search" class="search-input"><i class="fas fa-search"></i></a>
               </li>
               <li>
                 <a href="#" title="Blog" class="nav_edit"><i class="fas fa-edit" onclick="redirectToHome('blog')"></i></a>
@@ -376,7 +376,12 @@
         }
           } )
 
-  
+      // Search focusInput
+      var elementSearch  = document.querySelector(".search-input");
+      elementSearch.addEventListener("click",function(){
+        document.querySelector('.input-search2').focus();
+      })
+
     </script>
     <script>
       function formatDate(date) {

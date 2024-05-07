@@ -169,7 +169,7 @@ body {
 
 .post-content {
   margin: 6px 24px 10px;
-
+  word-wrap: break-word;
   line-height: 1.8;
 }
 
