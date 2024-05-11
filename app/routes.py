@@ -4,6 +4,7 @@ import os
 import sqlite3  
 import bcrypt
 import uuid
+import re
 from werkzeug.utils import secure_filename
 import re
 from urllib.parse import unquote, quote
@@ -50,7 +51,14 @@ def register():
             emailAddr = request.form['email'].strip()
             username = request.form['username'].strip()
             password = request.form['password'].strip()
-
+            
+            if len(password) < 6:
+                message = "Length of password needs to be more than 6 chars."
+                return render_template("register.html", message=message)
+            if re.match("^[a-zA-Z0-9_]*$", username) is None:
+                message = "Username cannot contain special characters."
+                return render_template("register.html", message=message)
+        
             cursor, conn = getDB()
             rows = cursor.execute("SELECT username FROM user WHERE emailAddr = ?", (emailAddr,)).fetchall()
 
