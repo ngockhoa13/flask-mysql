@@ -3,10 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assests/css/style.css" />
     <title>{{ title }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>{{ title }}</h1>
-    <p>{{ content }}</p>
+    <div class="blog-post" data-post-title="{{ title }}">
+        <h1>{{ title }}</h1>
+        <p>{{ content }}</p>
+        
+        <!-- Render ra từng comment và username kế bên từng comment-->
+        <div class="blog-comments">
+            {% for username, comment in comment_Content %}
+                <h5>{{ username }}</h5>
+                <p> {{ comment }}</p>
+            {% endfor %}
+
+
+        </div>
+
+        <textarea id="comment-input" placeholder="Enter your comment"></textarea>
+
+        <!-- Button to send the comment -->
+        <button id="submit-comment">Submit</button>
+
+
+
+
+
+
+        <button class="like-btn">Like</button>
+        <span class="likes-count"> {{ likes }}</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event to update the likes when press the like button
+            document.querySelectorAll('.like-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    console.log("Like button clicked");
+
+                    // Check if the post ID is correctly retrieved
+                    var postId = this.closest('.blog-post').dataset.postTitle;
+                    console.log("Post ID:", postId);
+
+                    // Check the constructed AJAX request URL
+                    var url = '/updateLike?post_title=' + postId + '&action=' + (this.classList.contains('liked') ? 'decrease' : 'increase');
+                    console.log("AJAX URL:", url);
+
+                    // Store reference to the button and likes count elements
+                    var buttonElement = this;
+                    var likesCountElement = this.nextElementSibling;
+                
+                    // Send AJAX request to updateLike route using fetch
+                    fetch(url, {
+                        method: 'POST'
+                    })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        console.log(data); // Log the response
+                        // Toggle the 'liked' class based on previous state
+                        buttonElement.classList.toggle('liked');
+                        // Update the UI to reflect the change in likes count
+                        var currentLikesCount = parseInt(likesCountElement.textContent);
+                        var newLikesCount = data.likes;
+                        likesCountElement.textContent = newLikesCount; // Update likes count in the UI
+                    })
+
+                    .catch(function(error) {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        // JavaScript code for handling comment submission
+        $(document).ready(function() {
+            $('#submit-comment').click(function() {
+                var comment = $('#comment-input').val().trim(); // Retrieve and trim comment content
+                if (comment !== '') {
+                    var blogTitle = $('.blog-post').data('post-title'); // Retrieve blog title from data attribute
+                    // AJAX request to send comment to the server
+                    $.post(`/addComment/${encodeURIComponent(blogTitle)}`, { content: comment })
+                        .done(function(response) {
+                            alert(response); // Show success message
+                            // Optionally, you can reload the page to display the updated comments
+                            // location.reload();
+                        })
+                        .fail(function(xhr, status, error) {
+                            alert("Error: " + xhr.responseText); // Show error message
+                        });
+                } else {
+                    alert('Please enter a comment.'); // Show error message if comment is empty
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>

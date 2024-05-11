@@ -20,7 +20,17 @@ conn.execute('''CREATE TABLE blogPosts (
     content TEXT NOT NULL, 
     imagepath VARCHAR(255),
     publish BOOLEAN,
+    likes INTERGER DEFAULT 0,
     FOREIGN KEY(userID) REFERENCES user(id)
+)''')
+
+
+conn.execute('''CREATE TABLE commentsBlog (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    username VARCHAR(20),
+    comment TEXT NOT NULL, 
+    FOREIGN KEY(title) REFERENCES blogPosts(title)
 )''')
 
 
