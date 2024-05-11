@@ -421,6 +421,7 @@ label {
   height: 200px;
   tab-size:0;
   white-space: pre-wrap;
+  resize:none;
 }
 
 .add-tag-badge {
@@ -671,6 +672,12 @@ a.nav_edit {
   width: inherit;
   display: flex;
   justify-content: space-between;
+}
+.del_blog{
+  background-color: red;
+  font-size: medium;
+  width: 70px;
+  height: 30px;
 }
 .published-checkbox{
   margin-top: 20px;

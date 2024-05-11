@@ -336,13 +336,14 @@ def save_blog():
             blogTitle = request.json.get('blogTitle')
             blogContent = request.json.get('blogContent')
 
-            # Execute and save the database
-            cursor.execute("INSERT INTO blogPosts (userID, title, content, authorname) VALUES (?, ?, ?, ?)", (id, blogTitle, blogContent, username,))
-            conn.commit()
-            conn.close()
-
-            return "Blog successfully upload!"
-        
+            if blogContent and blogTitle:
+                # Execute and save the database
+                cursor.execute("INSERT INTO blogPosts (userID, title, content, authorname) VALUES (?, ?, ?, ?)", (id, blogTitle, blogContent, username,))
+                conn.commit()
+                conn.close()
+                return "Blog successfully upload!"
+            else:
+                print(f"ERROR: {error}", flush=True)
         except Exception as error:
             print(f"ERROR: {error}", flush=True)
             return "You broke the server :(", 400
@@ -350,6 +351,30 @@ def save_blog():
     else:
         return None
     
+@app.route("/delete_blog", methods=["POST"])
+@check_session
+def delete_blog():
+    id=session.get("id")
+    cursor, conn = getDB()
+    
+    # Kiểm tra xem id có tồn tại trong cơ sở dữ liệu không
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập nếu id người dùng không tồn tại
+    
+    try:
+        # Lấy ID của blog cần xóa từ yêu cầu POST
+        blog_id = request.form.get('blog_id')
+        
+        # Xóa blog từ cơ sở dữ liệu
+        cursor.execute("DELETE FROM blogPosts WHERE id = ?", (blog_id,))
+        conn.commit()
+        
+        # Redirect đến trang profile sau khi xóa blog thành công
+        return redirect(url_for('profile'))
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500
 
 # Route will be called when update publish or not
 @app.route("/update_published", methods=["POST"])
