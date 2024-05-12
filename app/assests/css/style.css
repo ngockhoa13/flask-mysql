@@ -445,6 +445,7 @@ span.noti-content {
   height: 200px;
   tab-size:0;
   white-space: pre-wrap;
+  resize:none;
 }
 
 .add-tag-badge {
@@ -727,6 +728,12 @@ a.nav_edit {
   width: inherit;
   display: flex;
   justify-content: space-between;
+}
+.del_blog{
+  background-color: red;
+  font-size: medium;
+  width: 70px;
+  height: 30px;
 }
 .published-checkbox{
   margin-top: 20px;
@@ -1529,6 +1536,21 @@ a.nav_edit {
 .close:after {
   transform: rotate(-45deg);
 }
+<<<<<<< HEAD
 input#input_invite {
   margin-left: 70px;
+=======
+
+#comment-input {
+  width: calc(100% - 30px); /* Set the width to 100% minus the total padding and border widths */
+  height: 150px; /* Set the height to your desired size */
+  padding: 10px; /* Add padding for better appearance */
+  box-sizing: border-box; /* Ensure padding and border are included in the total width */
+  border: 1px solid #ccc; /* Add a border for visual separation */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  resize: vertical; /* Allow vertical resizing */
+  margin-bottom: 10px; /* Add some margin at the bottom for spacing */
+  margin-left: 15px; /* Add left margin */
+  margin-right: 15px; /* Add right margin */
+>>>>>>> fab1a65ffb824c97ef3218b35a63e062b866110a
 }

@@ -4,6 +4,7 @@ import os
 import sqlite3  
 import bcrypt
 import uuid
+import re
 from werkzeug.utils import secure_filename
 import re
 from urllib.parse import unquote, quote
@@ -50,7 +51,14 @@ def register():
             emailAddr = request.form['email'].strip()
             username = request.form['username'].strip()
             password = request.form['password'].strip()
-
+            
+            if len(password) < 6:
+                message = "Length of password needs to be more than 6 chars."
+                return render_template("register.html", message=message)
+            if re.match("^[a-zA-Z0-9_]*$", username) is None:
+                message = "Username cannot contain special characters."
+                return render_template("register.html", message=message)
+        
             cursor, conn = getDB()
             rows = cursor.execute("SELECT username FROM user WHERE emailAddr = ?", (emailAddr,)).fetchall()
 
@@ -350,13 +358,14 @@ def save_blog():
             blogTitle = request.json.get('blogTitle')
             blogContent = request.json.get('blogContent')
 
-            # Execute and save the database
-            cursor.execute("INSERT INTO blogPosts (userID, title, content, authorname) VALUES (?, ?, ?, ?)", (id, blogTitle, blogContent, username,))
-            conn.commit()
-            conn.close()
-
-            return "Blog successfully upload!"
-        
+            if blogContent and blogTitle:
+                # Execute and save the database
+                cursor.execute("INSERT INTO blogPosts (userID, title, content, authorname) VALUES (?, ?, ?, ?)", (id, blogTitle, blogContent, username,))
+                conn.commit()
+                conn.close()
+                return "Blog successfully upload!"
+            else:
+                print(f"ERROR: {error}", flush=True)
         except Exception as error:
             print(f"ERROR: {error}", flush=True)
             return "You broke the server :(", 400
@@ -364,6 +373,30 @@ def save_blog():
     else:
         return None
     
+@app.route("/delete_blog", methods=["POST"])
+@check_session
+def delete_blog():
+    id=session.get("id")
+    cursor, conn = getDB()
+    
+    # Kiểm tra xem id có tồn tại trong cơ sở dữ liệu không
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập nếu id người dùng không tồn tại
+    
+    try:
+        # Lấy ID của blog cần xóa từ yêu cầu POST
+        blog_id = request.form.get('blog_id')
+        
+        # Xóa blog từ cơ sở dữ liệu
+        cursor.execute("DELETE FROM blogPosts WHERE id = ?", (blog_id,))
+        conn.commit()
+        
+        # Redirect đến trang profile sau khi xóa blog thành công
+        return redirect(url_for('profile'))
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500
 
 # Route will be called when update publish or not
 @app.route("/update_published", methods=["POST"])
@@ -415,13 +448,17 @@ def view_blog(blog_title):
     cursor, conn = getDB()
 
     # Fetch the blog post from the database based on the provided blog_id
-    blog_post = cursor.execute("SELECT title, content FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
+    blog_post = cursor.execute("SELECT title, content, likes FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
     print(blog_post)
 
     # Check if the blog post exists
     if blog_post:
-        title, content = blog_post
-        return render_template('blog.html', title=title, content=content)
+        title, content, likes = blog_post
+
+        comment_Content = cursor.execute("SELECT username, comment FROM commentsBlog WHERE title = ?", (decode_title,)).fetchall()
+
+
+        return render_template('blog.html', title=title, content=content, likes=likes, comment_Content=comment_Content)
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return redirect(url_for('home'))
@@ -639,6 +676,105 @@ def allChat():
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
+    
+
+
+# Routes to update the likes when press like button
+@app.route('/updateLike', methods=["POST"])
+@check_session
+def update_like():
+    id = session.get('id')
+    cursor, conn = getDB()
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's
+
+    try:
+        # Get post ID and action from request
+        post_title = request.args.get('post_title')
+        action = request.args.get('action')
+        
+        #Check xem có post title và action tăng hay giảm
+        if not post_title or action not in ['increase', 'decrease']:
+            return jsonify({"error": "Invalid!!"}), 400
+
+        cursor, conn = getDB()
+        
+        # Check if the post ID exists in the database
+        post = cursor.execute("SELECT * FROM blogPosts WHERE title = ?", (post_title,)).fetchone()
+
+
+        if not post:
+            return jsonify({"error": "Post not found"}), 404
+
+        # Tăng số lượng, nếu không là increaase thì là giảm sẽ trừ đi cho 1 
+        if action == 'increase':
+            cursor.execute("UPDATE blogPosts SET likes = likes + 1 WHERE title = ?", (post_title,))
+        else:
+            cursor.execute("UPDATE blogPosts SET likes = likes - 1 WHERE title = ?", (post_title,))
+        
+
+
+        #test
+        test = cursor.execute("SELECT likes FROM blogPosts WHERE title = ?", (post_title,)).fetchone()
+        print(test)
+
+        # Commit the changes to the database
+        conn.commit()
+        conn.close()
+
+
+
+
+
+
+        return jsonify({"message": "Likes updated successfully"}), 200
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return jsonify({"error": "Internal Server Error"}), 500
+
+
+
+
+# Routes to add comment to the database, which will be retrieve when viewing each
+@app.route('/addComment/<string:blog_title>', methods=["POST"])
+@check_session
+def addComments(blog_title):
+    id = session.get('id')
+    cursor, conn = getDB()
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's
+
+    user_info = cursor.execute("SELECT id, username FROM user WHERE id = ?", (id,)).fetchone()
+    username = user_info[1]
+
+    try:
+        # Get the content from the request form
+        commentContent = request.form['content']
+        if commentContent:
+            # Insert comment into database along with blog title
+            cursor.execute("INSERT INTO commentsBlog (title, username, comment) VALUES (?, ?, ?)", (blog_title, username, commentContent))
+
+            # Commit to the database
+            conn.commit()
+            conn.close()
+
+            return "Comments added", 200
+        else:
+            return "Comments can't be empty :(", 400
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return jsonify({"error": "Internal Server Error"}), 500
+
+
+
 from datetime import datetime
 
 @app.template_filter("ftime")
