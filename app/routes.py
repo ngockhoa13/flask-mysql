@@ -133,6 +133,7 @@ def home():
     if id:        
         
         profile_pic = None
+        count_noti = cursor.execute("SELECT count(*) from notification where myid= ?",(id,)).fetchone()
         
         #Retrieve the needed data
         blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
@@ -142,15 +143,36 @@ def home():
         #Set up the avatar
         avatar_path = os.path.join(app.config['UPLOAD_FOLDER'], id)
         avatar_path_full = avatar_path + '/avatar.jpg'
-        print(avatar_path_full)     
+        # print(avatar_path_full)     
         if os.path.exists(avatar_path_full):
             profile_pic = id + '/' + 'avatar.jpg'
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
-
-
+        data = []
+        noti_list = cursor.execute("SELECT myid, content, timestamp, from_id from notification where myid = ?",(id,)).fetchall()
+        if noti_list:
+            for noti in noti_list:
+                myid , content, timestamp, fromid = noti
+                # select name sender noti
+                sender_pic = None
+                sender_name = cursor.execute("SELECT username from user where id = ?",(fromid,)).fetchone()
+                sender_ava = os.path.join(app.config['UPLOAD_FOLDER'], fromid)
+                sender_ava_full = sender_ava + '/avatar.jpg'
+                if os.path.exists(sender_ava_full):
+                    sender_pic = fromid + '/' + 'avatar.jpg'
+                if sender_pic == None:
+                    sender_pic = os.path.join("", "../../img/avatar.jpg")
+                
+                data.append({
+                        "myid": myid,
+                        "fromid": fromid,
+                        "fromname": sender_name,
+                        "content": content,
+                        "time": timestamp,
+                        "sender_pic":sender_pic
+                    })
         #Return the index template
-        return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic)
+        return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic, myid = id, data = data, count_noti=count_noti)
 
     return redirect('/login')
 
@@ -444,6 +466,8 @@ def new_chat():
                     else:
                         # Proceed with creating a new chat
                         # First, insert the new chat into the database
+                        invite_input = request.form['invite_input']
+                        return jsonify({'success': 'New chat created successfully', 'chat_id': recipient_id, 'content': invite_input}), 200
                         
                         chat_id = str(uuid.uuid4())
 
@@ -467,11 +491,69 @@ def new_chat():
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
 
-# Routes for testing adding new chat (sẽ bỏ đi khi UI xong để sử dụng chức năng tìm kiếm trong route chat chính)
-#@app.route('/new_chat_form', methods=["GET", "POST"])
-#def new_chat_form():
-#    return render_template('test_chatHTML.html')
+import json
+@app.route('/accept', methods=["POST"])
+@check_session
+def accept():
+    id = session.get('id')
+    cursor, conn = getDB()
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's
+    
+    
+    try:
+        if request.method == "POST":
+            data = request.data.decode('utf-8')  # Decode data from bytes to string using utf-8 encoding
+            data_dict = json.loads(data)  # Convert JSON string to Python dictionary
+            # return  jsonify({'success': 'New chat created successfully', 'data': data_dict}), 200
+            # return jsonify({'success': 'New chat created successfully', 'chatroom': 12222}), 200
+            
+            if 'data' in data_dict:
+                senderid = data_dict['data']
+                # Check if the input matches the format of an email address
+                if re.match(r'^[\w\.-]+@[\w\.-]+$', senderid):
+                    # Search for the user in the database based on the provided email address
+                    recipient_info = cursor.execute("SELECT id, username, emailAddr FROM user WHERE emailAddr = ?", (senderid,)).fetchone()
+                else:
+                    # Search for the user in the database based on the provided username
+                    recipient_info = cursor.execute("SELECT id, username, emailAddr FROM user WHERE id = ?", (senderid,)).fetchone()
+                    
+                if recipient_info:
+                    recipient_id, recipient_username, recipient_email = recipient_info
+                    # Check if a chat already exists between the current user and the recipient
+                    chat_exists = cursor.execute("SELECT id FROM chat WHERE (userID1 = ? AND userID2 = ?) OR (userID1 = ? AND userID2 = ?)", (id, recipient_id, recipient_id, id)).fetchone()
+                    if chat_exists:
+                        return jsonify({'error': 'Chat already exists'}), 400
+                    else:
+                        # Proceed with creating a new chat
+                        # First, insert the new chat into the database
+                        chat_id = str(uuid.uuid4())
 
+                        cursor.execute("INSERT INTO chat (id, userID1, userID2) VALUES (?, ?, ?)", (chat_id, id, recipient_id))
+                        conn.commit()
+                        # Retrieve the chat ID of the newly created chat
+                        new_chat_id = chat_id
+
+                        
+                        # Create room id equal to message id to make eassier query nd understanding
+                        chat_roomID = chat_id
+                        cursor.execute("INSERT INTO messages (room_id) VALUES (?)", (chat_roomID,))
+                        conn.commit()
+                        # Delete noti all noti from 
+                        
+                        cursor.execute("DELETE FROM notification WHERE myid = ? AND from_id = ?", (id,senderid,))
+                        conn.commit()
+
+                        return jsonify({'success': 'New chat created successfully', 'chatroom': chat_roomID}), 200
+                else:
+                    return jsonify({'error': 'User not found'}), 404
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500
 
 # Routes for chat (tất cả việc chat hay render list chat và tìm kiếm người dùng ở đây)
 @app.route('/chat/', methods=["GET", "POST"])
@@ -489,9 +571,11 @@ def allChat():
     try:
         # Get the room ID for when user press into one will render it out
         room_id = request.args.get("rid", None)
-
+        if room_id is None:
+            return redirect("/chat?rid="+id)
         # Query all the chat using the current user ID to render out on the page
         chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? or userID2 = ?", (id,id)).fetchall()
+        count_noti = cursor.execute("SELECT count(*) from notification where myid= ?",(id,)).fetchone()
         print(chat_list)
         data = []
         messages=[]
@@ -547,9 +631,9 @@ def allChat():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
         if chat_list == None:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic)  
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti)  
         else:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic)
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti)
         
         
     except Exception as error:

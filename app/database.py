@@ -55,6 +55,14 @@ conn.execute('''CREATE TABLE chat_messages (
 )''')
 
 
+conn.execute('''CREATE TABLE notification (
+    count INTEGER PRIMARY KEY AUTOINCREMENT,
+    myid INTEGER  NOT NULL,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    from_id VARCHAR(50) NOT NULL
+)''')
+
 
 # Close the connection
 conn.close()

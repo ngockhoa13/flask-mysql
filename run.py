@@ -11,17 +11,34 @@ def getDB():
     cursor = conn.cursor()
     return cursor, conn
 
-
+@socket.on("add_stack_noti")
+def hehe(data):
+    to_id = data["to"]
+    from_id = data["from"]
+    time = data['timestamp']
+    content = data['message']
+    
+    
+    cursor, conn = getDB()
+    # cursor.execute("INSERT into username FROM user WHERE id = ?", (id2,))
+    query = "INSERT INTO notification (myid, content, timestamp, from_id) VALUES (?, ?, ?, ?)"
+    cursor.execute(query, (to_id, content, time, from_id))
+    conn.commit()
 
 # Join room using flask_sockerIO by adding user in room and return messages
 @socket.on("join-chat")
 def join_private_chat(data):
     room = data["rid"]
+    myid = data['myid']
     join_room(room=room)
     cursor, conn = getDB()
     userID = cursor.execute("SELECT userID1,userID2 FROM chat WHERE id = ?", (room,)).fetchone()
     id1, id2 = userID
-    add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id2,)).fetchone()
+    if myid == id1:
+        add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id2,)).fetchone()
+    else:
+        add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id1,)).fetchone()
+
     conn.commit()
     arr_data =[]
     arr_data.append(add_friend_info)

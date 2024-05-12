@@ -33,7 +33,7 @@
                   class="nav_noti"
                   onclick="redirectToHome('noti')"
                   ><i class="fas fa-bell nav_noti_icon"></i>
-                  <span class="badge">12</span></a
+                  <span class="badge">{{count_noti[0]}}</span></a
                 >
               </li>
               <li>
@@ -92,7 +92,10 @@
               <div id="add_friend" class="none">
                 <div class="close"></div>
                 <form id="connected_email" >
+                  <label for="input_email">Email or username:</label>
                   <input type="text" id="input_email" name="search_input"><br><br>
+                  <label for="input_invite">Content:</label>
+                  <input type="text" id="input_invite" name="invite_input"><br><br>
                   <button type="submit">Add</button>
                 </form>
                 
@@ -227,40 +230,7 @@
 
 
     <script>
-      document.getElementById('connected_email').addEventListener('submit', function(event) {
-        event.preventDefault(); 
 
-        var formData = new FormData(this); 
-      fetch('/new_chat', {
-          method: 'POST',
-          body: formData 
-      })
-      .then((response) => {
-        if (response.status === 200) {
-            showSuccessToast("New chat created successfully");
-            return response.json();
-        } else if (response.status === 400) {
-            showErrorToast("Chat already exists");
-            throw new Error("Chat already exists");
-        } else if (response.status === 404) {
-            showErrorToast("User not found");
-            throw new Error("User not found");
-        } else {
-            showErrorToast("Errorrrr");
-            throw new Error("Server error");
-        }
-    })
-    .then(data => {
-        const chatId = data.chat_id;
-        socket.emit('join-chat', {
-          rid: chatId
-        })
-    })
-      .catch((error) => {
-          console.error("Error:", error);
-          showErrorToast("Something went wrong, try again later!")
-      });
-    });
     </script>
 
     <script type="text/javascript">
@@ -293,12 +263,44 @@
   
       // SOCKET CODE
       var socket = io.connect('http://' + document.domain + ':' + location.port + '/?rid=' + "{{ room_id }}" );
+
+      var socket2 = io.connect('http://localhost:7777')
+
       //scrollDown()
-      socket.on('connect', function () {
-          //socket.emit('join-chat', {
-         // rid: '{{ room_id }}'
-       // })
+      socket2.on('connect', function () {
+          console.log("heheheheh")
       })
+
+
+      socket2.on('invited', function (msg="11") {
+        if("{{myid}}" == msg.to){
+          showSuccessToast("You have new invite from" + msg.from);
+          var noti_span =    document.querySelector('.nav_noti span')
+          var count = parseInt(noti_span.innerHTML)
+          count += 1
+          noti_span.innerHTML = count
+        }
+        else if ("{{myid}}" == msg.from){
+          socket.emit('add_stack_noti', {
+            timestamp: parseInt(Date.now()/1000),
+            from: msg.from,
+            to: msg.to,
+            message : msg.content,
+            } )
+        }
+      })
+
+      socket2.on('gengen', function (msg="11") {
+        if("{{myid}}" == msg[1]){
+          showSuccessToast("Your friend had accepted your request");
+          socket.emit('join-chat', {
+            rid: msg[0],
+            myid: msg[1]
+          })
+        }
+      })
+
+
       socket.on('message', function (msg,a="",b="") {
           $('div.msg_history').append(`<div class="incoming_msg">
           <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -378,11 +380,47 @@
           } )
 
       // Search focusInput
-      var elementSearch  = document.querySelector(".search-input");
-      elementSearch.addEventListener("click",function(){
-        document.querySelector('.input-search2').focus();
-      })
+  //    var elementSearch  = document.querySelector(".search-input");
+  //    elementSearch.addEventListener("click",function(){
+  //      document.querySelector('.input-search2').focus();
+ //     })
 
+
+      document.getElementById('connected_email').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+
+      var formData = new FormData(this); 
+      fetch('/new_chat', {
+          method: 'POST',
+          body: formData 
+      })
+      .then((response) => {
+        if (response.status === 200) {
+            showSuccessToast("New chat created successfully");
+            return response.json();
+        } else if (response.status === 400) {
+            showErrorToast("Chat already exists");
+            throw new Error("Chat already exists");
+        } else if (response.status === 404) {
+            showErrorToast("User not found");
+            throw new Error("User not found");
+        } else {
+            showErrorToast("Errorrrr");
+            throw new Error("Server error");
+        }
+    })
+    .then(data => {
+        const chatId = data.chat_id;
+        socket2.emit('invite', {
+          rid: chatId,
+          from:"{{myid}}",
+          content: data.content
+        })
+    })
+      .catch((error) => {
+          showErrorToast("Something went wrong, try again later!")
+      });
+    });
     </script>
     <script>
       function formatDate(date) {

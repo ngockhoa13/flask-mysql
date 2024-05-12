@@ -12,6 +12,17 @@ body {
 
 .none {
   display: none !important;
+  animation-name: fadeOut; /* Tên của animation */
+  animation-duration: 0.5s; /* Thời gian chạy animation */
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1; /* Trạng thái ban đầu */
+  }
+  to {
+    opacity: 0; /* Trạng thái kết thúc */
+  }
 }
 
 /* Navbar */
@@ -332,6 +343,19 @@ label {
   display: block;
 }
 
+.placeholder .noti-content{
+  width: 342px;
+  max-width: 342px;
+}
+.placeholder{
+  margin: 0px !important;
+}
+span.noti-content {
+  font-weight: 600;
+  text-align: center;
+}
+
+
 .hide{
   opacity: 0;
 }
@@ -471,11 +495,18 @@ label {
   border-radius: 100%;
   background-position: center center;
   background-size: 110%;
-  margin-right: 15px;
+  margin-right: 36px;
+}
+
+.wrapper{
+  display: flex;
+  flex-direction: column;
 }
 
 .noti-content {
-  max-width: 270px;
+  max-width: 240px;
+  width: 263px;
+  display: block;
   text-align: justify;
   line-height: 1.1;
   cursor: auto;
@@ -485,6 +516,31 @@ label {
   align-items: center;
   margin-top: 10px;
   padding: 16px 16px;
+}
+.module{
+  margin-top: 10px;
+  padding: 16px 16px;
+  max-width: 270px;
+
+}
+.action{
+  margin-left: 18px;
+}
+.accept-button, .decline-button  {
+  color: #fff;
+  background: #39ac91;
+  border: transparent;
+  padding: 4px 16px;
+  margin-right: 21px;
+  border-radius: 5px;
+}
+
+.decline-button{
+  background-color: #ff623d;
+}
+
+.accept-button:hover, .decline-button:hover{
+  cursor: pointer;
 }
 
 .noti-item:hover {
@@ -1472,4 +1528,7 @@ a.nav_edit {
 }
 .close:after {
   transform: rotate(-45deg);
+}
+input#input_invite {
+  margin-left: 70px;
 }
