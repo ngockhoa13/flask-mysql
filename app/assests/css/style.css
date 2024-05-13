@@ -1536,10 +1536,9 @@ a.nav_edit {
 .close:after {
   transform: rotate(-45deg);
 }
-<<<<<<< HEAD
 input#input_invite {
   margin-left: 70px;
-=======
+}
 
 #comment-input {
   width: calc(100% - 30px); /* Set the width to 100% minus the total padding and border widths */
@@ -1552,5 +1551,4 @@ input#input_invite {
   margin-bottom: 10px; /* Add some margin at the bottom for spacing */
   margin-left: 15px; /* Add left margin */
   margin-right: 15px; /* Add right margin */
->>>>>>> fab1a65ffb824c97ef3218b35a63e062b866110a
 }

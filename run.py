@@ -21,7 +21,7 @@ def hehe(data):
     
     cursor, conn = getDB()
     # cursor.execute("INSERT into username FROM user WHERE id = ?", (id2,))
-    query = "INSERT INTO notification (myid, content, timestamp, from_id) VALUES (?, ?, ?, ?)"
+    query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 0)"
     cursor.execute(query, (to_id, content, time, from_id))
     conn.commit()
 
@@ -48,6 +48,9 @@ def join_private_chat(data):
         arr_data,
         room = data["rid"]
     )
+
+
+
 # Outgoing event handler
 @socket.on("outgoing")
 def chatting_event(json, methods=["GET", "POST"]):
@@ -73,6 +76,14 @@ def chatting_event(json, methods=["GET", "POST"]):
                 """,
                 (message, timestamp, sender_id, sender_username, room_id)
             )
+        conn.commit()
+        get_desit = cursor.execute(f"SELECT id, userID1, userID2 FROM chat WHERE id = ? ", (room_id, )).fetchone()
+        roomid, id1, id2 = get_desit
+        des_id = id1 
+        if id1 == sender_id:
+            des_id = id2
+        query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 1)"
+        cursor.execute(query, (des_id, message, timestamp, sender_id))
         conn.commit()
         # Lưu tin nhắn mới vào cơ sở dữ liệu
         # (Do bạn không sử dụng SQLAlchemy, nên phần này không cần thiết)

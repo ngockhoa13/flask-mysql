@@ -253,9 +253,29 @@
               <div class="noti-item">
                 <div class="noti-ava"></div>
                 <div class="wrapper">
-                  <h3 class="noti-title"> New invite from {{i['fromname'][0]}}</h3>
+                  {% if i['ischat'] != 1 %}
+                      <h3 class="noti-title"> New invite from {{i['fromname'][0]}}</h3>
+                      {% if i['content']!=none %}
+                      <div class="noti-content"> Content: {{i['content']}}
+                        <br>
+                        <span>
+                          Time: {{i['time']}}
+                        </span>
+                      </div>
+                      {% if i['sender_pic'] %}
+                      <style>
+                      .noti-ava {
+                            background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
+                        }
+                      </style>
+                      {% endif %} 
+                    {% endif %}
+
+                  {% else %}
+
+                  <h3 class="noti-title"> New Message</h3>
                   {% if i['content']!=none %}
-                  <div class="noti-content"> Content: {{i['content']}}
+                  <div class="noti-content"> You have new message from {{i['fromname'][0]}}
                     <br>
                     <span>
                       Time: {{i['time']}}
@@ -263,11 +283,15 @@
                   </div>
                   {% if i['sender_pic'] %}
                   <style>
-                   .noti-ava {
-                         background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
+                  .noti-ava {
+                        background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
                     }
                   </style>
-                   {% endif %} 
+                  {% endif %} 
+                {% endif %}
+
+
+
                   {% endif %}
                 </div>
               </div>
@@ -364,6 +388,76 @@
       }
       createonclick()
 
+      function render_noti(msg, chat = 0){
+        var notiItem = document.createElement("div");
+        notiItem.classList.add("noti-item");
+
+        // Tạo phần tử div chứa hình ảnh đại diện (nếu cần)
+        var notiAva = document.createElement("div");
+        notiAva.classList.add("noti-ava");
+        notiItem.appendChild(notiAva); // Thêm phần tử notiAva vào trong notiItem
+
+        // Tạo phần tử div chứa tiêu đề và nội dung thông báo
+        var wrapperDiv = document.createElement("div");
+        wrapperDiv.classList.add("wrapper");
+        notiItem.appendChild(wrapperDiv); // Thêm phần tử wrapperDiv vào trong notiItem
+
+        // Tạo phần tử h3 chứa tiêu đề thông báo
+        var titleH3 = document.createElement("h3");
+        titleH3.classList.add("noti-title");
+        titleH3.textContent = "New Invite";
+        if(chat == 1){
+          titleH3.textContent = "New Message";
+        }
+        wrapperDiv.appendChild(titleH3); // Thêm phần tử titleH3 vào trong wrapperDiv
+
+        // Tạo phần tử div chứa nội dung thông báo
+        var notiContent = document.createElement("div");
+        notiContent.classList.add("noti-content");
+        if(chat ==1){
+          notiContent.textContent = "You have new message from " + msg.fromname
+        }else{
+          notiContent.textContent = msg.content
+        }
+
+        wrapperDiv.appendChild(notiContent); // Thêm phần tử notiContent vào trong wrapperDiv
+
+        // Thêm phần tử notiItem vào trong DOM (ví dụ, bạn có thể thêm vào một phần tử cha nào đó)
+        document.querySelector('.noti-items').appendChild(notiItem); // Thêm notiItem vào cuối phần tử body trong DOM
+        var hr = document.createElement("hr");
+
+        // Tạo phần tử div với class là "action"
+        var actionDiv = document.createElement("div");
+        actionDiv.className = "action";
+
+        // Tạo nút chấp nhận
+        var acceptButton = document.createElement("button");
+        acceptButton.className = "accept-button-";
+        acceptButton.textContent = "Accept";
+
+        // Tạo phần tử a
+        var anchorElement = document.createElement("a");
+        anchorElement.id = msg.from;
+
+        // Thêm phần tử a vào nút chấp nhận
+        acceptButton.appendChild(anchorElement);
+
+        // Tạo nút từ chối
+        var declineButton = document.createElement("button");
+        declineButton.className = "decline-button";
+        declineButton.textContent = "Decline";
+
+        // Thêm nút chấp nhận và nút từ chối vào phần tử div
+        actionDiv.appendChild(acceptButton);
+        actionDiv.appendChild(declineButton);
+
+        document.querySelector('.noti-items').appendChild(actionDiv)
+
+
+        document.querySelector('.noti-items').appendChild(hr); // Thêm notiItem vào cuối phần tử body trong DOM
+        document.querySelector('.placeholder').classList.add("none");
+        createonclick()
+      }
 
     //<!-- SOCKET CODE-->
 
@@ -372,74 +466,11 @@
       var socket2 = io.connect('http://localhost:7777')
       socket2.on('connect', function () {
         console.log("heheheheh")
-    })
+      })
       socket2.on('invited', function (msg="11") {
         if("{{myid}}" == msg.to){
           showSuccessToast("You have new invite from" + msg.from);
-
-          // Tạo phần tử div chứa toàn bộ nội dung thông báo
-          var notiItem = document.createElement("div");
-          notiItem.classList.add("noti-item");
-
-          // Tạo phần tử div chứa hình ảnh đại diện (nếu cần)
-          var notiAva = document.createElement("div");
-          notiAva.classList.add("noti-ava");
-          notiItem.appendChild(notiAva); // Thêm phần tử notiAva vào trong notiItem
-
-          // Tạo phần tử div chứa tiêu đề và nội dung thông báo
-          var wrapperDiv = document.createElement("div");
-          wrapperDiv.classList.add("wrapper");
-          notiItem.appendChild(wrapperDiv); // Thêm phần tử wrapperDiv vào trong notiItem
-
-          // Tạo phần tử h3 chứa tiêu đề thông báo
-          var titleH3 = document.createElement("h3");
-          titleH3.classList.add("noti-title");
-          titleH3.textContent = "New Invite";
-          wrapperDiv.appendChild(titleH3); // Thêm phần tử titleH3 vào trong wrapperDiv
-
-          // Tạo phần tử div chứa nội dung thông báo
-          var notiContent = document.createElement("div");
-          notiContent.classList.add("noti-content");
-          notiContent.textContent = msg.content
-          wrapperDiv.appendChild(notiContent); // Thêm phần tử notiContent vào trong wrapperDiv
-
-          // Thêm phần tử notiItem vào trong DOM (ví dụ, bạn có thể thêm vào một phần tử cha nào đó)
-          document.querySelector('.noti-items').appendChild(notiItem); // Thêm notiItem vào cuối phần tử body trong DOM
-          var hr = document.createElement("hr");
-
-          // Tạo phần tử div với class là "action"
-          var actionDiv = document.createElement("div");
-          actionDiv.className = "action";
-
-          // Tạo nút chấp nhận
-          var acceptButton = document.createElement("button");
-          acceptButton.className = "accept-button-";
-          acceptButton.textContent = "Accept";
-
-          // Tạo phần tử a
-          var anchorElement = document.createElement("a");
-          anchorElement.id = msg.from;
-
-          // Thêm phần tử a vào nút chấp nhận
-          acceptButton.appendChild(anchorElement);
-
-          // Tạo nút từ chối
-          var declineButton = document.createElement("button");
-          declineButton.className = "decline-button";
-          declineButton.textContent = "Decline";
-
-          // Thêm nút chấp nhận và nút từ chối vào phần tử div
-          actionDiv.appendChild(acceptButton);
-          actionDiv.appendChild(declineButton);
-
-          document.querySelector('.noti-items').appendChild(actionDiv)
-
-
-          document.querySelector('.noti-items').appendChild(hr); // Thêm notiItem vào cuối phần tử body trong DOM
-          document.querySelector('.placeholder').classList.add("none");
-          createonclick()
-
-
+          render_noti(msg)
           var noti_span =  document.querySelector('.noti-badge')
           var count = parseInt(noti_span.innerHTML)
           count += 1
@@ -447,6 +478,16 @@
         }
       })
 
+      socket2.on('receive-notichat', function(msg){
+        if("{{myid}}" == msg.toid){
+          showSuccessToast("You have new message from "+msg.fromname);
+          var noti_span = document.querySelector('.nav_noti span')
+          var count = parseInt(noti_span.innerHTML)
+          count += 1
+          noti_span.innerHTML = count
+          render_noti(msg, 1)
+        }
+      })
 
 
 

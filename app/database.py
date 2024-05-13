@@ -70,7 +70,8 @@ conn.execute('''CREATE TABLE notification (
     myid INTEGER  NOT NULL,
     content TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    from_id VARCHAR(50) NOT NULL
+    from_id VARCHAR(50) NOT NULL,
+    ischat BOOLEAN
 )''')
 
 

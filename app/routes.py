@@ -137,6 +137,8 @@ def home():
     #Check if the ID is actually exist in the database
     cursor, conn = getDB()
     id = session['id']
+    ischat = None
+    
     cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
     if id:        
         
@@ -157,10 +159,10 @@ def home():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
         data = []
-        noti_list = cursor.execute("SELECT myid, content, timestamp, from_id from notification where myid = ?",(id,)).fetchall()
+        noti_list = cursor.execute("SELECT myid, content, timestamp, from_id, ischat from notification where myid = ?",(id,)).fetchall()
         if noti_list:
             for noti in noti_list:
-                myid , content, timestamp, fromid = noti
+                myid , content, timestamp, fromid, ischat = noti
                 # select name sender noti
                 sender_pic = None
                 sender_name = cursor.execute("SELECT username from user where id = ?",(fromid,)).fetchone()
@@ -177,7 +179,8 @@ def home():
                         "fromname": sender_name,
                         "content": content,
                         "time": timestamp,
-                        "sender_pic":sender_pic
+                        "sender_pic":sender_pic,
+                        "ischat": ischat
                     })
         #Return the index template
         return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic, myid = id, data = data, count_noti=count_noti)
@@ -220,7 +223,6 @@ def profile():
 
         return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs)
     return redirect('/login')
-
 
 
 # Settings user information route -------------------------------
@@ -608,17 +610,25 @@ def allChat():
     try:
         # Get the room ID for when user press into one will render it out
         room_id = request.args.get("rid", None)
-        if room_id is None:
-            return redirect("/chat?rid="+id)
         # Query all the chat using the current user ID to render out on the page
         chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? or userID2 = ?", (id,id)).fetchall()
         count_noti = cursor.execute("SELECT count(*) from notification where myid= ?",(id,)).fetchone()
         print(chat_list)
         data = []
         messages=[]
-        queryname = cursor.execute(f"SELECT id,username from user where id = ?",(id,)).fetchone()
+        queryname = cursor.execute(f"SELECT id,username from user where id = ?",(id,)).fetchone()        
+        
         myid,ownname = queryname
+        des_id = None
         if chat_list:
+            if room_id != id: 
+                get_desit = cursor.execute(f"SELECT userID1, userID2 FROM chat WHERE id = ? ", (room_id, )).fetchall()
+                if get_desit: 
+                    id1 =  get_desit[0][0]
+                    id2 = get_desit[0][1]
+                    des_id = id1 
+                    if id1 == id:
+                        des_id = id2
             for chat in chat_list:
                 chat_roomID, userID1, userID2 = chat
                 try:
@@ -632,6 +642,7 @@ def allChat():
                         friend = cursor.execute(f"SELECT username from user where id = ?",(userID2,)).fetchone()
                     else:
                         friend = cursor.execute(f"SELECT username from user where id = ?",(userID1,)).fetchone()
+                        
                     if room_id == chat_roomID:
                         for message in messages_th:
                             var1, var2, var3, var4,var5,var6 = message
@@ -668,9 +679,9 @@ def allChat():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
         if chat_list == None:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti)  
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id)  
         else:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti)
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id)
         
         
     except Exception as error:
