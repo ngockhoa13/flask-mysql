@@ -4,37 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assests/css/style.css" />
+    <link rel="stylesheet" href="../assests/css/reset.css" />
+    <link rel="stylesheet" href="../assests/css/style.css" />
     <title>{{ title }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="blog-post" data-post-title="{{ title }}">
-        <h1>{{ title }}</h1>
-        <p>{{ content }}</p>
-        
-        <!-- Render ra từng comment và username kế bên từng comment-->
-        <div class="blog-comments">
-            {% for username, comment in comment_Content %}
-                <h5>{{ username }}</h5>
-                <p> {{ comment }}</p>
-            {% endfor %}
 
-
+    <!-- Header -->
+    <header class="header fixed">
+        <div class="content">
+          <div class="body">
+            <!-- Nav -->
+            <nav class="navbar">
+              <ul class="navbar_items">
+                <li class="active nav_home">
+                  <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
+                </li>
+                <li>
+                  <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
+                </li>
+                <li>
+                  <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
+                </li>
+                <li>
+                  <a
+                    href="#notification"
+                    title="Notification"
+                    class="nav_noti"
+                    ><i class="fas fa-bell nav_noti_icon"></i>
+                    <span class="badge noti-badge">12</span></a
+                  >
+                </li>
+                <li>
+                  <a href="/chat" title="Message" class="nav_mess"
+                    ><i class="fas fa-envelope"></i>
+                    <span class="badge">3</span></a
+                  >
+                </li>
+              </ul>
+              <ul class="navbar_items nav-bottom">
+                <li>
+                  <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
+                </li>
+                <li>
+                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                  ></a>
+                </li>
+                <li>
+                  <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+                  ></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
-
-        <textarea id="comment-input" placeholder="Enter your comment"></textarea>
-
-        <!-- Button to send the comment -->
-        <button id="submit-comment">Submit</button>
+      </header>
 
 
 
 
 
-
-        <button class="like-btn">Like</button>
-        <span class="likes-count"> {{ likes }}</span>
-    </div>
+      <div class="background"></div>
+   
+      <!-- body -->
+      <main class="blog-content">
+        <div class="blog-post" data-post-title="{{ title }}">
+            <h1>{{ title }}</h1>
+            <p>{{ content }}</p>
+            
+            <!-- Render ra từng comment và username kế bên từng comment-->
+            <div class="blog-comments">
+                {% for username, comment in comment_Content %}
+                    <h5>{{ username }}</h5>
+                    <p> {{ comment }}</p>
+                {% endfor %}
+    
+    
+            </div>
+    
+            <textarea id="comment-input" placeholder="Enter your comment"></textarea>
+    
+            <!-- Button to send the comment -->
+            <button id="submit-comment">Submit</button>
+    
+    
+    
+    
+    
+    
+            <button class="like-btn">Like</button>
+            <span class="likes-count"> {{ likes }}</span>
+        </div>
+      </main>
+      <style>
+        main.blog-content {
+            margin-left: 548px;
+            width: 727px;
+        }
+      </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -108,5 +176,12 @@
         });
 
     </script>
+
+    <script
+    src="https://kit.fontawesome.com/c9f23d41c7.js"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+  <script src="./../assests/js/index.js"></script>  
 </body>
 </html>

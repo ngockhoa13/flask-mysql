@@ -16,7 +16,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 
     <title>Open U</title>
-    <style></style>
+
   </head>
   <body class="scrollbar">
     <!-- Header -->
@@ -47,7 +47,7 @@
               <li>
                 <a href="/chat" title="Message" class="nav_mess"
                   ><i class="fas fa-envelope"></i>
-                  <span class="badge">3</span></a
+                  <span class="badge noti-chat-badge">3</span></a
                 >
               </li>
             </ul>
@@ -249,8 +249,9 @@
                     </span>
                 </div>
               </div>
+              {% set loop_count = namespace(value=0) %}
               {% for i in data %}
-              <div class="noti-item">
+              <div class="noti-item noti-item-{{ loop.index }}">
                 <div class="noti-ava"></div>
                 <div class="wrapper">
                   {% if i['ischat'] != 1 %}
@@ -300,7 +301,11 @@
                 <button class="decline-button">Decline</button>
               </div>
               <hr>
+              {% set loop_count.value = loop_count.value + 1 %}
               {% endfor %}
+              <script>
+                var countnotifications = {{loop_count.value}};
+              </script>
 
               <!-- check data-->
               {% if data != [] %}
@@ -388,9 +393,14 @@
       }
       createonclick()
 
-      function render_noti(msg, chat = 0){
+      function render_noti(msg, chat = 0, th=0){
         var notiItem = document.createElement("div");
         notiItem.classList.add("noti-item");
+        if(th != 0)
+        {
+          th+=1
+          notiItem.classList.add("noti-item-" + th)
+        }
 
         // Tạo phần tử div chứa hình ảnh đại diện (nếu cần)
         var notiAva = document.createElement("div");
@@ -426,32 +436,38 @@
         document.querySelector('.noti-items').appendChild(notiItem); // Thêm notiItem vào cuối phần tử body trong DOM
         var hr = document.createElement("hr");
 
-        // Tạo phần tử div với class là "action"
-        var actionDiv = document.createElement("div");
-        actionDiv.className = "action";
+        if(chat != 1){
+          // Tạo phần tử div với class là "action"
+          var actionDiv = document.createElement("div");
+          actionDiv.className = "action";
 
-        // Tạo nút chấp nhận
-        var acceptButton = document.createElement("button");
-        acceptButton.className = "accept-button-";
-        acceptButton.textContent = "Accept";
+          // Tạo nút chấp nhận
+          var acceptButton = document.createElement("button");
+          acceptButton.className = "accept-button-";
+          acceptButton.textContent = "Accept";
 
-        // Tạo phần tử a
-        var anchorElement = document.createElement("a");
-        anchorElement.id = msg.from;
+          // Tạo phần tử a
+          var anchorElement = document.createElement("a");
+          anchorElement.id = msg.from;
 
-        // Thêm phần tử a vào nút chấp nhận
-        acceptButton.appendChild(anchorElement);
+          // Thêm phần tử a vào nút chấp nhận
+          acceptButton.appendChild(anchorElement);
 
-        // Tạo nút từ chối
-        var declineButton = document.createElement("button");
-        declineButton.className = "decline-button";
-        declineButton.textContent = "Decline";
+          // Tạo nút từ chối
+          var declineButton = document.createElement("button");
+          declineButton.className = "decline-button";
+          declineButton.textContent = "Decline";
 
-        // Thêm nút chấp nhận và nút từ chối vào phần tử div
-        actionDiv.appendChild(acceptButton);
-        actionDiv.appendChild(declineButton);
+          // Thêm nút chấp nhận và nút từ chối vào phần tử div
+          actionDiv.appendChild(acceptButton);
+          actionDiv.appendChild(declineButton);
+          document.querySelector('.noti-items').appendChild(actionDiv)
+        }
+        else{
+          wrapperDiv.classList.add(msg.from)
+        }
+       
 
-        document.querySelector('.noti-items').appendChild(actionDiv)
 
 
         document.querySelector('.noti-items').appendChild(hr); // Thêm notiItem vào cuối phần tử body trong DOM
@@ -485,7 +501,12 @@
           var count = parseInt(noti_span.innerHTML)
           count += 1
           noti_span.innerHTML = count
-          render_noti(msg, 1)
+          render_noti(msg, 1,countnotifications)
+
+          var noti_chat = document.querySelector('.noti-chat-badge');
+          var count_chat_noti = parseInt(noti_chat.innerHTML)
+          count_chat_noti +=1
+          noti_chat.innerHTML = count_chat_noti
         }
       })
 

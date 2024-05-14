@@ -29,6 +29,14 @@ def hwhw(data):
         "invited",
         haha
     )
+    
+@socket.on('noti-chat')
+def noti_chat(data):
+    socket.emit(
+        "receive-notichat",
+        data
+    )
+    
 
 @socket.on("gen_user")
 def gengen(data):
