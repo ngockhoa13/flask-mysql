@@ -52,13 +52,17 @@ def register():
             username = request.form['username'].strip()
             password = request.form['password'].strip()
             
+
+            #Check for length and regex of the password, sẽ thêm vào để check cả name và email
+            '''
             if len(password) < 6:
                 message = "Length of password needs to be more than 6 chars."
                 return render_template("register.html", message=message)
             if re.match("^[a-zA-Z0-9_]*$", username) is None:
                 message = "Username cannot contain special characters."
                 return render_template("register.html", message=message)
-        
+            '''
+
             cursor, conn = getDB()
             rows = cursor.execute("SELECT username FROM user WHERE emailAddr = ?", (emailAddr,)).fetchall()
 
@@ -450,17 +454,17 @@ def view_blog(blog_title):
     cursor, conn = getDB()
 
     # Fetch the blog post from the database based on the provided blog_id
-    blog_post = cursor.execute("SELECT title, content, likes FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
+    blog_post = cursor.execute("SELECT title, content, likes, authorname FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
     print(blog_post)
 
     # Check if the blog post exists
     if blog_post:
-        title, content, likes = blog_post
+        title, content, likes, authorname = blog_post
 
         comment_Content = cursor.execute("SELECT username, comment FROM commentsBlog WHERE title = ?", (decode_title,)).fetchall()
 
 
-        return render_template('blog.html', title=title, content=content, likes=likes, comment_Content=comment_Content)
+        return render_template('blog.html', title=title, content=content, likes=likes, comment_Content=comment_Content, id=id, authorname=authorname)
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return redirect(url_for('home'))
@@ -593,6 +597,8 @@ def accept():
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
+
+
 
 # Routes for chat (tất cả việc chat hay render list chat và tìm kiếm người dùng ở đây)
 @app.route('/chat/', methods=["GET", "POST"])
@@ -783,6 +789,59 @@ def addComments(blog_title):
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return jsonify({"error": "Internal Server Error"}), 500
+    
+
+
+
+#Route to render about user information\
+@app.route('/user/<string:user_id>', methods=["GET", "POST"])
+@check_session
+def viewProfile(user_id):
+    id = session.get('id')
+    cursor, conn = getDB()
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's
+
+    # Decode the 
+    decoded_id = unquote(user_id)
+    print(decoded_id)
+
+
+    try:
+        # Truy xuất về thông tin người dùng trước
+        user_info = cursor.execute("SELECT name, username, emailAddr FROM user WHERE id = ?", (decoded_id,)).fetchone()
+        print(user_info)
+
+        #Nếu thông tin người dùng có tồn tại
+        if user_info:
+            # Truy xuất các blog publish để vào profile
+            name, username, emailAddr = user_info
+
+
+            all_blogs = cursor.execute("SELECT title, likes FROM blogPosts WHERE userID = ? and publish = 1", (decoded_id,)).fetchall()
+            print(all_blogs)
+
+            if not all_blogs:
+                return "lmao"
+            else:
+                return render_template("userProfile.html", all_blogs = all_blogs, name=name, username=username, emailAddr=emailAddr)
+
+
+        else:
+            return "No user found!!", 400
+
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return jsonify({"error": "Internal Server Error"}), 500
+
+
+
+
+
 
 
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ username }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+        
+    <h1>{{ name }}</h1>
+    <h1>{{ username }}</h1>
+    <p>{{ emailAddr }}</p>
+        
+    <!-- Render ra từng comment và username kế bên từng comment-->
+    <div class="blog-comments">
+        {% for title, likes in all_blogs %}
+            <h5>{{ title }}</h5>
+            <p>{{ likes }}</p>
+        {% endfor %}
+    </div>
+
+
+    <script>
+    </script>
+</body>
+</html>

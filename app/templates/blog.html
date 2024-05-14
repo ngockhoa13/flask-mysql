@@ -10,7 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
     <!-- Header -->
     <header class="header fixed">
         <div class="content">
@@ -28,19 +27,10 @@
                   <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
                 </li>
                 <li>
-                  <a
-                    href="#notification"
-                    title="Notification"
-                    class="nav_noti"
-                    ><i class="fas fa-bell nav_noti_icon"></i>
-                    <span class="badge noti-badge">12</span></a
-                  >
-                </li>
-                <li>
-                  <a href="/chat" title="Message" class="nav_mess"
-                    ><i class="fas fa-envelope"></i>
-                    <span class="badge">3</span></a
-                  >
+                  <a href="/chat" title="Message" class="nav_mess">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge noti-chat-badge">3</span>
+                  </a>
                 </li>
               </ul>
               <ul class="navbar_items nav-bottom">
@@ -48,12 +38,12 @@
                   <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
                 </li>
                 <li>
-                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
-                  ></a>
+                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i></a>
                 </li>
                 <li>
-                  <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
-                  ></a>
+                  <a href="{{ url_for('logout') }}" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i>
+                  </a>
                 </li>
               </ul>
             </nav>
@@ -61,69 +51,151 @@
         </div>
       </header>
 
+    <div class="background"></div>
 
-
-
-
-      <div class="background"></div>
-   
-      <!-- body -->
-      <main class="blog-content">
+    <!-- Blog Content -->
+    <main class="blog-content">
         <div class="blog-post" data-post-title="{{ title }}">
             <h1>{{ title }}</h1>
+            <h3>Author: <a href="/user/{{ id }}">{{ authorname }}</a></h3>
             <p>{{ content }}</p>
             
-            <!-- Render ra từng comment và username kế bên từng comment-->
+            <!-- Render comments -->
             <div class="blog-comments">
                 {% for username, comment in comment_Content %}
                     <h5>{{ username }}</h5>
-                    <p> {{ comment }}</p>
+                    <p>{{ comment }}</p>
                 {% endfor %}
-    
-    
             </div>
-    
+
             <textarea id="comment-input" placeholder="Enter your comment"></textarea>
-    
-            <!-- Button to send the comment -->
             <button id="submit-comment">Submit</button>
-    
-    
-    
-    
-    
-    
             <button class="like-btn">Like</button>
-            <span class="likes-count"> {{ likes }}</span>
+            <span class="likes-count">{{ likes }}</span>
         </div>
-      </main>
-      <style>
-        main.blog-content {
-            margin-left: 548px;
-            width: 727px;
+    </main>
+
+    <style>
+        .navbar i {
+            font-size: 1rem; 
         }
-      </style>
+
+        .blog-post h1 {
+            font-size: 4rem !important; /* Force the font size to be larger */
+            color: #333;
+        }
+
+
+
+        main.blog-content {
+            margin-left: 425px;
+            width: 950px;
+        }
+
+        .blog-post {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        .blog-post h1, .blog-post h3, .blog-post p {
+            margin: 0 0 1rem;
+        }
+
+        .blog-post h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .blog-post h3 {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .blog-comments {
+            margin-top: 2rem;
+            padding: 1rem; 
+            border: 0.5px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        .blog-comments h5 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-comments p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        #comment-input {
+            width: calc(100% - 30px);
+            padding: 0.5rem;
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        #submit-comment {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #submit-comment:hover {
+            background-color: #555;
+        }
+
+        .like-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .like-btn.liked {
+            background-color: #555;
+        }
+
+        .likes-count {
+            margin-left: 1rem;
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Event to update the likes when press the like button
             document.querySelectorAll('.like-btn').forEach(function(button) {
                 button.addEventListener('click', function() {
                     console.log("Like button clicked");
 
-                    // Check if the post ID is correctly retrieved
                     var postId = this.closest('.blog-post').dataset.postTitle;
                     console.log("Post ID:", postId);
 
-                    // Check the constructed AJAX request URL
                     var url = '/updateLike?post_title=' + postId + '&action=' + (this.classList.contains('liked') ? 'decrease' : 'increase');
                     console.log("AJAX URL:", url);
 
-                    // Store reference to the button and likes count elements
                     var buttonElement = this;
                     var likesCountElement = this.nextElementSibling;
                 
-                    // Send AJAX request to updateLike route using fetch
                     fetch(url, {
                         method: 'POST'
                     })
@@ -134,54 +206,40 @@
                         return response.json();
                     })
                     .then(function(data) {
-                        console.log(data); // Log the response
-                        // Toggle the 'liked' class based on previous state
+                        console.log(data);
                         buttonElement.classList.toggle('liked');
-                        // Update the UI to reflect the change in likes count
                         var currentLikesCount = parseInt(likesCountElement.textContent);
                         var newLikesCount = data.likes;
-                        likesCountElement.textContent = newLikesCount; // Update likes count in the UI
+                        likesCountElement.textContent = newLikesCount;
                     })
-
                     .catch(function(error) {
                         console.error('There was a problem with the fetch operation:', error);
                     });
                 });
             });
         });
-
     </script>
 
     <script>
-        // JavaScript code for handling comment submission
         $(document).ready(function() {
             $('#submit-comment').click(function() {
-                var comment = $('#comment-input').val().trim(); // Retrieve and trim comment content
+                var comment = $('#comment-input').val().trim();
                 if (comment !== '') {
-                    var blogTitle = $('.blog-post').data('post-title'); // Retrieve blog title from data attribute
-                    // AJAX request to send comment to the server
+                    var blogTitle = $('.blog-post').data('post-title');
                     $.post(`/addComment/${encodeURIComponent(blogTitle)}`, { content: comment })
                         .done(function(response) {
-                            alert(response); // Show success message
-                            // Optionally, you can reload the page to display the updated comments
-                            // location.reload();
+                            alert(response);
                         })
                         .fail(function(xhr, status, error) {
-                            alert("Error: " + xhr.responseText); // Show error message
+                            alert("Error: " + xhr.responseText);
                         });
                 } else {
-                    alert('Please enter a comment.'); // Show error message if comment is empty
+                    alert('Please enter a comment.');
                 }
             });
         });
-
     </script>
 
-    <script
-    src="https://kit.fontawesome.com/c9f23d41c7.js"
-    crossorigin="anonymous"
-  ></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
-  <script src="./../assests/js/index.js"></script>  
+    <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
 </body>
 </html>
