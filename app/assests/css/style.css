@@ -628,7 +628,11 @@ a.nav_edit {
   font-size: 16px;
   margin-right: 30px;
 }
-.nav-post div:first-child {
+.nav-post .nav-item {
+  border-bottom: none;
+}
+
+.nav-post .nav-item.active {
   border-bottom: 2px solid #fff;
   color: #fff;
 }

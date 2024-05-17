@@ -20,21 +20,36 @@
       </div>
       <div class="post-container">
         <div class="nav-post">
-          <div>
+          <div class="nav-item">
             <i class="fa-solid fa-lock"></i> 
             <a href="#" onclick="showAllNotes()" title="All notes" class="nav_edit"><i class="fas fa-edit button-profile"></i>All notes</a>
             <span class="tab-count inside">1</span>
           </div>
-          <div>
+          <div class="nav-item">
             <a href="#" onclick="showPublishedNotes()" title="Published notes" class="nav_edit publish_notes"><i class="fas fa-edit button-profile"></i>Published notes</a>
           </div>
 
 
-          <div>Liked notes</div>
+          <div class="nav-item">Liked notes</div>
           <div class="back-btn">
             <a href="{{ url_for('home')}}">Back to home</a>
           </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const navItems = document.querySelectorAll('.nav-post .nav-item');
+
+              navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                  // Remove the 'active' class from all nav-items
+                  navItems.forEach(nav => nav.classList.remove('active'));
+
+                  // Add the 'active' class to the clicked nav-item
+                  item.classList.add('active');
+                });
+              });
+            });
+        </script>
         <!-- Filter -->
         <div class="post-filter">
           <div class="tags filter-item">
