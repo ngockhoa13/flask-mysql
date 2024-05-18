@@ -1,9 +1,8 @@
 
-# LaptrinhungdungWeb
+# *Đồ án môn học lập trình ứng dụng web*
+*GV: Trần Tuấn Dũng*
 
-## *Ứng dụng mạng xã hội:* OpenU
-
-## Team 15:
+## *Team 15:*
 22520645 - Nguyễn Phan Hữu Khánh
 
 22521399 - Đặng Chí Thịnh
@@ -14,22 +13,24 @@
 
 22521147 - Võ Văn Phúc
 
-*GV: Trần Tuấn Dũng*
-
-# *Giới thiệu ứng dụng:*
+## *Tên đề tài:* OpenU
+### *Giới thiệu ứng dụng:*
     
-Là một mạng xã hội cho phép người dùng đăng tải các blog, post một cách công khai (`public`) hoặc chỉ ở chế độ riêng tư (`private`). Ngoài ra có thể tìm kiếm, xem và tương tác các blog, post của người dùng khác.
+**OpenU** là nền tảng giúp bạn thể hiện bản thân và kết nối với cộng đồng một cách dễ dàng. Tạo blog, chia sẻ câu chuyện và quản lý không gian cá nhân của bạn một cách linh hoạt. Khám phá và tương tác với những người có cùng sở thích qua các tính năng tìm kiếm và chat tiện lợi.
 
 
-# *Sơ đồ ứng dụng:*
-<img src="tải xuống-1.jpg" alt="drawing" width="700" height="400"/>
+### *Sơ đồ ứng dụng:*
+<img src="mindmap.png" alt="drawing" width="700" height="400"/>
 
-# *Mô tả chức năng*
+### *Mô tả chức năng*
 - Mỗi người dùng tạo và sử dụng 1 tài khoản
-- Đăng bài viết công khai hoặc viết nhật ký riêng tư: có thể chứa văn bản, ảnh, video...
-- Quản lý hồ sơ cá nhân: bao gồm thêm,xóa và chỉnh sửa ảnh đại diện, thông tin cá nhân và các bài viết đã tạo. Có thể tùy chỉnh cài đặt và quyền riêng tư.
-- Tính năng tìm kiếm mọi người và khám phá các nội dụng từ cộng đồng.
-# *Công nghệ sử dụng:*
+- Tạo và đăng blog công khai hoặc đơn giản chỉ là viết nhật ký riêng tư
+- Chỉnh sửa ảnh đại diện, thông tin cá nhân.
+- Quản lý blog cá nhân: set trạng thái,xóa, xem các blog đã like
+- Tính năng tìm kiếm blog và mọi người
+- **Thông báo realtime**
+- **Chat**
+### *Công nghệ sử dụng:*
 
 - HTML,CSS,JS đối với Front-end
 
@@ -39,5 +40,6 @@ Là một mạng xã hội cho phép người dùng đăng tải các blog, post
 
 - Framework: Flask
 
+- Deployment: ngrok
 
 
