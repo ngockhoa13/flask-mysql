@@ -82,9 +82,14 @@ def chatting_event(json, methods=["GET", "POST"]):
         des_id = id1 
         if id1 == sender_id:
             des_id = id2
-        query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 1)"
-        cursor.execute(query, (des_id, message, timestamp, sender_id))
-        conn.commit()
+        checker = cursor.execute("select * from notification where myid = ? and from_id = ?", (des_id,sender_id, )).fetchall()
+        if checker:
+            # donothing
+            a = 1
+        else:
+            query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 1)"
+            cursor.execute(query, (des_id, message, timestamp, sender_id))
+            conn.commit()
         # Lưu tin nhắn mới vào cơ sở dữ liệu
         # (Do bạn không sử dụng SQLAlchemy, nên phần này không cần thiết)
 

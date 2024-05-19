@@ -148,6 +148,7 @@ def home():
         
         profile_pic = None
         count_noti = cursor.execute("SELECT count(*) from notification where myid= ?",(id,)).fetchone()
+        count_noti_chat = cursor.execute("SELECT count(*) from notification where myid= ? and ischat = 1",(id,)).fetchone()
         
         #Retrieve the needed data
         blog_info = cursor.execute("SELECT title, content FROM blogPosts WHERE publish = 1 ORDER BY RANDOM() LIMIT 5").fetchall()
@@ -167,6 +168,8 @@ def home():
         if noti_list:
             for noti in noti_list:
                 myid , content, timestamp, fromid, ischat = noti
+                rid = cursor.execute("SELECT id FROM chat WHERE userID1 = ? and userID2 = ? or userID1= ? and userID2 = ?", (id,fromid, fromid, id)).fetchall()
+                
                 # select name sender noti
                 sender_pic = None
                 sender_name = cursor.execute("SELECT username from user where id = ?",(fromid,)).fetchone()
@@ -176,18 +179,30 @@ def home():
                     sender_pic = fromid + '/' + 'avatar.jpg'
                 if sender_pic == None:
                     sender_pic = os.path.join("", "../../img/avatar.jpg")
-                
-                data.append({
-                        "myid": myid,
-                        "fromid": fromid,
-                        "fromname": sender_name,
-                        "content": content,
-                        "time": timestamp,
-                        "sender_pic":sender_pic,
-                        "ischat": ischat
-                    })
+                if rid != []: 
+                    data.append({
+                            "myid": myid,
+                            "fromid": fromid,
+                            "fromname": sender_name,
+                            "content": content,
+                            "time": timestamp,
+                            "sender_pic":sender_pic,
+                            "ischat": ischat,
+                            "rid" : rid
+                        })
+                else:
+                    data.append({
+                            "myid": myid,
+                            "fromid": fromid,
+                            "fromname": sender_name,
+                            "content": content,
+                            "time": timestamp,
+                            "sender_pic":sender_pic,
+                            "ischat": ischat,
+                            "rid" : None
+                        })
         #Return the index template
-        return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic, myid = id, data = data, count_noti=count_noti)
+        return render_template('index.html', blog_info=blog_info,user_info = user_info,profile_pic=profile_pic, myid = id, data = data, count_noti=count_noti, count_noti_chat = count_noti_chat)
 
     return redirect('/login')
 
@@ -510,7 +525,12 @@ def new_chat():
                         # Proceed with creating a new chat
                         # First, insert the new chat into the database
                         invite_input = request.form['invite_input']
-                        return jsonify({'success': 'New chat created successfully', 'chat_id': recipient_id, 'content': invite_input}), 200
+                        query = "SELECT * from notification where myid = ? and from_id = ?"
+                        check = cursor.execute(query, (recipient_id, id)).fetchone()
+                        if check:
+                            return jsonify({'error': 'You are already invited', 'chat_id': recipient_id, 'content': invite_input}), 404
+                        else:    
+                            return jsonify({'success': 'New chat created successfully', 'chat_id': recipient_id, 'content': invite_input}), 200
                         
                         chat_id = str(uuid.uuid4())
 
@@ -533,6 +553,49 @@ def new_chat():
     except Exception as error:
         print(f"ERROR: {error}", flush=True)
         return "Internal Server Error", 500
+    
+    
+    
+    
+    
+    
+    
+@app.route('/deletenoti', methods=["POST"])
+@check_session
+def deletenoti():
+    id = session.get('id')
+    cursor, conn = getDB()
+        
+    # Check if id exist in database
+    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    if not id:        
+        return redirect(url_for('login'))  # Redirect to login page if user's
+    
+    
+    try:
+        if request.method == "POST":
+            data = request.data.decode('utf-8')  # Decode data from bytes to string using utf-8 encoding
+            data_dict = json.loads(data)  # Convert JSON string to Python dictionary
+            if 'fromid' in data_dict:
+                fromid = data_dict['fromid']
+                toid = data_dict['toid']
+                # search_input = request.form['search_input']
+                # Check if the input matches the format of an email address
+
+                recipient_info = cursor.execute("SELECT id, username, emailAddr FROM user WHERE id = ?", (toid,)).fetchone()
+                    
+                if recipient_info:
+                    recipient_id, recipient_username, recipient_email = recipient_info
+                    cursor.execute("DELETE FROM notification WHERE myid = ? AND from_id = ?", (id,fromid,))
+                    conn.commit()
+                
+                else:
+                    return jsonify({'error': 'User not found'}), 404
+
+    except Exception as error:
+        print(f"ERROR: {error}", flush=True)
+        return "Internal Server Error", 500 
+    
 
 import json
 @app.route('/accept', methods=["POST"])
@@ -616,6 +679,8 @@ def allChat():
     try:
         # Get the room ID for when user press into one will render it out
         room_id = request.args.get("rid", None)
+        count_noti_chat = cursor.execute("SELECT count(*) from notification where myid= ? and ischat = 1",(id,)).fetchone()
+        
         # Query all the chat using the current user ID to render out on the page
         chat_list = cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? or userID2 = ?", (id,id)).fetchall()
         count_noti = cursor.execute("SELECT count(*) from notification where myid= ?",(id,)).fetchone()
@@ -685,9 +750,9 @@ def allChat():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
         if chat_list == None:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id)  
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id, count_noti_chat = count_noti_chat)  
         else:
-            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id)
+            return render_template('chatbox-code.html', room_id=room_id, data=data,messages=messages,ownname=ownname, myid=myid, profile_pic= profile_pic, count_noti= count_noti, des_id=des_id, count_noti_chat= count_noti_chat)
         
         
     except Exception as error:

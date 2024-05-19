@@ -47,7 +47,7 @@
               <li>
                 <a href="/chat" title="Message" class="nav_mess"
                   ><i class="fas fa-envelope"></i>
-                  <span class="badge noti-chat-badge">3</span></a
+                  <span class="badge noti-chat-badge">{{count_noti_chat[0]}}</span></a
                 >
               </li>
             </ul>
@@ -251,7 +251,12 @@
               </div>
               {% set loop_count = namespace(value=0) %}
               {% for i in data %}
-              <div class="noti-item noti-item-{{ loop.index }}">
+              {% if i['rid'] %}
+              <div class="noti-item noti-item-{{ loop.index }} {{i['rid'][0][0]}} {{i['fromid']}}">
+              {% else %}
+                <div class="noti-item-{{ loop.index }} noti-item">
+              {% endif %} 
+              
                 <div class="noti-ava"></div>
                 <div class="wrapper">
                   {% if i['ischat'] != 1 %}
@@ -269,6 +274,10 @@
                             background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
                         }
                       </style>
+                      <div class="action">
+                        <button class="accept-button">Accept <a id="{{i['fromid']}}"></a></button>
+                        <button class="decline-button">Decline <a id="{{i['fromid']}}"></a></button>
+                      </div>
                       {% endif %} 
                     {% endif %}
 
@@ -295,10 +304,6 @@
 
                   {% endif %}
                 </div>
-              </div>
-              <div class="action">
-                <button class="accept-button">Accept <a id="{{i['fromid']}}"></a></button>
-                <button class="decline-button">Decline</button>
               </div>
               <hr>
               {% set loop_count.value = loop_count.value + 1 %}
@@ -391,7 +396,53 @@
 
         });
       }
+      var listlist = document.querySelectorAll('[class^="noti-item noti-item-"]');
+      listlist.forEach(function(element){
+        element.addEventListener('click', function(){
+          if(element.classList.length > 2){
+            const requestOptions = {
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              body: JSON.stringify({ 'fromid': element.classList[3], 'toid': "{{myid}}"})
+                } 
+              fetch('/deletenoti', requestOptions)
+            location.href = "/chat?rid="+element.classList[2];
+          }
+          
+        })
+      })
       createonclick()
+      function declineclick(){
+        var btndec = document.querySelectorAll('.decline-button');
+        btndec.forEach(function(element){
+          element.addEventListener('click', function(){
+            element.parentNode.parentNode.parentNode.classList.add('none');
+            const requestOptions = {
+              method: 'POST', // Phương thức của request
+              headers: { 'Content-Type': 'application/json' }, // Định dạng của dữ liệu gửi đi
+              body: JSON.stringify({ 'fromid': element.previousElementSibling.querySelector('a').id, 'toid':'{{myid}}'})
+            } // Dữ liệu gửi đi, được chuyển đổi sang chuỗi JSON
+            fetch('/deletenoti', requestOptions).then(response =>{
+              // down count noti
+              var noti_span =  document.querySelector('.noti-badge')
+              var count = parseInt(noti_span.innerHTML)
+              count -= 1
+              noti_span.innerHTML = count
+              
+              //check 
+              var checkvar= document.querySelectorAll('[class^="accept-button"]');
+              if(checkvar.length = 1){
+                document.querySelector('.placeholder').classList.remove("none");
+              }
+  
+            }).catch((error) => {
+              console.error("Error:", error.error);
+              showErrorToast(error.error)
+            });
+          });
+        })
+      }
+      declineclick()
 
       function render_noti(msg, chat = 0, th=0){
         var notiItem = document.createElement("div");
@@ -434,45 +485,84 @@
 
         // Thêm phần tử notiItem vào trong DOM (ví dụ, bạn có thể thêm vào một phần tử cha nào đó)
         document.querySelector('.noti-items').appendChild(notiItem); // Thêm notiItem vào cuối phần tử body trong DOM
-        var hr = document.createElement("hr");
-
+        
+        
         if(chat != 1){
           // Tạo phần tử div với class là "action"
           var actionDiv = document.createElement("div");
           actionDiv.className = "action";
-
+          
           // Tạo nút chấp nhận
           var acceptButton = document.createElement("button");
           acceptButton.className = "accept-button-";
           acceptButton.textContent = "Accept";
-
+          
           // Tạo phần tử a
           var anchorElement = document.createElement("a");
           anchorElement.id = msg.from;
-
+          
           // Thêm phần tử a vào nút chấp nhận
           acceptButton.appendChild(anchorElement);
-
+          
           // Tạo nút từ chối
           var declineButton = document.createElement("button");
           declineButton.className = "decline-button";
           declineButton.textContent = "Decline";
-
+          
           // Thêm nút chấp nhận và nút từ chối vào phần tử div
           actionDiv.appendChild(acceptButton);
           actionDiv.appendChild(declineButton);
           document.querySelector('.noti-items').appendChild(actionDiv)
+
+          declineButton.addEventListener('click', function(){
+            declineButton.parentNode.classList.add('none');
+            declineButton.parentNode.previousElementSibling.classList.add('none')
+            const requestOptions = {
+              method: 'POST', // Phương thức của request
+              headers: { 'Content-Type': 'application/json' }, // Định dạng của dữ liệu gửi đi
+              body: JSON.stringify({ 'fromid': declineButton.previousElementSibling.querySelector('a').id, 'toid':'{{myid}}'})
+            } // Dữ liệu gửi đi, được chuyển đổi sang chuỗi JSON
+            fetch('/deletenoti', requestOptions).then(response =>{
+              // down count noti
+              var noti_span =  document.querySelector('.noti-badge')
+              var count = parseInt(noti_span.innerHTML)
+              count -= 1
+              noti_span.innerHTML = count
+              
+              //check 
+              var checkvar= document.querySelectorAll('[class^="accept-button"]');
+              if(checkvar.length = 1){
+                document.querySelector('.placeholder').classList.remove("none");
+              }
+  
+            }).catch((error) => {
+              //console.error("Error:", error.error);
+              showErrorToast(error.error)
+            });
+          });
         }
         else{
-          wrapperDiv.classList.add(msg.from)
+          wrapperDiv.classList.add(msg.fromid)
+          notiItem.addEventListener('click', function(){
+          const requestOptions = {
+            method: 'POST', // Phương thức của request
+            headers: { 'Content-Type': 'application/json' }, // Định dạng của dữ liệu gửi đi
+            body: JSON.stringify({ 'fromid': notiItem.querySelector('.wrapper ').classList[1], 'toid':'{{myid}}'})
+              } // Dữ liệu gửi đi, được chuyển đổi sang chuỗi JSON
+            fetch('/deletenoti', requestOptions)
+            location.href = "/chat?rid="+msg.rid;
+          })
+          
         }
-       
-
-
+        
+        
+        
+        var hr = document.createElement("hr");
 
         document.querySelector('.noti-items').appendChild(hr); // Thêm notiItem vào cuối phần tử body trong DOM
         document.querySelector('.placeholder').classList.add("none");
         createonclick()
+
       }
 
     //<!-- SOCKET CODE-->
@@ -485,6 +575,9 @@
       })
       socket2.on('invited', function (msg="11") {
         if("{{myid}}" == msg.to){
+          //arr.append()
+          
+          //console.log(arr)
           showSuccessToast("You have new invite from" + msg.from);
           render_noti(msg)
           var noti_span =  document.querySelector('.noti-badge')
@@ -493,7 +586,7 @@
           noti_span.innerHTML = count
         }
       })
-
+      
       socket2.on('receive-notichat', function(msg){
         if("{{myid}}" == msg.toid){
           showSuccessToast("You have new message from "+msg.fromname);
@@ -507,6 +600,12 @@
           var count_chat_noti = parseInt(noti_chat.innerHTML)
           count_chat_noti +=1
           noti_chat.innerHTML = count_chat_noti
+
+          var chat_count = document.querySelector('.noti-chat-badge').innerHTML;
+          chat_count = parseInt(chat_count)
+          chat_count +=1;
+          document.querySelector('.noti-chat-badge').innerHTML = chat_count;
+
         }
       })
 
