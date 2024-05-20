@@ -45,7 +45,7 @@
               <li>
                 <a href="#" title="Message" class="nav_mess"
                   ><i class="fas fa-envelope"></i>
-                  <span class="badge">3</span></a
+                  <span class="badge">{{count_noti_chat[0]}}</span></a
                 >
               </li>
             </ul>
@@ -470,11 +470,11 @@
             showSuccessToast("New chat created successfully");
             return response.json();
         } else if (response.status === 400) {
-            showErrorToast("Chat already exists");
+            //showErrorToast("Chat already exists");
             throw new Error("Chat already exists");
         } else if (response.status === 404) {
-            showErrorToast("User not found");
-            throw new Error("User not found");
+            //showErrorToast("User not found");
+            throw new Error("Already invite or user not found");
         } else {
             showErrorToast("Errorrrr");
             throw new Error("Server error");
@@ -489,7 +489,7 @@
         })
     })
       .catch((error) => {
-          showErrorToast("Something went wrong, try again later!")
+          showErrorToast(error)
       });
     });
     </script>
