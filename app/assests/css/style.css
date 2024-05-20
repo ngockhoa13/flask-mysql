@@ -700,6 +700,10 @@ a.nav_edit {
   left: 10px;
 }
 
+.menu-edit {
+  display: none;
+}
+
 .n2o-filter {
   margin-left: auto;
 }

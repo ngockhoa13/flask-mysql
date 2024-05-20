@@ -6,9 +6,11 @@
     <title>Chat</title>
     <link rel="stylesheet" href="./../assests/css/style.css" />
     <link rel="stylesheet" href="./../assests/css/reset.css">
+    <link rel="stylesheet" href="../assests/responsive/tablet.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="./../assests/js/index.js"></script>
+    
 </head>
   <body class="chatbox-bg">
     <header class="header fixed">
@@ -47,13 +49,18 @@
               <li>
                 <a href="#" title="Profile" onclick="redirectToHome('profile')"><i class="fas fa-user"></i></a>
               </li>
+              <li class="temp">
+                <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
+                <ul class="subnav">
               <li>
                 <a href="#" title="Settings" onclick="redirectToHome('setting')"><i class="fa-solid fa-gear setting" ></i
                 ></a>
               </li>
               <li>
-                <a href="#" title="Logout" onclick="redirectToHome('logout')"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+                    <a href="#" title="Logout" onclick="redirectToHome('logout')"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
                 ></a>
+                  </li>
+                </ul> 
               </li>
             </ul>
           </nav>
@@ -465,5 +472,6 @@
         return timeFormat;
       }
    </script>
+   <script src="../assests/responsive/tablet.js"></script>
   </body>
 </html>

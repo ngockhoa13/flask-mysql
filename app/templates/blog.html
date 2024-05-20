@@ -37,14 +37,19 @@
                 <li>
                   <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
                 </li>
-                <li>
-                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i></a>
-                </li>
-                <li>
-                  <a href="{{ url_for('logout') }}" title="Logout">
-                    <i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i>
-                  </a>
-                </li>
+                <li class="temp">
+                    <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
+                    <ul class="subnav">
+                      <li>
+                        <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                        ></a>
+                      </li>
+                      <li>
+                        <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
+                        ></a>
+                      </li>
+                    </ul> 
+                  </li>
               </ul>
             </nav>
           </div>
@@ -241,5 +246,7 @@
     </script>
 
     <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../assests/responsive/tablet.css">
+    <script src="../assests/responsive/tablet.js"></script>
 </body>
 </html>
