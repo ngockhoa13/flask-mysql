@@ -624,11 +624,11 @@
     <script >
       var list_blog = [
      {% for item in blog_info %}
-     {
-         "title": {{item[0]|tojson}},
-         "content": {{item[1]|tojson}}
-     }{% if not loop.last %},{% endif %}
-     {% endfor %}
+    {
+        "title": {{ item.0|tojson }},
+        "content": {{ item.1|tojson }}
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
      ];
      //list_blog.forEach(blog =>{ alert(blog['title'])})
 
