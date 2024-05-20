@@ -219,12 +219,14 @@ def profile():
     profile_pic = None
     cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
     if id:   
+        cursor.execute("SELECT COUNT(*) FROM blogPosts WHERE userID = ?", (id,))
+        blog_count = cursor.fetchone()[0]
 
         #Retrieve the data: username, blod title, content,...
         userName = cursor.execute("SELECT username FROM user WHERE id = ?",(id,)).fetchone()
         username = userName[0]
         print(username)
-        blog_info = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ?",(id,)).fetchall()
+        blog_info = cursor.execute("SELECT id, title, content, authorname, publish FROM blogPosts WHERE userID = ?", (id,)).fetchall()
             
         print(blog_info)
         published_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ? and publish = 1",(id,)).fetchall()
@@ -240,10 +242,8 @@ def profile():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs)
+        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs,blog_count=blog_count)
     return redirect('/login')
-
-
 # Settings user information route -------------------------------
 @app.route('/settings', methods=["GET", "POST"])
 @check_session

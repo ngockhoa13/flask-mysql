@@ -23,7 +23,7 @@
           <div class="nav-item">
             <i class="fa-solid fa-lock"></i> 
             <a href="#" onclick="showAllNotes()" title="All notes" class="nav_edit"><i class="fas fa-edit button-profile"></i>All notes</a>
-            <span class="tab-count inside">1</span>
+            <span class="tab-count inside">{{blog_count}}</span>
           </div>
           <div class="nav-item">
             <a href="#" onclick="showPublishedNotes()" title="Published notes" class="nav_edit publish_notes"><i class="fas fa-edit button-profile"></i>Published notes</a>
@@ -75,7 +75,7 @@
         <div id="userPostsContainer">
           <div class="pro-post-items" id="userPosts">
             <!-- Items -->
-              {% for id, title, authorname, publish in blog_info %}
+              {% for id, title,content, authorname, publish in blog_info %}
               <div class="pro-post-item">
                   <div class="item-header">
                     <span>{{title}}<i class="fa-solid fa-lock"></i></span>
@@ -85,13 +85,16 @@
                           <button type="submit" class="del_blog">Delete</button>
                         </form>
                       </span>
-                    <span><i class="fa-solid fa-pencil"></i></span>
+                      <span><i class="fa-solid fa-pencil"></i></span>                               
                   </div>
                   <!-- Checkbox for Published -->
                   <div class="published-checkbox">
                     <label for="published{{ id }}">Published</label>
                     <input type="checkbox" id="published{{ id }}" name="published" onchange="updatePublished('{{ id }}')" {% if publish == 1 %} checked {% endif %}>
                   
+                  </div>
+                  <div class="item-content">
+                    {{ content }}
                   </div>
                   <!-- End of Checkbox for Published -->
                   <div class="item-desc">
@@ -106,7 +109,7 @@
                     <span class="bookmark"
                       ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
                     >
-                  </div>
+                  </div>                 
             </div>
               {% endfor %}
           </div>
