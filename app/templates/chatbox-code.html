@@ -10,23 +10,32 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="./../assests/js/index.js"></script>
+<<<<<<< HEAD
     
+=======
+    <link rel="stylesheet" href="../assests/css/responsive-mobile.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Lily Script One' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
 </head>
   <body class="chatbox-bg">
     <header class="header fixed">
       <div class="content">
+        <div class="name-web">
+          <h1 class="name-web-details">OpenU</h1>
+        </div>
         <div class="body">
           <!-- Nav -->
-          <nav class="navbar">
+          <nav id="mobile-navbar" class="navbar">
             <ul class="navbar_items">
               <li class="active nav_home">
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
               <li>
-                <a href="#" onclick="" title="Search" class="search-input"><i class="fas fa-search"></i></a>
+                <a href="#" onclick="focusInput()" title="Search" id="nav-search" class="nav_search"><i class="fas fa-search"></i></a>
               </li>
               <li>
-                <a href="#" title="Blog" class="nav_edit"><i class="fas fa-edit" onclick="redirectToHome('blog')"></i></a>
+                <a href="#blog" title="Blog" id="nav-post" class="nav_edit"><i class="fas fa-edit"></i></a>
               </li>
               <li>
                 <a
@@ -45,36 +54,47 @@
                 >
               </li>
             </ul>
-            <ul class="navbar_items nav-bottom">
+            <div class="navbar_items_v2 navbar-bottom">
+              <div class="nav-bottom">
+                <div id="mobile-menu" class="nav_menu none">
+                  <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-menu-items">
               <li>
-                <a href="#" title="Profile" onclick="redirectToHome('profile')"><i class="fas fa-user"></i></a>
+                <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li class="temp">
                 <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
                 <ul class="subnav">
               <li>
-                <a href="#" title="Settings" onclick="redirectToHome('setting')"><i class="fa-solid fa-gear setting" ></i
+                <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
                 ></a>
               </li>
               <li>
+<<<<<<< HEAD
                     <a href="#" title="Logout" onclick="redirectToHome('logout')"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
+=======
+                <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
                 ></a>
                   </li>
                 </ul> 
               </li>
             </ul>
+              </div>
+            </div>
           </nav>
         </div>
       </div>
     </header>
     <div class="chat-container">
       <div class="chat-header">
-        <h3>OpenU</h3>
-        <span>User: {{ownname}}</span>
+        <h3 class="h3-name-web">OpenU</h3>
+        <span class="name-user-display">User: {{ownname}}</span>
       </div>
       <div class="chat-messing">
         <div class="inbox-mess">
-          <div class="inbox-peo">
+          <div id = "inbox-list" class="inbox-peo">
             <div class="inbox-peo-header">
               <p class="inbox-recent">Recent</p>
               <div class="inbox-search-wrap">
@@ -146,9 +166,10 @@
 
             </div>
             <div class="inbox-peo-list">
-              <!-- member list -->
+              <!-- mem1 -->
+              <div class"mem-mess">
               {% for i in data %}
-              <a href="/chat?rid={{i.room_id}}">
+                <a href="/chat?rid={{i.room_id}}" onclick="toConservation()">
                 <div class="inbox-peo-mem">
                   <div class="inbox-ava"></div>
                   <div class="inbox-info">
@@ -160,11 +181,14 @@
                 </div>
               </a>
               {% endfor %}
-              
+              </div>
             </div>
           </div>
           
-          <div class="mess">
+          <div id ="conservation" class="mess">
+            <div id="back-button" class="mobile-back-button none">
+              <i class="material-icons" onclick="BacktoInboxPeo()">arrow_back</i>
+            </div>   
             <div class="msg_history">
                 {% for j in messages %}
                   {% if j.sender_username==ownname %}
@@ -205,6 +229,11 @@
       </div>
       <div id="toast"></div>
     </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+      <script src="./../assests/js/index.js"></script>
+      <script src="./../assests/js/responsive-mobile.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         const listusername =   [
         {% for i in data %}
@@ -237,7 +266,40 @@
 
 
     <script>
+      document.getElementById('connected_email').addEventListener('submit', function(event) {
+        event.preventDefault(); 
 
+        var formData = new FormData(this); 
+      fetch('/new_chat', {
+          method: 'POST',
+          body: formData 
+      })
+      .then((response) => {
+        if (response.status === 200) {
+            showSuccessToast("New chat created successfully");
+            return response.json();
+        } else if (response.status === 400) {
+            showErrorToast("Chat already exists");
+            throw new Error("Chat already exists");
+        } else if (response.status === 404) {
+            showErrorToast("User not found");
+            throw new Error("User not found");
+        } else {
+            showErrorToast("Errorrrr");
+            throw new Error("Server error");
+        }
+    })
+    .then(data => {
+        const chatId = data.chat_id;
+        socket.emit('join-chat', {
+          rid: chatId
+        })
+    })
+      .catch((error) => {
+          console.error("Error:", error);
+          showErrorToast("Something went wrong, try again later!")
+      });
+    });
     </script>
 
     <script type="text/javascript">
@@ -472,6 +534,46 @@
         return timeFormat;
       }
    </script>
+<<<<<<< HEAD
    <script src="../assests/responsive/tablet.js"></script>
+=======
+   <script>
+    function BacktoInboxPeo() {
+      var conservation = document.getElementById('conservation');
+      var inboxList = document.getElementById('inbox-list')
+      var isOpened = conservation.style.display !== 'none';
+        if (isOpened){
+          conservation.style.display = 'none';
+          inboxList.style.display = "block";
+        }
+    }
+  </script>
+  <script>
+    function toConservation() {
+      var href = location.href; // Lấy đường dẫn từ thuộc tính href
+      //window.location.replace(href); // Thực hiện chuyển hướng mà không gây hiện tượng lịch sử trở lại
+      var url = new URL(href)
+      var rid = url.searchParams.get("rid")
+      if(rid){
+        console.log(location.href);
+        var conservation = document.getElementById('conservation');
+        var inboxList = document.getElementById('inbox-list');
+        var isOpened = inboxList.style.display !== 'none';
+        if (isOpened) {
+            conservation.style.display = 'block';
+            inboxList.style.display='none';
+
+        }
+      }
+      // Thực hiện các thay đổi CSS
+  
+  
+   } 
+    var mediaQuery = window.matchMedia('(max-width: 46.1875em)');
+    if (mediaQuery.matches) {
+          toConservation()
+      }
+   </script>
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
   </body>
 </html>

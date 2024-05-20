@@ -29,7 +29,7 @@
 - Quản lý blog cá nhân: set trạng thái,xóa, xem các blog đã like
 - Tính năng tìm kiếm blog và mọi người
 - **Thông báo realtime**
-- **Chat**
+- **Chat realtime**
 ### *Công nghệ sử dụng:*
 
 - HTML,CSS,JS đối với Front-end

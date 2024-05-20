@@ -5,36 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../assests/css/reset.css" />
     <link rel="stylesheet" href="../assests/css/style.css" />
+    <link rel="stylesheet" href="../assests/css/responsive-mobile.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       integrity="sha384-X6d13e5gKALF2DI8z5/jFfkhpk11lK5vdOB67HquyKbSrLp04I0ypSNf/JFF6Ds3"
       crossorigin="anonymous"
     />
+    <link href='https://fonts.googleapis.com/css?family=Lily Script One' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 
     <title>Open U</title>
     <style></style>
+<<<<<<< HEAD
     <link rel="stylesheet" href="../assests/responsive/tablet.css">
+=======
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
   </head>
   <body class="scrollbar">
     <!-- Header -->
     <header class="header fixed">
       <div class="content">
+        <div class="name-web">
+          <h1 class="name-web-details">OpenU</h1>
+        </div>
         <div class="body">
           <!-- Nav -->
-          <nav class="navbar">
+          <nav id="mobile-navbar" class="navbar">
             <ul class="navbar_items">
               <li class="active nav_home">
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
+<<<<<<< HEAD
               <li class="btn-search">
                 <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
+=======
+              <li>
+                <a href="#" onclick="focusInput()" title="Search" id="nav-search" class="nav_search"><i class="fas fa-search"></i></a>
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
               </li>
               <li>
-                <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
+                <a href="#blog" title="Blog" id="nav-post" class="nav_edit"><i class="fas fa-edit"></i></a>
               </li>
               <li>
                 <a
@@ -52,8 +66,18 @@
                 >
               </li>
             </ul>
+<<<<<<< HEAD
             <ul class="navbar_items nav-bottom">
               <li class="profile">
+=======
+            <div class="navbar_items_v2 navbar-bottom">
+              <div class="nav-bottom">
+                <div id="mobile-menu" class="nav_menu none">
+                  <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-menu-items">
+              <li>
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
                 <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li class="temp">
@@ -70,6 +94,8 @@
                 </ul> 
               </li>
             </ul>
+              </div>
+            </div>
           </nav>
         </div>
       </div>
@@ -135,12 +161,17 @@
 
 
       <!-- Blog-create -->
-      <section class="blog-page none">
-        <div class="create-blog-container container">
+      <section id="mobile-post" class="blog-page none">
+        <div class="create-blog-container container-v2">
           <!-- Item 1 -->
           <div class="create-blog card-border">
             <header class="create-post-header text-center">
-              <span class="create-post-title">Create your own post</a>
+              <div class="mobile-post-close none">
+                <button onclick="closePost()" type="button">Close</button>
+              </div>
+              <a class="create-post-title" href="https://goodapple.top/archives/1145"
+                >Create your own post</a
+              >
             </header>
             <div class="create-title">
           
@@ -176,10 +207,18 @@
 
         
       <!-- Profile -->
+<<<<<<< HEAD
       <section class="blog-noti">
         <aside class="blog-user-info">
+=======
+      <section class="section-profile">
+        <aside id = "mobile-search" class="blog-user-info">
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
           <div class="right-side1">
             <div class="rs-desc-pro">
+              <div class="mobile-search-close none">
+                <button onclick="closeSearch()" type="button">Close</button>
+              </div>
               <div class="rs-banner">
                 <span>OpenU Blog</span>
               </div>
@@ -235,10 +274,13 @@
           </div>
         </aside>
         <!-- Notification -->
-        <aside class="notification none">
+        <aside id="mobile-noti" class="notification none">
           <div class="noti-container">
             <div class="noti-header">
               <div class="noti-banner">
+                <div class="mobile-post-close none">
+                  <button onclick="closeNotification()" type="button">Close</button>
+                </div>
                 <span>Notification</span>
               </div>
               <span class="noti-desc"
@@ -334,6 +376,7 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
     <script src="./../assests/js/index.js"></script>
+    <script src="../assests/js/responsive-mobile.js"></script>
     <script>
       function createonclick(){
         var acceptElements = document.querySelectorAll('[class^="accept-button"]');
@@ -679,6 +722,49 @@
           notifications.style.display === "block" ? "none" : "block";
       }
     </script>
+<<<<<<< HEAD
     <script src="../assests/responsive/tablet.js"></script>
+=======
+    <script>
+      var navbar = document.getElementById('mobile-navbar');
+      var moblieMenu = document.getElementById('mobile-menu');
+      moblieMenu.onclick = function(){
+        var isClosed = navbar.style.overflow === 'hidden';
+        if (isClosed){
+          navbar.style.overflow = 'initial';
+        } else{
+          navbar.style.overflow = 'hidden';
+        }
+      }
+    </script>
+    <script>
+      function closePost() {
+        var post = document.getElementById('mobile-post');
+        var isOpened = post.style.display !== 'none';
+        if (isOpened){
+          post.style.display = 'none';
+        }
+      }
+    </script>
+    <script>
+      function closeNotification() {
+        var noti = document.getElementById('mobile-noti');
+        var isOpened = noti.style.display !== 'none';
+        if (isOpened){
+          noti.style.display = 'none';
+        }
+      }
+    </script>
+    <script>
+      function closeSearch() {
+        var search = document.getElementById('mobile-search');
+        var computedStyle = window.getComputedStyle(search);
+        var zIndex = parseInt(computedStyle.getPropertyValue('z-index'));
+        if(zIndex === 10){
+            search.style.zIndex = '-10'; // Đóng cửa sổ tìm kiếm
+        }
+      }
+    </script>
+>>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
   </body>
 </html>
