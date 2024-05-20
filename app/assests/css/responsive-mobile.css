@@ -252,6 +252,7 @@
         align-items: center;
         justify-content: center;
         display: none;
+        margin-left: 0;
     }
     .create-blog{
         width: 380px;

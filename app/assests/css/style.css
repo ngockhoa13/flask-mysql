@@ -130,6 +130,9 @@ body {
   /* display: none; */
 }
 /* Post blog */
+.blog-page{
+  margin-left: 150px;
+}
 .post,
 .create-blog {
   margin-bottom: 25px;
