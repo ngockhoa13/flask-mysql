@@ -6,14 +6,22 @@
     <title>Settings - OpenU</title>
     <link rel="stylesheet" href="../assests/css/style.css">
     <link rel="stylesheet" href="../assests/css/reset.css">
+    <link rel="stylesheet" href="../assests/css/responsive-mobile.css">
 </head>
 <body style="overflow-x: hidden">
     <div class="set-page-container">
         <header class="setting-header">
             <span class="setting-banner">Settings</span>
             <div class="donate"><i class="fa-solid fa-list-check"></i> Donate</div>
+            <div class="mobile-nav-setting none">
+                <ul class="nav-setting-container">
+                    <li class="general">General</li>
+                    <li class="notes">Notes</li>
+                    <li class="set-notifications">Notifications</li>
+                </ul>
+                </div>
             <div class="back-btn-setting">
-                <a href="/home">Back to home</a>
+                <a href="/home"><i class="fas fa-home"></i></a>
             </div>
         </header>
         <main class="setting-body">
@@ -29,7 +37,7 @@
                 <form action="/settings" method="post" enctype="multipart/form-data">
                     <div class="setting-area">
                         <div class="set-area-left">
-                            <div>
+                            <div class="setting-name">
                                 <label for="inputname">Name</label>
                                 <input type="text" name="name" minlength="1" maxlength="80" id="inputname" placeholder="Your full name" value="{{ name }}">
                             </div>

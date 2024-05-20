@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../assests/css/style.css" />
     <link rel="stylesheet" href="../assests/css/reset.css" />
     <link rel="stylesheet" href="../assests/css/style.css" />
+    <link rel="stylesheet" href="../assests/css/responsive-mobile.css" />
     <title>{{ title }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -13,9 +14,12 @@
     <!-- Header -->
     <header class="header fixed">
         <div class="content">
+          <div class="name-web">
+                <h1 class="name-web-details">OpenU</h1>
+          </div>
           <div class="body">
             <!-- Nav -->
-            <nav class="navbar">
+            <nav id="mobile-navbar" class="navbar">
               <ul class="navbar_items">
                 <li class="active nav_home">
                   <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
@@ -33,19 +37,26 @@
                   </a>
                 </li>
               </ul>
-              <ul class="navbar_items nav-bottom">
+              <div class="navbar_items_v2 navbar-bottom">
+                <div class="nav-bottom">
+                  <div id="mobile-menu" class="nav_menu none">
+                    <i class="fas fa-bars"></i>
+                  </div>
+                  <ul class="nav-menu-items">
                 <li>
                   <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
                 </li>
                 <li>
-                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i></a>
+                  <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                  ></a>
                 </li>
                 <li>
-                  <a href="{{ url_for('logout') }}" title="Logout">
-                    <i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i>
-                  </a>
+                  <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
+                  ></a>
                 </li>
               </ul>
+                </div>
+              </div>
             </nav>
           </div>
         </div>
@@ -239,6 +250,18 @@
             });
         });
     </script>
+    <script>
+        var navbar = document.getElementById('mobile-navbar');
+        var moblieMenu = document.getElementById('mobile-menu');
+        moblieMenu.onclick = function(){
+          var isClosed = navbar.style.overflow === 'hidden';
+          if (isClosed){
+            navbar.style.overflow = 'initial';
+          } else{
+            navbar.style.overflow = 'hidden';
+          }
+        }
+      </script>
 
     <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
 </body>

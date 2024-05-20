@@ -6,13 +6,22 @@
     <title>Profile</title>
     <link rel="stylesheet" href="../assests/css/style.css" />
     <link rel="stylesheet" href="../assests/css/reset.css" />
+    <link rel="stylesheet" href="../assests/css/responsive-mobile.css" />
   </head>
   <body>
     <div class="pro-container">
+      <div class="mobile-back-btn none">
+        <a href="{{ url_for('home')}}"><i class="fas fa-home"></i></a>
+      </div>
       <div class="pro-sidebar">
+        <div class="info-user">
         <div class="logo"></div>
         <div class="user-avatar"></div>
+          <div class="info-user-details">
         <span class="user-name">{{username}}</span>
+            <span class="mobile-time-joined none">Joined on Mar 12, 2024</span>
+          </div>
+        </div>
         <div class="edit-profile">
           <a href="{{ url_for('settings')}}">Edit info</a>
         </div>
@@ -74,7 +83,8 @@
         <!-- User's post -->
         <div id="userPostsContainer">
           <div class="pro-post-items" id="userPosts">
-            <!-- Items -->
+            <!-- Item1 -->
+            <div class="pro-post-item">
               {% for id, title, authorname, publish in blog_info %}
               <div class="pro-post-item">
                   <div class="item-header">
@@ -107,8 +117,9 @@
                       ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
                     >
                   </div>
-            </div>
+              </div>
               {% endfor %}
+            </div>
           </div>
         </div>
 
@@ -162,6 +173,7 @@
     {% endif %} 
 
     <script src="../assests/js/index.js"></script>
+    <script src="../assests/js/responsive-mobile.js"></script>
     <script
       src="https://kit.fontawesome.com/c9f23d41c7.js"
       crossorigin="anonymous"

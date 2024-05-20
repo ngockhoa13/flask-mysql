@@ -14,9 +14,7 @@
     />
     <link href='https://fonts.googleapis.com/css?family=Lily Script One' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
 
     <title>Open U</title>
     <style></style>
@@ -24,6 +22,7 @@
   <body class="scrollbar">
     <!-- Header -->
     <header class="header fixed">
+
       <div class="content">
         <div class="name-web">
           <h1 class="name-web-details">OpenU</h1>
@@ -47,19 +46,19 @@
                   title="Notification"
                   class="nav_noti"
                   ><i class="fas fa-bell nav_noti_icon"></i>
-                  <span class="badge noti-badge">{{count_noti[0]}}</span></a
+                  <span class="badge">12</span></a
                 >
               </li>
               <li>
                 <a href="/chat" title="Message" class="nav_mess"
                   ><i class="fas fa-envelope"></i>
-                  <span class="badge noti-chat-badge">3</span></a
+                  <span class="badge">3</span></a
                 >
               </li>
             </ul>
             <div class="navbar_items_v2 navbar-bottom">
               <div class="nav-bottom">
-                <div id="mobile-menu" class="nav_menu none">
+                <div id="mobile-menu" class="nav_menu">
                   <i class="fas fa-bars"></i>
                 </div>
                 <ul class="nav-menu-items">
@@ -264,77 +263,34 @@
               >
             </div>
             <div class="noti-items">
-              <div class="noti-item placeholder">
-                <div class="wrapper">
-                    <span class="noti-content">
-                        You don't have notification<br>
-                    </span>
+              <!-- noti1 -->
+              <div class="noti-item">
+                <div class="noti-ava">
                 </div>
-              </div>
-              {% set loop_count = namespace(value=0) %}
-              {% for i in data %}
-              <div class="noti-item noti-item-{{ loop.index }}">
-                <div class="noti-ava"></div>
-                <div class="wrapper">
-                  {% if i['ischat'] != 1 %}
-                      <h3 class="noti-title"> New invite from {{i['fromname'][0]}}</h3>
-                      {% if i['content']!=none %}
-                      <div class="noti-content"> Content: {{i['content']}}
-                        <br>
-                        <span>
-                          Time: {{i['time']}}
-                        </span>
-                      </div>
-                      {% if i['sender_pic'] %}
-                      <style>
-                      .noti-ava {
-                            background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
-                        }
-                      </style>
-                      {% endif %} 
-                    {% endif %}
-
-                  {% else %}
-
-                  <h3 class="noti-title"> New Message</h3>
-                  {% if i['content']!=none %}
-                  <div class="noti-content"> You have new message from {{i['fromname'][0]}}
-                    <br>
-                    <span>
-                      Time: {{i['time']}}
-                    </span>
-                  </div>
-                  {% if i['sender_pic'] %}
-                  <style>
-                  .noti-ava {
-                        background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + i['sender_pic']) }}");
-                    }
-                  </style>
-                  {% endif %} 
-                {% endif %}
-
-
-
-                  {% endif %}
-                </div>
-              </div>
-              <div class="action">
-                <button class="accept-button">Accept <a id="{{i['fromid']}}"></a></button>
-                <button class="decline-button">Decline</button>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
               </div>
               <hr>
-              {% set loop_count.value = loop_count.value + 1 %}
-              {% endfor %}
-              <script>
-                var countnotifications = {{loop_count.value}};
-              </script>
-
-              <!-- check data-->
-              {% if data != [] %}
-                <script>
-                  document.querySelector('.placeholder').classList.add("none");
-                </script>
-               {% endif %} 
+              <!-- noti2 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
+              </div>
+              <hr>
+              <!-- noti3 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
+              </div>
+              <hr>
+              <!-- noti4 -->
+              <div class="noti-item">
+                <div class="noti-ava">
+                </div>
+                <div class="noti-content"> Lorem ipsum dolor sit amet consectetur, djklsajdlasjdlksajdlsa.</div>
+              </div>
+            </div>
           </div>
         </aside>
       </section>
@@ -348,198 +304,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
     <script src="./../assests/js/index.js"></script>
     <script src="../assests/js/responsive-mobile.js"></script>
-    <script>
-      function createonclick(){
-        var acceptElements = document.querySelectorAll('[class^="accept-button"]');
-        acceptElements.forEach(function(element) {
-          element.classList.add('accept-button')
-          element.addEventListener('click', function() {
-            const requestOptions = {
-              method: 'POST', // Phương thức của request
-              headers: { 'Content-Type': 'application/json' }, // Định dạng của dữ liệu gửi đi
-              body: JSON.stringify({ data: element.querySelector('a').id }) // Dữ liệu gửi đi, được chuyển đổi sang chuỗi JSON
-            };
-          var ID = element.querySelector('a').id
-          // Gửi request sử dụng fetch
-          fetch('/accept', requestOptions)
-              .then(response => {
-                  if (!response.ok) {
-                    showErrorToast('Network response was not ok')
-                    throw new Error('Network response was not ok');
-  
-                  }
-                  return response.json();
-              })
-              .then((response) => {
-                if (response.success) {
-                  showSuccessToast(response.success);
-
-                  var deletednotilist = document.querySelectorAll('[class^="accept-button"]');
-                  deletednotilist.forEach(function(ele){
-                    if(ele.querySelector('a').id == element.querySelector('a').id){
-                      ele.parentNode.previousElementSibling.classList.add('none')
-                      ele.parentNode.classList.add('none')
-                      ele.parentNode.nextElementSibling.classList.add('none')
-                    }
-                  });
-                  element.parentNode.previousElementSibling.classList.add('none')
-                  element.parentNode.classList.add('none')
-                  element.parentNode.nextElementSibling.classList.add('none')
-                  socket2.emit('gen_user', {
-                    room_id: response.chatroom,
-                    to_id: ID
-                    } )
-                    // down count noti
-                    var noti_span =  document.querySelector('.noti-badge')
-                    var count = parseInt(noti_span.innerHTML)
-                    count -= 1
-                    noti_span.innerHTML = count
-                    
-                    //check 
-                    var checkvar= document.querySelectorAll('[class^="accept-button"]');
-                    if(checkvar.length = 1){
-                      document.querySelector('.placeholder').classList.remove("none");
-                    }
-                } else {
-                  showErrorToast(response.error);
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error.error);
-                showErrorToast(error.error)
-              });
-          });
-
-          
-
-        });
-      }
-      createonclick()
-
-      function render_noti(msg, chat = 0, th=0){
-        var notiItem = document.createElement("div");
-        notiItem.classList.add("noti-item");
-        if(th != 0)
-        {
-          th+=1
-          notiItem.classList.add("noti-item-" + th)
-        }
-
-        // Tạo phần tử div chứa hình ảnh đại diện (nếu cần)
-        var notiAva = document.createElement("div");
-        notiAva.classList.add("noti-ava");
-        notiItem.appendChild(notiAva); // Thêm phần tử notiAva vào trong notiItem
-
-        // Tạo phần tử div chứa tiêu đề và nội dung thông báo
-        var wrapperDiv = document.createElement("div");
-        wrapperDiv.classList.add("wrapper");
-        notiItem.appendChild(wrapperDiv); // Thêm phần tử wrapperDiv vào trong notiItem
-
-        // Tạo phần tử h3 chứa tiêu đề thông báo
-        var titleH3 = document.createElement("h3");
-        titleH3.classList.add("noti-title");
-        titleH3.textContent = "New Invite";
-        if(chat == 1){
-          titleH3.textContent = "New Message";
-        }
-        wrapperDiv.appendChild(titleH3); // Thêm phần tử titleH3 vào trong wrapperDiv
-
-        // Tạo phần tử div chứa nội dung thông báo
-        var notiContent = document.createElement("div");
-        notiContent.classList.add("noti-content");
-        if(chat ==1){
-          notiContent.textContent = "You have new message from " + msg.fromname
-        }else{
-          notiContent.textContent = msg.content
-        }
-
-        wrapperDiv.appendChild(notiContent); // Thêm phần tử notiContent vào trong wrapperDiv
-
-        // Thêm phần tử notiItem vào trong DOM (ví dụ, bạn có thể thêm vào một phần tử cha nào đó)
-        document.querySelector('.noti-items').appendChild(notiItem); // Thêm notiItem vào cuối phần tử body trong DOM
-        var hr = document.createElement("hr");
-
-        if(chat != 1){
-          // Tạo phần tử div với class là "action"
-          var actionDiv = document.createElement("div");
-          actionDiv.className = "action";
-
-          // Tạo nút chấp nhận
-          var acceptButton = document.createElement("button");
-          acceptButton.className = "accept-button-";
-          acceptButton.textContent = "Accept";
-
-          // Tạo phần tử a
-          var anchorElement = document.createElement("a");
-          anchorElement.id = msg.from;
-
-          // Thêm phần tử a vào nút chấp nhận
-          acceptButton.appendChild(anchorElement);
-
-          // Tạo nút từ chối
-          var declineButton = document.createElement("button");
-          declineButton.className = "decline-button";
-          declineButton.textContent = "Decline";
-
-          // Thêm nút chấp nhận và nút từ chối vào phần tử div
-          actionDiv.appendChild(acceptButton);
-          actionDiv.appendChild(declineButton);
-          document.querySelector('.noti-items').appendChild(actionDiv)
-        }
-        else{
-          wrapperDiv.classList.add(msg.from)
-        }
-       
-
-
-
-        document.querySelector('.noti-items').appendChild(hr); // Thêm notiItem vào cuối phần tử body trong DOM
-        document.querySelector('.placeholder').classList.add("none");
-        createonclick()
-      }
-
-    //<!-- SOCKET CODE-->
-
-      var socket = io.connect('http://' + document.domain + ':' + location.port)
-      
-      var socket2 = io.connect('http://localhost:7777')
-      socket2.on('connect', function () {
-        console.log("heheheheh")
-      })
-      socket2.on('invited', function (msg="11") {
-        if("{{myid}}" == msg.to){
-          showSuccessToast("You have new invite from" + msg.from);
-          render_noti(msg)
-          var noti_span =  document.querySelector('.noti-badge')
-          var count = parseInt(noti_span.innerHTML)
-          count += 1
-          noti_span.innerHTML = count
-        }
-      })
-
-      socket2.on('receive-notichat', function(msg){
-        if("{{myid}}" == msg.toid){
-          showSuccessToast("You have new message from "+msg.fromname);
-          var noti_span = document.querySelector('.nav_noti span')
-          var count = parseInt(noti_span.innerHTML)
-          count += 1
-          noti_span.innerHTML = count
-          render_noti(msg, 1,countnotifications)
-
-          var noti_chat = document.querySelector('.noti-chat-badge');
-          var count_chat_noti = parseInt(noti_chat.innerHTML)
-          count_chat_noti +=1
-          noti_chat.innerHTML = count_chat_noti
-        }
-      })
-
-
-
-
-
-    </script>
-
-    
     <!-- Search function -->
     <script >
       var list_blog = [
@@ -575,7 +339,7 @@
     articleElement.appendChild(headerElement);
     
     document.querySelector(".post-items").appendChild(articleElement);
-    articleElement.classList.add('hide')
+    articleElement.classList.add('none')
     // Search logic
       var searchInput = document.querySelector("[data-search]")
       searchInput.addEventListener("input", e => {
@@ -637,7 +401,7 @@
         if(zIndex === 10){
             search.style.zIndex = '-10'; // Đóng cửa sổ tìm kiếm
         }
-      }
+    }
     </script>
   </body>
 </html>
