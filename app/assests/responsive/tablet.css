@@ -9,6 +9,10 @@
         font-size: 20px;
     }
 
+    .hidden-element {
+        display: none !important;
+    }   
+
     /* Register */
     .account-edit-entry {
         display: flex;
@@ -108,8 +112,17 @@
         margin-top: initial;
     }
 
+    .nav-bottom {
+        height: 60px;
+    }
+
     .navbar_items li {
         display: inline-block;
+    }
+
+    .nav-menu-items li {
+        display: inline-block;
+        align-items: center;
     }
 
     .blog-container {
@@ -256,7 +269,7 @@
 
     .nav-bottom li{
         color: #fff;
-        padding-bottom: 30px;
+        /* padding-bottom: 30px; */
         margin-top: -5px;
         position: relative;
     }
@@ -345,6 +358,8 @@
         height: 40px;
     }
 
+    
+
 
 
 
@@ -353,6 +368,7 @@
     .blog-page {
         margin-top: 150px;
         width: 100%;
+        margin-left: 0;
     }
 
     .create-blog-container {
@@ -420,6 +436,7 @@
         text-align: left;
         letter-spacing: 1px;
         font-size: 18px;
+        font-weight: 200;
     }
 
 
@@ -455,14 +472,37 @@
         margin-right: 18px;
     }
 
+    .pro-container {
+        /* height: 1024px; */
+    }
+
     .pro-sidebar {
         width: 190px;
+        height: 1024px;
     }
+    .noti-header{
+        padding: 30px;
+    }
+    .placeholder{
+        padding: 20px !important;
+    }
+    #lmao{
+        overflow-y: scroll;
+        max-height: calc( 1024px - 173px);
+      }
+    .lmao{
+        overflow-y: scroll;
+        max-height: calc( 1024px - 173px);
+      }
 
     .nav-post {
         margin: 0;
         /* position: fixed; */
 
+    }
+
+    .wrapper{
+        margin: auto;
     }
 
     .n2o-filter .fa-angle-down {
@@ -493,6 +533,16 @@
         margin-right: 15px;
     }
 
+    .nav-post div {
+        font-size: 15px;
+    }
+
+    .info-user-details {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
 
     /* Setting */
     /* Setting header */
@@ -507,6 +557,7 @@
     .setting-body {
         display: block; 
         padding-top: 0;
+        height: calc(100vh - 95px);
     }
 
     .setting-area {
@@ -556,22 +607,36 @@
     .set-area-right {
         display: flex;
         flex-direction: row;
-        /* align-items: center; */
+        align-items: normal;
         justify-content: space-between;
         margin-left: 0;
+        margin-top: -60%;
+        border: 1px solid #fff;
+        height: 320px;
+        position: relative;
+        z-index: 20;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        transform: translateZ(0);
     }
 
     .save-change {
-        right: 62px;
+        right: 37%;
         position: absolute;
         margin-top: 0;
+        top: 63%;
+        font-size: 25px;
+        z-index: 2;
     }
 
     .choose-photo,
     .reset-pass {
         margin: 0;
-        height: 38px;
+        height: 44px;
+        width: fit-content;
         padding: 8px 14px;
+        font-size: 25px;
+        margin-top: 70px;
+        margin-right: 22px;
     }
 
     .setting-ava {
@@ -581,6 +646,23 @@
 
     .item-desc .tablet-font {
         font-size: 16px;
+    }
+
+    .btn-edit-setting {
+        position: absolute;
+        right: 30%;
+        bottom: 130px;
+        font-size: 25px;
+        border: 1px solid #fff;
+        background-color: #39ac91;
+        font-weight: 500;
+        color: #fff;
+        border-radius: 3px;
+        text-align: center;
+        padding: 8px 14px;
+        width: 300px;
+        display: block !important;
+        animation: none;
     }
 
 
@@ -604,10 +686,14 @@
 
     .inbox-mess .mess{
         height: 924px;
+        width: 768px;
+        padding-left: 40px;
+        padding-top: 40px;
     }
 
     .inbox-mess .inbox-peo{
-        width: 30%;
+        width: 100%;
+        height: calc(1024px - 100px);
     }
 
     .inbox-peo .inbox-recent {
@@ -618,17 +704,19 @@
         display: none;
     }
 
+    .inbox-peo-list {
+        width: 370px;
+    }
+
     .inbox-peo-header {
-        height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        height: 80px;
+        margin-bottom: 10px;
     }
 
     #new_chat_btn {
-        top: 5px;
+        top: 38px;
         right: 5px;
-        height: 30px;
+        height: 33px;
         font-size: 20px;
     }
 
@@ -662,15 +750,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
+        background-color: rgba(48, 57, 61, 0.7);
+        background-image: none;
     }
 
     #add_friend {
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
-        width: 47%;
+        top: 106px;
+        right: 0px;
+        width: 399px;
         height: 31%;
     }
 
@@ -688,13 +776,14 @@
     }
 
     #connected_email > input {
-        font-size: 22px;
+        font-size: 27px;
         margin-top: 4px;
+        width: 314px;
     }
 
     #connected_email > button {
         margin-top: 15px;
-        font-size: 22px;
+        font-size: 24px;
         width: 93%;
     }
 
@@ -703,13 +792,38 @@
     }
 
     .inbox-peo-mem {
-        margin: 0;
-        padding: 0;
-        margin-top: 20px;
+        padding: 15px;
+        margin: 0px;
+        margin: 20px 15px 0 15px;
     }
 
     .inbox-info {
         font-size: 22px;
+    }
+
+    .inbox-mess {
+        display: block;
+    }
+
+    #conservation {
+        display: none;
+    }
+
+    #inbox-list {
+        /* display: none; */
+    }
+    
+    .mobile-back-button{
+        display: block !important;
+        position: sticky;
+        top: 0;
+        left: 0;
+        margin-top: -10px;
+    }
+
+    .msg_history {
+        height: 784px;
+        margin-top: 10px;
     }
 
 
@@ -721,4 +835,7 @@
         padding-right: 30px;
         padding-left: 30px;
     }
+
+    /* test  */
+    
 }

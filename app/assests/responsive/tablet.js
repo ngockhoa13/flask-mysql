@@ -51,7 +51,7 @@ if (mediaQuery.matches) {
   var overlay = document.createElement("div");
   overlay.classList.add("overlay", "none");
   document.body.appendChild(overlay);
-  btnSearch.addEventListener("click", function (event) {
+  btnSearch.addEventListener("click", function () {
     if (blog_noti.classList.contains("none")) {
       blog_noti.classList.remove("none");
       if (search.classList.contains("none")) {
@@ -179,4 +179,6 @@ if (mediaQuery.matches) {
   newChat.addEventListener("click", function () {
     overlay.classList.remove("none");
   });
+
+  
 }

@@ -6,17 +6,13 @@
     <title>Chat</title>
     <link rel="stylesheet" href="./../assests/css/style.css" />
     <link rel="stylesheet" href="./../assests/css/reset.css">
-    <link rel="stylesheet" href="../assests/responsive/tablet.css">
+    <link rel="stylesheet" href="./../assests/responsive/tablet.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="./../assests/js/index.js"></script>
-<<<<<<< HEAD
-    
-=======
     <link rel="stylesheet" href="../assests/css/responsive-mobile.css"/>
     <link href='https://fonts.googleapis.com/css?family=Lily Script One' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
 </head>
   <body class="chatbox-bg">
     <header class="header fixed">
@@ -54,29 +50,25 @@
                 >
               </li>
             </ul>
-            <div class="navbar_items_v2 navbar-bottom">
+            <div class="navbar_items_v2 navbar_items navbar-bottom">
               <div class="nav-bottom">
                 <div id="mobile-menu" class="nav_menu none">
                   <i class="fas fa-bars"></i>
                 </div>
                 <ul class="nav-menu-items">
-              <li>
+              <li class="profile">
                 <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li class="temp">
                 <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
                 <ul class="subnav">
-              <li>
-                <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
-                ></a>
-              </li>
-              <li>
-<<<<<<< HEAD
-                    <a href="#" title="Logout" onclick="redirectToHome('logout')"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
-=======
-                <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket" style="font-size:18px"></i></i
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
-                ></a>
+                  <li>
+                    <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
+                    ></a>
                   </li>
                 </ul> 
               </li>
@@ -233,6 +225,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
       <script src="./../assests/js/index.js"></script>
       <script src="./../assests/js/responsive-mobile.js"></script>
+      <script src="./../assests/responsive/tablet.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         const listusername =   [
@@ -242,7 +235,7 @@
             "room_id":"{{i['room_id']}}"
         }{% if not loop.last %},{% endif %} 
         {% endfor %}
-         ];
+        ];
          var searchInput2 = document.querySelector(".input-search2")
          searchInput2.addEventListener("input", e => {
           
@@ -534,9 +527,6 @@
         return timeFormat;
       }
    </script>
-<<<<<<< HEAD
-   <script src="../assests/responsive/tablet.js"></script>
-=======
    <script>
     function BacktoInboxPeo() {
       var conservation = document.getElementById('conservation');
@@ -560,7 +550,7 @@
         var inboxList = document.getElementById('inbox-list');
         var isOpened = inboxList.style.display !== 'none';
         if (isOpened) {
-            conservation.style.display = 'block';
+            conservation.style.display = 'flex';
             inboxList.style.display='none';
 
         }
@@ -570,10 +560,12 @@
   
    } 
     var mediaQuery = window.matchMedia('(max-width: 46.1875em)');
-    if (mediaQuery.matches) {
+    var mediaQuery1 = window.matchMedia(
+          "(min-width: 46.25em) and (max-width: 63.9375em)"
+        );
+    if (mediaQuery.matches || mediaQuery1.matches) {
           toConservation()
       }
-   </script>
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
+    </script>
   </body>
 </html>

@@ -6,11 +6,8 @@
     <title>Settings - OpenU</title>
     <link rel="stylesheet" href="../assests/css/style.css">
     <link rel="stylesheet" href="../assests/css/reset.css">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../assests/responsive/tablet.css">
-=======
     <link rel="stylesheet" href="../assests/css/responsive-mobile.css">
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
 </head>
 <body style="overflow-x: hidden">
     <div class="set-page-container">
@@ -66,7 +63,7 @@
                                 <textarea class="bio-area" rows="5" maxlength="160" placeholder="Tell about yourself..." name="bio" id="inputBio"></textarea>
                             </div>
                         </div>
-                        <div class="set-area-right">
+                        <div class="set-area-right hidden-element">
                             <div class="setting-ava"></div>
                             <label class="choose-photo">
                                 <span>Choose photo</span>
@@ -75,7 +72,8 @@
                             <div class="reset-pass"><span>Reset password</span></div>
                         </div>
                     </div>
-                    <button class="save-change" type="submit">Save Changes</button>
+                    <button class="btn-edit-setting none">Edit</button>
+                    <button class="save-change hidden-element" type="submit">Save Changes</button>
                 </form>
             </section>
         </main>
@@ -88,7 +86,30 @@
     </style>
     {% endif %} 
     <script src="https://kit.fontawesome.com/c9f23d41c7.js" crossorigin="anonymous"></script>
-    
-    <script src="../assests/responsive/tablet.js"></script>
+    <script>
+        var overlay = document.createElement("div");
+        overlay.classList.add("overlay", "none");
+        document.body.appendChild(overlay);
+        var editSet = document.querySelector(".btn-edit-setting");
+        var btnSave = document.querySelector(".save-change");
+        var setAreaRight = document.querySelector(".set-area-right");
+
+        editSet.addEventListener("click", function(event) {
+
+            event.preventDefault();
+
+            if (overlay.classList.contains("none")) {
+                overlay.classList.remove("none");
+            }
+
+            if(btnSave.classList.contains("hidden-element")) {
+                btnSave.classList.remove("hidden-element");
+            }
+
+            if(setAreaRight.classList.contains("hidden-element")) {
+                setAreaRight.classList.remove("hidden-element");
+            }
+        })
+    </script>
 </body>
 </html>

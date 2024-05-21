@@ -242,7 +242,7 @@ def profile():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic, published_blogs=published_blogs,blog_count=blog_count)
+        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic,  published_blogs=published_blogs,blog_count=blog_count)
     return redirect('/login')
 # Settings user information route -------------------------------
 @app.route('/settings', methods=["GET", "POST"])

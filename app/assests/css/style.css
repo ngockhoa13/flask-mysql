@@ -486,7 +486,6 @@ span.noti-content {
   font-weight: 400;
 }
 .noti-items {
-  padding-top: 10px;
   background-color: #f3f3f3;
   border-radius: 0px 0px 10px 10px;
 }
@@ -715,8 +714,20 @@ a.nav_edit {
   margin-left: 40px;
 }
 
+#publishedNotesContainer{
+  overflow-y: hidden;
+}
 .pro-post-items .pro-post-published-items{
   margin-top: 20px;
+}
+#lmao{
+  overflow-y: scroll;
+  max-height: calc( 100vh - 156px);
+}
+.lmao{
+  overflow-y: scroll;
+  max-height: calc( 100vh - 156px);
+
 }
 
 .pro-post-item {

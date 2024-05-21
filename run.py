@@ -31,7 +31,7 @@ def join_private_chat(data):
     room = data["rid"]
     myid = data['myid']
     join_room(room=room)
-    cursor, conn = getDB()
+    cursor, conn = getDB()  
     userID = cursor.execute("SELECT userID1,userID2 FROM chat WHERE id = ?", (room,)).fetchone()
     id1, id2 = userID
     if myid == id1:

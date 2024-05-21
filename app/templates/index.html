@@ -17,13 +17,9 @@
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-
     <title>Open U</title>
     <style></style>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../assests/responsive/tablet.css">
-=======
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
+    <link rel="stylesheet" href="../assests/responsive/tablet.css" />
   </head>
   <body class="scrollbar">
     <!-- Header -->
@@ -39,13 +35,8 @@
               <li class="active nav_home">
                 <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
               </li>
-<<<<<<< HEAD
               <li class="btn-search">
-                <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
-=======
-              <li>
                 <a href="#" onclick="focusInput()" title="Search" id="nav-search" class="nav_search"><i class="fas fa-search"></i></a>
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
               </li>
               <li>
                 <a href="#blog" title="Blog" id="nav-post" class="nav_edit"><i class="fas fa-edit"></i></a>
@@ -66,30 +57,25 @@
                 >
               </li>
             </ul>
-<<<<<<< HEAD
-            <ul class="navbar_items nav-bottom">
-              <li class="profile">
-=======
-            <div class="navbar_items_v2 navbar-bottom">
-              <div class="nav-bottom">
+            <div class="navbar_items_v2 navbar_items nav-bottom navbar-bottom">
+              <div class="nav-bottom navbar_items">
                 <div id="mobile-menu" class="nav_menu none">
                   <i class="fas fa-bars"></i>
                 </div>
                 <ul class="nav-menu-items">
-              <li>
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
+              <li class="profile">
                 <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
               </li>
               <li class="temp">
                 <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
                 <ul class="subnav">
-              <li>
-                <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
-                ></a>
-              </li>
-              <li>
+                  <li class="subnav-setting">
+                    <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                    ></a>
+                  </li>
+                  <li>
                     <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
-                ></a>
+                    ></a>
                   </li>
                 </ul> 
               </li>
@@ -162,7 +148,7 @@
 
       <!-- Blog-create -->
       <section id="mobile-post" class="blog-page none">
-        <div class="create-blog-container container-v2">
+        <div class="create-blog-container container-v2 container">
           <!-- Item 1 -->
           <div class="create-blog card-border">
             <header class="create-post-header text-center">
@@ -207,13 +193,8 @@
 
         
       <!-- Profile -->
-<<<<<<< HEAD
-      <section class="blog-noti">
-        <aside class="blog-user-info">
-=======
-      <section class="section-profile">
+      <section class="section-profile blog-noti">
         <aside id = "mobile-search" class="blog-user-info">
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
           <div class="right-side1">
             <div class="rs-desc-pro">
               <div class="mobile-search-close none">
@@ -667,11 +648,11 @@
     <script >
       var list_blog = [
      {% for item in blog_info %}
-    {
-        "title": {{ item.0|tojson }},
-        "content": {{ item.1|tojson }}
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
+     {
+         "title": {{item[0]|tojson}},
+         "content": {{item[1]|tojson}}
+     }{% if not loop.last %},{% endif %}
+     {% endfor %}
      ];
      //list_blog.forEach(blog =>{ alert(blog['title'])})
 
@@ -722,9 +703,6 @@
           notifications.style.display === "block" ? "none" : "block";
       }
     </script>
-<<<<<<< HEAD
-    <script src="../assests/responsive/tablet.js"></script>
-=======
     <script>
       var navbar = document.getElementById('mobile-navbar');
       var moblieMenu = document.getElementById('mobile-menu');
@@ -765,6 +743,6 @@
         }
       }
     </script>
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
+    <script src="../assests/responsive/tablet.js"></script>
   </body>
 </html>

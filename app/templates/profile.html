@@ -6,11 +6,8 @@
     <title>Profile</title>
     <link rel="stylesheet" href="../assests/css/style.css" />
     <link rel="stylesheet" href="../assests/css/reset.css" />
-<<<<<<< HEAD
-    <link rel="stylesheet" href="../assests/responsive/tablet.css">
-=======
+    <link rel="stylesheet" href="../assests/responsive/tablet.css" />
     <link rel="stylesheet" href="../assests/css/responsive-mobile.css" />
->>>>>>> bb51f8960d59e9117cad03f91879320925ac242c
   </head>
   <body>
     <div class="pro-container">
@@ -85,10 +82,9 @@
         
         <!-- User's post -->
         <div id="userPostsContainer">
-          <div class="pro-post-items" id="userPosts">
+          <div class="pro-post-items lmao" id="userPosts">
             <!-- Item1 -->
-            <div class="pro-post-item">
-              {% for id, title, authorname, publish in blog_info %}
+              {% for id, title,content, authorname, publish in blog_info %}
               <div class="pro-post-item">
                   <div class="item-header">
                     <span>{{title}}<i class="fa-solid fa-lock"></i></span>
@@ -125,7 +121,6 @@
                   </div>
               </div>
               {% endfor %}
-            </div>
           </div>
         </div>
 
@@ -133,10 +128,10 @@
 
         <!-- Published notes only -->
         <div id="publishedNotesContainer" class="none">
-          <div class="pro-post-published-items">
+          <div class="pro-post-published-items" id="lmao">
             <!-- Item1 -->
+            {% for id, title, authorname, publish in published_blogs %} 
             <div class="pro-post-published-item">
-              {% for id, title, authorname, publish in published_blogs %} 
               <div class="item-header">
                 <span>{{title}}<i class="fa-solid fa-lock"></i></span>
               
@@ -158,8 +153,8 @@
                   ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
                 >
               </div>
-              {% endfor %}
             </div>
+              {% endfor %}
           </div>
         </div>
 
@@ -254,7 +249,7 @@
           userAvatar.className = 'user-avatar post-ava';
           const itemUserName = document.createElement('span');
           itemUserName.className = 'item-user-name';
-          itemUserName.textContent = '1';
+          itemUserName.textContent = '{{username}}';
           const viewMode = document.createElement('span');
           viewMode.className = 'view-mode';
           viewMode.innerHTML = '<i class="fa-solid fa-eye" aria-hidden="true"></i> VIEW MODE';
