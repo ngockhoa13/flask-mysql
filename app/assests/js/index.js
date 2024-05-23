@@ -1,4 +1,3 @@
-
 // Toast function
 function toast({ title = "", message = "", type = "info", duration = 3000 }) {
   const main = document.getElementById("toast");
@@ -45,7 +44,7 @@ function toast({ title = "", message = "", type = "info", duration = 3000 }) {
     main.appendChild(toast);
   }
 }
-function showSuccessToast(mesg="Blog saved successfully!") {
+function showSuccessToast(mesg = "Blog saved successfully!") {
   toast({
     title: "Nice!",
     message: mesg,
@@ -63,16 +62,16 @@ function showErrorToast(mesg = "Failed to save blog. Please try again.") {
   });
 }
 
-function showWarning(mesg="Length of the title must be less than 25 characters"){
-    toast({
-        title: "Error!",
-        message: mesg,
-        type: "error",
-        duration: 5000,
-      });
+function showWarning(
+  mesg = "Length of the title must be less than 25 characters"
+) {
+  toast({
+    title: "Error!",
+    message: mesg,
+    type: "error",
+    duration: 5000,
+  });
 }
-
-
 
 var blog_page = document.querySelector(".blog-page");
 var create_blog_icon = document.querySelector(".nav_edit");
@@ -98,7 +97,7 @@ function saveBlogContent(blogTitle, blogContent) {
     })
     .catch((error) => {
       console.error("Error:", error);
-      showErrorToast()
+      showErrorToast();
     });
 }
 
@@ -106,18 +105,17 @@ function saveBlogContent(blogTitle, blogContent) {
 document.getElementById("createButton").addEventListener("click", function () {
   // Extract the blog title from the input field
   var blogTitle = document.getElementById("blog-title").value;
-    if(blogTitle.length > 25){
-        showWarning();
-        document.getElementById("blog-title").value = "";
-        document.querySelector(".create-content").value = "";
-    }else{
+  if (blogTitle.length > 25) {
+    showWarning();
+    document.getElementById("blog-title").value = "";
+    document.querySelector(".create-content").value = "";
+  } else {
+    // Extract the blog content from the textarea
+    var blogContent = document.querySelector(".create-content").value;
 
-        // Extract the blog content from the textarea
-        var blogContent = document.querySelector(".create-content").value;
-      
-        // Call the function to save the blog title and content
-        saveBlogContent(blogTitle, blogContent);
-    }
+    // Call the function to save the blog title and content
+    saveBlogContent(blogTitle, blogContent);
+  }
 });
 
 create_blog_icon.addEventListener("click", function () {
@@ -158,36 +156,35 @@ for (var i = 0; i < contents.length; i++) {
   }
 }
 
-document.querySelector('.nav_home').addEventListener('click',function(){
-    document.querySelector('.home-page').classList.remove('none');
-    blog_page.classList.add('none');
-})
+document.querySelector(".nav_home").addEventListener("click", function () {
+  document.querySelector(".home-page").classList.remove("none");
+  blog_page.classList.add("none");
+});
 
 function updatePublished(blogID) {
-    // Get the checkbox element based on the blog ID
-    var checkbox = document.getElementById("published" + blogID);
+  // Get the checkbox element based on the blog ID
+  var checkbox = document.getElementById("published" + blogID);
 
-    // Check if the checkbox is checked
-    var isChecked = checkbox.checked;
+  // Check if the checkbox is checked
+  var isChecked = checkbox.checked;
 
-    // Make AJAX request to update published status
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/update_published", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+  // Make AJAX request to update published status
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/update_published", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
 
-    // Send the blog ID and published status in the request body
-    xhr.send(JSON.stringify({ blogID: blogID, published: isChecked }));
+  // Send the blog ID and published status in the request body
+  xhr.send(JSON.stringify({ blogID: blogID, published: isChecked }));
 }
-
 
 // Search function
 function focusInput() {
-  var inputElement = document.querySelector('.input-search'); 
+  var inputElement = document.querySelector(".input-search");
   inputElement.focus();
-  document.querySelector(".menu-item-icon").classList.add('none');
+  document.querySelector(".menu-item-icon").classList.add("none");
 }
-document.querySelector('.input-search').addEventListener('blur', function() {
-  document.querySelector(".menu-item-icon").classList.remove('none');
+document.querySelector(".input-search").addEventListener("blur", function () {
+  document.querySelector(".menu-item-icon").classList.remove("none");
 });
 
 

@@ -613,10 +613,14 @@
         margin-top: -60%;
         border: 1px solid #fff;
         height: 320px;
-        position: relative;
-        z-index: 20;
+        position: absolute;
+        z-index: 2;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         transform: translateZ(0);
+        background-color: #19201c;
+        width: 705px;
+        right: 4%;
+        top: 85%;
     }
 
     .save-change {
@@ -625,7 +629,14 @@
         margin-top: 0;
         top: 63%;
         font-size: 25px;
-        z-index: 2;
+        z-index: 100;
+    }
+
+    .item-close-set {
+        font-size: 30px;
+        color: turquoise;
+        position: absolute;
+        right: 4px;
     }
 
     .choose-photo,

@@ -11,6 +11,16 @@ if (mediaQuery.matches) {
     }
   }
 
+  var itemContents = document.getElementsByClassName("item-content");
+  for (var i = 0; i < itemContents.length; i++) {
+    var itemContent = itemContents[i].innerHTML;
+    var lineItemContent = itemContent.split("\n");
+    if (lineItemContent[2].length > 48) {
+      lineItemContent[2] = lineItemContent[2].substring(0, 54) + "...";
+      itemContents[i].innerHTML = lineItemContent[2];
+    }
+  }
+
   // Message
   // var nav_mess = document.querySelector(".nav_mess");
   // var nav_bar = document.querySelector(".navbar");
@@ -179,6 +189,4 @@ if (mediaQuery.matches) {
   newChat.addEventListener("click", function () {
     overlay.classList.remove("none");
   });
-
-  
 }

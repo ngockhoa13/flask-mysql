@@ -587,6 +587,12 @@ hr {
   line-height: 2;
 }
 
+.info-user-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .edit-profile {
   margin-top: 15px;
   background-color: #39ac91;
@@ -756,6 +762,25 @@ a.nav_edit {
   font-size: medium;
   width: 70px;
   height: 30px;
+}
+
+.del_blog {
+  color: #eee;
+  padding: 7px 13px;
+  border: none;
+  border-radius: 5px;
+  background: #2c3e50;
+  margin-right: 10px;
+  margin-top: -10px;
+  cursor: pointer;
+}
+
+.del_blog:hover{
+  background: #c0392b;
+}
+
+.del_blog:active{
+  background: #e74c3c;
 }
 .published-checkbox{
   margin-top: 20px;

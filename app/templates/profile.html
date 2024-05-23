@@ -94,7 +94,7 @@
                           <button type="submit" class="del_blog">Delete</button>
                         </form>
                       </span>
-                      <span><i class="fa-solid fa-pencil"></i></span>                               
+                      <!-- <span><i class="fa-solid fa-pencil"></i></span>                                -->
                   </div>
                   <!-- Checkbox for Published -->
                   <div class="published-checkbox">
@@ -300,5 +300,21 @@
     
     
     <script src="../assests/responsive/tablet.js"></script>
+
+    <script>
+      // Item Content
+      var itemContents = document.getElementsByClassName("item-content");
+      for (var i = 0; i < itemContents.length; i++) {
+        var itemContent = itemContents[i].innerHTML;
+        var lineItemContent = itemContent.split("\n");
+        if (lineItemContent[2].length > 150) {
+          lineItemContent[2] = lineItemContent[2].substring(0, 130) + "...";
+          itemContents[i].innerHTML = lineItemContent[2];
+        }
+        else if (lineItemContent.length > 2) {
+          itemContents[i].innerHTML = lineItemContent[2] + "...";
+        }
+      }
+    </script>
   </body>
 </html>
