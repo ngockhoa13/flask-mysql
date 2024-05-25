@@ -227,10 +227,25 @@ def profile():
         username = userName[0]
         print(username)
         blog_info = cursor.execute("SELECT id, title, content, authorname, publish FROM blogPosts WHERE userID = ?", (id,)).fetchall()
-            
-        print(blog_info)
+        print(blog_info)    
+
         published_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE userID = ? and publish = 1",(id,)).fetchall()
 
+        
+        # Query về những cái blog đc like mà có tồn tại userID
+        liked_blogs_title = cursor.execute("SELECT title FROM likedBlogs WHERE liked =  1 and userID = ?", (id,)).fetchall()
+        print(liked_blogs_title)
+
+
+        total_blog = []
+        for title_blog in liked_blogs_title:
+            final_title = title_blog[0]
+            print(final_title)
+            print("---------------------------------------------------")
+            liked_blogs = cursor.execute("SELECT id, title, authorname, publish FROM blogPosts WHERE title = ?",(final_title,)).fetchall()
+            print(liked_blogs)
+            total_blog += liked_blogs
+            print(total_blog)
 
 
             # Render avatar for the user
@@ -242,8 +257,15 @@ def profile():
         if profile_pic == None:
             profile_pic = os.path.join("", "../../img/avatar.jpg")
 
-        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic,  published_blogs=published_blogs,blog_count=blog_count)
+
+
+        return render_template('profile.html', username=username, blog_info=blog_info,profile_pic=profile_pic,  published_blogs=published_blogs,blog_count=blog_count, liked_blogs=total_blog)
     return redirect('/login')
+
+
+
+
+
 # Settings user information route -------------------------------
 @app.route('/settings', methods=["GET", "POST"])
 @check_session
@@ -469,17 +491,35 @@ def view_blog(blog_title):
     cursor, conn = getDB()
 
     # Fetch the blog post from the database based on the provided blog_id
-    blog_post = cursor.execute("SELECT title, content, likes, authorname FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
+    blog_post = cursor.execute("SELECT title, content, likes, authorname, userID FROM blogPosts WHERE title = ? and publish = 1", (decode_title,)).fetchone()
     print(blog_post)
 
     # Check if the blog post exists
     if blog_post:
-        title, content, likes, authorname = blog_post
+        title, content, likes, authorname, userID = blog_post
 
         comment_Content = cursor.execute("SELECT username, comment FROM commentsBlog WHERE title = ?", (decode_title,)).fetchall()
 
+        liked = cursor.execute("SELECT liked FROM likedBlogs WHERE title = ? AND userID = ?", (decode_title, id)).fetchone()
+        liked = liked[0] if liked else 0  # Default to 0 if the user has not liked the blog
 
-        return render_template('blog.html', title=title, content=content, likes=likes, comment_Content=comment_Content, id=id, authorname=authorname)
+        return render_template('blog.html', title=title, content=content, likes=likes, comment_Content=comment_Content, id=userID, authorname=authorname, liked=liked)
+        
+
+    #Update else, check xem liệu bài viết có của phải chính người dùng hay ko, nếu phải thì render, ko thì trả về home
+    elif not blog_post:
+        blog_post_2 = cursor.execute("SELECT title, content, likes, authorname, userID FROM blogPosts WHERE title = ?", (decode_title,)).fetchone()
+
+        title, content, likes, authorname, userID = blog_post_2
+
+        if userID == id:
+            liked = cursor.execute("SELECT liked FROM likedBlogs WHERE title = ? AND userID = ?", (decode_title, id)).fetchone()
+            liked = liked[0] if liked else 0  # Default to 0 if the user has not liked the blog
+
+            return render_template('blog.html', title=title, content=content, likes=likes, id=userID, authorname=authorname, liked=liked)
+        else:
+            return redirect(url_for('home'))
+
     else:
         # If the blog post does not exist, render an error page or redirect to another page
         return redirect(url_for('home'))
@@ -761,56 +801,40 @@ def allChat():
     
 
 
-# Routes to update the likes when press like button
+
+
+
+
+# Route to update the likes
 @app.route('/updateLike', methods=["POST"])
 @check_session
 def update_like():
     id = session.get('id')
     cursor, conn = getDB()
-        
-    # Check if id exist in database
-    cursor.execute("SELECT id FROM user WHERE id = ?",(id,)).fetchone()
+    
+    # Check if id exists in database
+    cursor.execute("SELECT id FROM user WHERE id = ?", (id,)).fetchone()
     if not id:        
-        return redirect(url_for('login'))  # Redirect to login page if user's
+        return redirect(url_for('login'))  # Redirect to login page if user's not logged in
 
     try:
-        # Get post ID and action from request
-        post_title = request.args.get('post_title')
-        action = request.args.get('action')
-        
-        #Check xem có post title và action tăng hay giảm
-        if not post_title or action not in ['increase', 'decrease']:
-            return jsonify({"error": "Invalid!!"}), 400
+        # Get post title and action from request
+        post_title = request.form.get('post_title')
+        action = request.form.get('action')
 
-        cursor, conn = getDB()
-        
-        # Check if the post ID exists in the database
-        post = cursor.execute("SELECT * FROM blogPosts WHERE title = ?", (post_title,)).fetchone()
+        # Determine the like_unlike value based on the action
+        like_unlike = 1 if action == "like" else 0
 
+        blog_and_user_existed = cursor.execute("SELECT * FROM likedBlogs WHERE title = ? AND userID = ?", (post_title, id)).fetchone()
 
-        if not post:
-            return jsonify({"error": "Post not found"}), 404
-
-        # Tăng số lượng, nếu không là increaase thì là giảm sẽ trừ đi cho 1 
-        if action == 'increase':
-            cursor.execute("UPDATE blogPosts SET likes = likes + 1 WHERE title = ?", (post_title,))
+        if blog_and_user_existed:
+            cursor.execute("UPDATE likedBlogs SET liked = ? WHERE title = ? AND userID = ?", (like_unlike, post_title, id))
         else:
-            cursor.execute("UPDATE blogPosts SET likes = likes - 1 WHERE title = ?", (post_title,))
-        
-
-
-        #test
-        test = cursor.execute("SELECT likes FROM blogPosts WHERE title = ?", (post_title,)).fetchone()
-        print(test)
+            cursor.execute("INSERT INTO likedBlogs (title, userID, liked) VALUES (?, ?, ?)", (post_title, id, like_unlike))
 
         # Commit the changes to the database
         conn.commit()
         conn.close()
-
-
-
-
-
 
         return jsonify({"message": "Likes updated successfully"}), 200
 
@@ -870,7 +894,7 @@ def viewProfile(user_id):
     if not id:        
         return redirect(url_for('login'))  # Redirect to login page if user's
 
-    # Decode the 
+    # Decode the id on the url
     decoded_id = unquote(user_id)
     print(decoded_id)
 

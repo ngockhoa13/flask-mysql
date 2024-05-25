@@ -75,5 +75,15 @@ conn.execute('''CREATE TABLE notification (
 )''')
 
 
+conn.execute('''CREATE TABLE likedBlogs (
+    title VARCHAR(100) NOT NULL,
+    userID TEXT NOT NULL,
+    liked BOOLEAN,
+    FOREIGN KEY(title) REFERENCES blogPosts(title),
+    FOREIGN KEY(userID) REFERENCES user(id)
+)''')
+
+
+
 # Close the connection
 conn.close()

@@ -105,17 +105,19 @@ function saveBlogContent(blogTitle, blogContent) {
 document.getElementById("createButton").addEventListener("click", function () {
   // Extract the blog title from the input field
   var blogTitle = document.getElementById("blog-title").value;
-  if (blogTitle.length > 25) {
-    showWarning();
-    document.getElementById("blog-title").value = "";
-    document.querySelector(".create-content").value = "";
-  } else {
-    // Extract the blog content from the textarea
-    var blogContent = document.querySelector(".create-content").value;
+    if(blogTitle.length > 25){
+        showWarning();
+        document.getElementById("blog-title").value = "";
+        document.querySelector(".create-content").value = "";
+    }else{
 
-    // Call the function to save the blog title and content
-    saveBlogContent(blogTitle, blogContent);
-  }
+        // Extract the blog content from the textarea
+        var blogContent = document.querySelector(".create-content").value;
+        // Replace newline characters with <br> tags
+        blogContent = blogContent.replace(/\n/g, '<br>');
+        // Call the function to save the blog title and content
+        saveBlogContent(blogTitle, blogContent);
+    }
 });
 
 create_blog_icon.addEventListener("click", function () {

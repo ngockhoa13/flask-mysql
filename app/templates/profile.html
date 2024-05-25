@@ -36,11 +36,13 @@
             <span class="tab-count inside">{{blog_count}}</span>
           </div>
           <div class="nav-item">
-            <a href="#" onclick="showPublishedNotes()" title="Published notes" class="nav_edit publish_notes"><i class="fas fa-edit button-profile"></i>Published notes</a>
+            <a href="#published" onclick="showPublishedNotes()" title="Published notes" class="nav_edit publish_notes"><i class="fas fa-edit button-profile"></i>Published notes</a>
           </div>
 
 
-          <div class="nav-item">Liked notes</div>
+          <div class="nav-item">
+            <a href="#liked" onclick="showLikedNotes()" title="Published notes" class="nav_edit publish_notes"><i class="fas fa-edit button-profile"></i>Liked notes</a>
+          </div>
           <div class="back-btn">
             <a href="{{ url_for('home')}}">Back to home</a>
           </div>
@@ -87,7 +89,7 @@
               {% for id, title,content, authorname, publish in blog_info %}
               <div class="pro-post-item">
                   <div class="item-header">
-                    <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+                    <span><a href="/blog/{{ title }}" class="title_of_blog">{{title}}</a><i class="fa-solid fa-lock"></i></span>
                       <span>
                         <form action="/delete_blog" method="post" onsubmit="return confirm('Are you sure you want to delete this blog?');">
                           <input type="hidden" name="blog_id" value="{{ id }}">
@@ -103,7 +105,7 @@
                   
                   </div>
                   <div class="item-content">
-                    {{ content }}
+                    {{ content | safe }}
                   </div>
                   <!-- End of Checkbox for Published -->
                   <div class="item-desc">
@@ -160,6 +162,41 @@
 
 
 
+        <!-- Liked notes only -->
+        <div id="likedNotesContainer" class="none">
+          <div class="pro-post-published-items" id="lmao">
+            <!-- Item1 -->
+            {% for id, title, authorname, publish in liked_blogs %} 
+            <div class="pro-post-published-item">
+              <div class="item-header">
+                <span>{{title}}<i class="fa-solid fa-lock"></i></span>
+              
+                <span>
+                 
+                  <i class="fa-solid fa-pencil"></i>
+                </span>
+              </div>
+              <div class="item-desc">
+                <div class="user-avatar post-ava"></div>
+                <span class="item-user-name">{{authorname}}</span>
+                <span class="view-mode"
+                  ><i class="fa-solid fa-eye"></i> VIEW MODE</span
+                >
+                <span class="like-mode"
+                  ><i class="fa-regular fa-heart"></i> LIKE</span
+                >
+                <span class="bookmark"
+                  ><i class="fa-regular fa-bookmark"></i> BOOKMARK</span
+                >
+              </div>
+            </div>
+              {% endfor %}
+          </div>
+        </div>
+
+
+
+
 
 
 
@@ -170,6 +207,19 @@
       .user-avatar {
         background-image: url("../assests/static{{ url_for('static', filename='../users_uploads/' + profile_pic) }}");
       }
+
+      /*
+      .item-content {
+        display: inline; 
+        word-wrap: break-word; 
+        white-space: pre-wrap; 
+      }
+      */
+      .title_of_blog {
+        color: aliceblue;
+        font-size: 30px !important;
+      }
+
     </style>
     {% endif %} 
 
@@ -193,19 +243,37 @@
       function showPublishedNotes() {
         var userPostsContainer = document.getElementById('userPostsContainer');
         var publishedNotesContainer = document.getElementById('publishedNotesContainer');
+        var likedPostsContainer = document.getElementById('likedNotesContainer');
         
         userPostsContainer.classList.add('none');
         publishedNotesContainer.classList.remove('none');
+        likedPostsContainer.classList.add('none');
 
       }
+
+      function showLikedNotes() {
+        var userPostsContainer = document.getElementById('userPostsContainer');
+        var publishedNotesContainer = document.getElementById('publishedNotesContainer');
+        var likedNotesContainer = document.getElementById('likedNotesContainer')
+        
+        userPostsContainer.classList.add('none');
+        publishedNotesContainer.classList.add('none');
+        likedNotesContainer.classList.remove('none');
+      }
+
+
 
       function showAllNotes() {
         var userPostsContainer = document.getElementById('userPostsContainer');
         var publishedNotesContainer = document.getElementById('publishedNotesContainer');
-        
+        var likedNotesContainer = document.getElementById('likedNotesContainer');
+
         userPostsContainer.classList.remove('none');
         publishedNotesContainer.classList.add('none');
+        likedNotesContainer.classList.add('none');
       }
+
+
       function updatePublished(blogID) {
         // Get the checkbox element based on the blog ID
         var checkbox = document.getElementById("published" + blogID);
@@ -298,7 +366,6 @@
     }
     </script>
     
-    
     <script src="../assests/responsive/tablet.js"></script>
 
     <script>
@@ -307,12 +374,21 @@
       for (var i = 0; i < itemContents.length; i++) {
         var itemContent = itemContents[i].innerHTML;
         var lineItemContent = itemContent.split("\n");
-        if (lineItemContent[2].length > 150) {
-          lineItemContent[2] = lineItemContent[2].substring(0, 130) + "...";
-          itemContents[i].innerHTML = lineItemContent[2];
-        }
-        else if (lineItemContent.length > 2) {
-          itemContents[i].innerHTML = lineItemContent[2] + "...";
+        console.log(lineItemContent.length)
+        console.log(lineItemContent)
+        for (var j = 0; j < lineItemContent.length; j++) {
+          if (lineItemContent[j].trim().length > 0) {
+            console.log(lineItemContent[j])
+            if (lineItemContent[j].length > 150) {
+              lineItemContent[j] = lineItemContent[j].substring(0, 130) + "...";
+              itemContents[i].innerHTML = lineItemContent[j];
+              console.log(itemContents[i].innerHTML);
+            }
+            else {
+              itemContents[i].innerHTML = lineItemContent[j] + "...";
+            }
+            break;
+          }
         }
       }
     </script>

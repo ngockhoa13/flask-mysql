@@ -25,10 +25,10 @@
                   <a href="{{ url_for('home')}}" title="Home"><i class="fas fa-home"></i></a>
                 </li>
                 <li>
-                  <a href="#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
+                  <a href="/home#" onclick="focusInput()" title="Search"><i class="fas fa-search"></i></a>
                 </li>
                 <li>
-                  <a href="#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
+                  <a href="/home#blog" title="Blog" class="nav_edit"><i class="fas fa-edit"></i></a>
                 </li>
                 <li>
                   <a href="/chat" title="Message" class="nav_mess">
@@ -43,23 +43,23 @@
                     <i class="fas fa-bars"></i>
                   </div>
                   <ul class="nav-menu-items">
-                    <li class="profile">
-                      <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
-                    </li>
-                    <li class="temp">
-                        <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
-                        <ul class="subnav">
-                          <li>
-                            <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
-                            ></a>
-                          </li>
-                          <li>
-                            <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
-                            ></a>
-                          </li>
-                        </ul> 
+                <li>
+                  <a href="{{ url_for('profile')}}" title="Profile"><i class="fas fa-user"></i></a>
+                </li>
+                <li class="temp">
+                    <div class="menu-edit"><a href="#"><i class="fa-solid fa-bars menu-icon"></i></a></div>
+                    <ul class="subnav">
+                      <li>
+                        <a href="{{ url_for('settings') }}" title="Settings"><i class="fa-solid fa-gear setting"></i
+                        ></a>
                       </li>
-                  </ul>
+                      <li>
+                        <a href="{{ url_for('logout') }}" title="Logout"><i class="fa-solid fa-right-from-bracket logout" style="font-size:18px"></i></i
+                        ></a>
+                      </li>
+                    </ul> 
+                  </li>
+              </ul>
                 </div>
               </div>
             </nav>
@@ -72,22 +72,26 @@
     <!-- Blog Content -->
     <main class="blog-content">
         <div class="blog-post" data-post-title="{{ title }}">
-            <h1>{{ title }}</h1>
+
+            <!-- Move the liked button to the left of the title -->
+            <div class="post-header">
+                <h1>{{ title }}</h1>
+                <div class="like {{ 'like-yes' if liked else 'like-no' }}"></div>
+            </div>
+
             <h3>Author: <a href="/user/{{ id }}">{{ authorname }}</a></h3>
-            <p>{{ content }}</p>
+            <p>{{ content | safe }}</p>
             
             <!-- Render comments -->
             <div class="blog-comments">
                 {% for username, comment in comment_Content %}
-                    <h5>{{ username }}</h5>
-                    <p>{{ comment }}</p>
+                    <p><span class="comment-username">{{ username }}</span>: <span class="comment-text">{{ comment }}</span></p>
                 {% endfor %}
             </div>
+            
 
             <textarea id="comment-input" placeholder="Enter your comment"></textarea>
-            <button id="submit-comment">Submit</button>
-            <button class="like-btn">Like</button>
-            <span class="likes-count">{{ likes }}</span>
+            <button id="submit-comment">Submit Comment</button>
         </div>
     </main>
 
@@ -97,15 +101,13 @@
         }
 
         .blog-post h1 {
-            font-size: 4rem !important; /* Force the font size to be larger */
+            font-size: 4rem !important; 
             color: #333;
         }
 
-
-
         main.blog-content {
-            margin-left: 425px;
-            width: 950px;
+            margin-left: 328px;
+            width: 975px;
         }
 
         .blog-post {
@@ -119,6 +121,12 @@
 
         .blog-post h1, .blog-post h3, .blog-post p {
             margin: 0 0 1rem;
+        }
+        .blog-post p {
+            line-height: 1.5;
+            display: inline; 
+            word-wrap: break-word; 
+            white-space: pre-wrap; 
         }
 
         .blog-post h1 {
@@ -150,6 +158,9 @@
             font-size: 1rem;
             color: #666;
             margin-bottom: 1rem;
+            word-wrap: break-word; 
+            white-space: pre-wrap; 
+            line-height: 1.5;
         }
 
         #comment-input {
@@ -195,46 +206,90 @@
             font-size: 1rem;
             color: #666;
         }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .like {
+            width: 48px;
+            height: 48px; /* Ensure the element is clickable */
+        }
+
+
+        .comment-username {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .comment-text {
+            display: inline; 
+            word-wrap: break-word; 
+            white-space: pre-wrap; 
+        }
+    </style>
+    <style>
+        .like-no {
+            background: url("../assests/img/dislike_2.svg") no-repeat;
+            background-size: 38px 38px;
+            margin-top: 5.8px;
+            margin-left: 4.5px;
+        }
+        .like-yes {
+            background: url("../assests/img/like.svg") no-repeat;
+            margin-bottom: 5.3px;
+            margin-right: 5px;
+        }
     </style>
 
+
+
+    <!-- JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.like-btn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    console.log("Like button clicked");
-
-                    var postId = this.closest('.blog-post').dataset.postTitle;
-                    console.log("Post ID:", postId);
-
-                    var url = '/updateLike?post_title=' + postId + '&action=' + (this.classList.contains('liked') ? 'decrease' : 'increase');
-                    console.log("AJAX URL:", url);
-
-                    var buttonElement = this;
-                    var likesCountElement = this.nextElementSibling;
-                
-                    fetch(url, {
-                        method: 'POST'
-                    })
-                    .then(function(response) {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        console.log(data);
-                        buttonElement.classList.toggle('liked');
-                        var currentLikesCount = parseInt(likesCountElement.textContent);
-                        var newLikesCount = data.likes;
-                        likesCountElement.textContent = newLikesCount;
-                    })
-                    .catch(function(error) {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-                });
-            });
-        });
+      const listenForLikes = () => {
+          const likes = document.querySelectorAll(".like");
+          likes.forEach(like => {
+              like.addEventListener("click", (event) => {
+                  event.preventDefault();
+  
+                  const isLiked = event.target.classList.contains("like-yes");
+                  const action = isLiked ? "unlike" : "like";
+                  const postTitle = document.querySelector(".blog-post").getAttribute("data-post-title");
+  
+                  event.target.classList.toggle("like-no");
+                  event.target.classList.toggle("like-yes");
+  
+                  $.ajax({
+                      url: "/updateLike",
+                      type: "POST",
+                      data: {
+                          post_title: postTitle,
+                          action: action
+                      },
+                      success: function(response) {
+                          console.log(response.message);
+                      },
+                      error: function(xhr, status, error) {
+                          console.log("Error: " + xhr.responseText);
+                      }
+                  });
+              });
+          });
+      }
+  
+      document.addEventListener("DOMContentLoaded", () => {
+          listenForLikes();
+      });
+  </script>
+  
+  
     </script>
+    
+
+
+        
 
     <script>
         $(document).ready(function() {
@@ -244,6 +299,7 @@
                     var blogTitle = $('.blog-post').data('post-title');
                     $.post(`/addComment/${encodeURIComponent(blogTitle)}`, { content: comment })
                         .done(function(response) {
+                            document.getElementById('comment-input').value = "";
                             alert(response);
                         })
                         .fail(function(xhr, status, error) {
@@ -253,19 +309,14 @@
                     alert('Please enter a comment.');
                 }
             });
+
+            var navbar = document.getElementById('mobile-navbar');
+            var mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.onclick = function() {
+                var isClosed = navbar.style.overflow === 'hidden';
+                navbar.style.overflow = isClosed ? 'initial' : 'hidden';
+            };
         });
-    </script>
-    <script>
-        var navbar = document.getElementById('mobile-navbar');
-        var moblieMenu = document.getElementById('mobile-menu');
-        moblieMenu.onclick = function(){
-          var isClosed = navbar.style.overflow === 'hidden';
-          if (isClosed){
-            navbar.style.overflow = 'initial';
-          } else{
-            navbar.style.overflow = 'hidden';
-          }
-        }
     </script>
 
     <link rel="stylesheet" href="../assests/responsive/tablet.css">
