@@ -22,6 +22,8 @@
 ### *Sơ đồ ứng dụng:*
 <img src="mindmap.png" alt="drawing" width="700" height="400"/>
 
+### *Database:*
+<img src="dbmap.png" alt="drawing" width="700" height="400"/>
 ### *Mô tả chức năng*
 - Mỗi người dùng tạo và sử dụng 1 tài khoản
 - Tạo và đăng blog công khai hoặc đơn giản chỉ là viết nhật ký riêng tư
@@ -39,7 +41,5 @@
 - SQLite cho tạo và quản lý database
 
 - Framework: Flask
-
-- Deployment: ngrok
 
 
