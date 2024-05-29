@@ -15,19 +15,19 @@ if (mediaQuery.matches) {
   for (var i = 0; i < itemContents.length; i++) {
     var itemContent = itemContents[i].innerHTML;
     var lineItemContent = itemContent.split("\n");
-    if (lineItemContent[2].length > 48) {
-      lineItemContent[2] = lineItemContent[2].substring(0, 54) + "...";
-      itemContents[i].innerHTML = lineItemContent[2];
+    for (var j = 0; j < lineItemContent.length; j++) {
+      if (lineItemContent[j].trim().length > 0) {
+        console.log(lineItemContent[j]);
+        if (lineItemContent[j].length > 70) {
+          lineItemContent[j] = lineItemContent[j].substring(0, 60) + "...";
+          itemContents[i].innerHTML = lineItemContent[j];
+        } else {
+          itemContents[i].innerHTML = lineItemContent[j] + "...";
+        }
+        break;
+      }
     }
   }
-
-  // Message
-  // var nav_mess = document.querySelector(".nav_mess");
-  // var nav_bar = document.querySelector(".navbar");
-  // nav_mess.addEventListener("click", function () {
-  //   console.log(nav_mess);
-  //   nav_bar.classList.add("none");
-  // });
 
   var noti_icon = document.querySelector(".nav_noti");
   var nav_edit = document.querySelector(".nav_edit");
