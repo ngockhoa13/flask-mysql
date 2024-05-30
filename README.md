@@ -24,6 +24,7 @@
 
 ### *Database:*
 <img src="dbmap.png" alt="drawing" width="700" height="400"/>
+
 ### *Mô tả chức năng*
 - Mỗi người dùng tạo và sử dụng 1 tài khoản
 - Tạo và đăng blog công khai hoặc đơn giản chỉ là viết nhật ký riêng tư
@@ -32,6 +33,7 @@
 - Tính năng tìm kiếm blog và mọi người
 - **Thông báo realtime**
 - **Chat**
+
 ### *Công nghệ sử dụng:*
 
 - HTML,CSS,JS đối với Front-end
