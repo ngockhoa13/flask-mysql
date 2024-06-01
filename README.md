@@ -44,4 +44,15 @@
 
 - Framework: Flask
 
+### *Package dependencies*
+- Flask
+- Flask-SocketIO
+- Flask-Bcrypt
+- Flask-Cors
+- Werkzeug
+- bcrypt
+- uuid
+- python-dotenv
+- eventlet
+- gunicorn
 
