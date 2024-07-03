@@ -64,6 +64,7 @@ a. Django:
 + Nguyên tắc DRY (Don't Repeat Yourself): Django khuyến khích việc tái sử dụng mã và giảm thiểu sự lặp lại.
 + Kiến trúc cấu trúc: Django có cấu trúc thư mục và tệp rất rõ ràng và bắt buộc.
 + Admin panel: Django có sẵn bảng điều khiển quản trị để quản lý các mô hình dữ liệu.
+
 b. Flask:
 + Microframework: Flask rất nhẹ và linh hoạt, chỉ cung cấp những gì cần thiết để bắt đầu xây dựng ứng dụng.
 + Tùy chỉnh cao: Người dùng có thể chọn các thành phần cần thiết và tích hợp chúng vào ứng dụng theo cách riêng của mình.
@@ -77,15 +78,18 @@ b. Flask:
 - Flask tự bản thân không cung cấp nhiều tính năng bảo mật tích hợp như Django. Tuy nhiên, bảo mật của Flask được tăng cường nhờ vào việc sử dụng các thư viện và tài nguyên bảo mật mạnh mẽ của Python, như itsdangerous để tạo token bảo mật, Flask-Login để quản lý người dùng, và Flask-WTF để chống lại các cuộc tấn công CSRF.
 
 4. Tại sao cần phương thức GET, bởi vì cơ bản chỉ cần POST là được:
+
 a. Phương thức GET: Được sử dụng để truy xuất dữ liệu từ máy chủ. GET yêu cầu dữ liệu từ một tài nguyên đã được xác định.
 + Ưu điểm:
 Dữ liệu có thể được đánh dấu bởi URL, cho phép người dùng chia sẻ và đánh dấu các liên kết.
 Được lưu trữ trong bộ nhớ cache của trình duyệt và có thể được lưu trong lịch sử trình duyệt.
 Thường nhanh hơn vì không yêu cầu payload trong yêu cầu HTTP.
+
 b. Phương thức POST: Được sử dụng để gửi dữ liệu đến máy chủ để xử lý (ví dụ: nộp form).
 + Ưu điểm:
 Có thể gửi dữ liệu lớn vì dữ liệu được gửi trong body của yêu cầu HTTP.
 Bảo mật hơn vì dữ liệu không xuất hiện trong URL.
+
 c. Render một web trên Flask:
 
 ![image](https://github.com/dcthinh1704/Laptrinhungdungweb/assets/143063774/2ec8d478-4c99-4a12-9b7d-b11f723704f8)
