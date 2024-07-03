@@ -56,9 +56,9 @@
 - eventlet
 - gunicorn
 
-### *Trả lời các câu hỏi nhận được từ nhóm khác:
+### *Trả lời các câu hỏi nhận được từ nhóm khác*
 1. Sự khác biệt giữa Django và Flask:
-- Django:
+- Django: 
 + Full-stack framework: Cung cấp nhiều tính năng tích hợp sẵn như ORM (Object-Relational Mapping), hệ thống quản lý người dùng, hệ thống template, và nhiều tính năng khác.
 + Nguyên tắc DRY (Don't Repeat Yourself): Django khuyến khích việc tái sử dụng mã và giảm thiểu sự lặp lại.
 + Kiến trúc cấu trúc: Django có cấu trúc thư mục và tệp rất rõ ràng và bắt buộc.
@@ -129,9 +129,7 @@ def success(name):
 if __name__ == '__main__':
     app.run(debug=True)
 + HTML template (form.html):
-
-html
-Sao chép mã
+'''
 <!doctype html>
 <html lang="en">
 <head>
@@ -146,4 +144,4 @@ Sao chép mã
     </form>
 </body>
 </html>
-
+'''
