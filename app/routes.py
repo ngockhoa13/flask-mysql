@@ -11,36 +11,28 @@ from urllib.parse import unquote, quote
 from middlewares.loggin import check_session
 from middlewares.file_upload import handle_file_upload
 #Import required library      
+import mysql.connector
+import os
+from dotenv import load_dotenv
 
 
+# Load biến môi trường từ file .env
+load_dotenv()
 
-
-
-# Settings the utils
-curr_dir = os.path.dirname(os.path.abspath(__file__))
-print(curr_dir)
-
-#def is_valid_random_string(random_string):
-#    # Check if the random string matches the expected format (you can adjust this based on your requirements)
-#    return len(random_string) == 32 and all(c in '0123456789abcdef' for c in random_string)
-
-#def generate_randString(length):
-#    characters = string.ascii_letters + string.digits
-#    return ''.join(random.choice(characters) for _ in range(length))
-
-
-
-
-# Checks file extension
-#ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-#def allowed_file(filename):
-#    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-# ConnectDB
 def getDB():
-    conn = sqlite3.connect(os.path.join(curr_dir, "openu.db"))
-    cursor = conn.cursor()
+    # Thiết lập kết nối MySQL với SSL
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST", "127.0.0.1"),
+        port=os.getenv("DB_PORT", "3306"),
+        database=os.getenv("DB_DATABASE", "database_name"),
+        user=os.getenv("DB_USERNAME", "username"),
+        password=os.getenv("DB_PASSWORD", "password"),
+        charset='utf8mb4',
+        collation='utf8mb4_unicode_ci',
+        ssl_ca=os.getenv("MYSQL_SSL_CA"),
+    )
+    cursor = conn.cursor(dictionary=True)  # `dictionary=True` if you want dict-like results
     return cursor, conn
-
 
 # Register route -----------------------------------------------
 @app.route("/register", methods=["GET", "POST"])

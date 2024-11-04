@@ -1,89 +1,107 @@
-import sqlite3
+from sqlalchemy import create_engine, Column, String, Integer, Boolean, Text, ForeignKey, TIMESTAMP
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+import os
 
-# Open database
-conn = sqlite3.connect('openu.db')
+# Tạo URI kết nối MySQL
+DATABASE_USER = os.getenv("DB_USER", "your_mysql_username")
+DATABASE_PASSWORD = os.getenv("DB_PASSWORD", "your_mysql_password")
+DATABASE_HOST = os.getenv("DB_HOST", "localhost")  # Hoặc địa chỉ IP server MySQL
+DATABASE_NAME = os.getenv("DB_NAME", "openu_db")
 
-# Create tables
-conn.execute('''CREATE TABLE user (
-    id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    name VARCHAR(20),
-    username VARCHAR(20) NOT NULL,
-    emailAddr VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(60) NOT NULL
-)''')
+DATABASE_URI = f"mysql+pymysql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}"
 
-conn.execute('''CREATE TABLE blogPosts (
-    id INTEGER PRIMARY KEY NOT NULL,
-    userID TEXT,
-    authorname VARCHAR(20),
-    title VARCHAR(100) NOT NULL,
-    content TEXT NOT NULL, 
-    imagepath VARCHAR(255),
-    publish BOOLEAN,
-    likes INTERGER DEFAULT 0,
-    FOREIGN KEY(userID) REFERENCES user(id)
-)''')
+# Khởi tạo engine SQLAlchemy và session
+engine = create_engine(DATABASE_URI, echo=True)
+SessionLocal = sessionmaker(bind=engine)
 
+# Khởi tạo base model
+Base = declarative_base()
 
-conn.execute('''CREATE TABLE commentsBlog (
-    id INTEGER PRIMARY KEY NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    username VARCHAR(20),
-    comment TEXT NOT NULL, 
-    FOREIGN KEY(title) REFERENCES blogPosts(title)
-)''')
+# Định nghĩa bảng User
+class User(Base):
+    __tablename__ = 'user'
+    
+    id = Column(String(36), primary_key=True, unique=True, nullable=False)
+    name = Column(String(20))
+    username = Column(String(20), nullable=False)
+    emailAddr = Column(String(150), unique=True, nullable=False)
+    password = Column(String(60), nullable=False)
+    
+    blog_posts = relationship("BlogPost", back_populates="user")
 
+# Định nghĩa bảng BlogPost
+class BlogPost(Base):
+    __tablename__ = 'blogPosts'
+    
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    userID = Column(String(36), ForeignKey("user.id"))
+    authorname = Column(String(20))
+    title = Column(String(100), nullable=False)
+    content = Column(Text, nullable=False)
+    imagepath = Column(String(255))
+    publish = Column(Boolean, default=False)
+    likes = Column(Integer, default=0)
+    
+    user = relationship("User", back_populates="blog_posts")
+    comments = relationship("Comment", back_populates="blog_post")
 
+# Định nghĩa bảng Comment
+class Comment(Base):
+    __tablename__ = 'commentsBlog'
+    
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    title = Column(String(100), ForeignKey("blogPosts.title"), nullable=False)
+    username = Column(String(20))
+    comment = Column(Text, nullable=False)
+    
+    blog_post = relationship("BlogPost", back_populates="comments")
 
-# Table for saving the user's current chat
-conn.execute('''CREATE TABLE chat (
-    id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    userID1 TEXT NOT NULL,
-    userID2 TEXT NOT NULL,
-    FOREIGN KEY(userID1) REFERENCES user(id),
-    FOREIGN KEY(userID2) REFERENCES user(id),
-    UNIQUE(userID1, userID2) 
-)''')
+# Định nghĩa bảng Chat
+class Chat(Base):
+    __tablename__ = 'chat'
+    
+    id = Column(String(36), primary_key=True, unique=True, nullable=False)
+    userID1 = Column(String(36), ForeignKey("user.id"), nullable=False)
+    userID2 = Column(String(36), ForeignKey("user.id"), nullable=False)
 
+# Định nghĩa bảng Messages
+class Message(Base):
+    __tablename__ = 'messages'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    room_id = Column(String(50), ForeignKey("chat.id"), unique=True, nullable=False)
 
-# Tables for sacing whats to be the room chat id
-conn.execute('''CREATE TABLE messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room_id VARCHAR(50) UNIQUE NOT NULL,
-    FOREIGN KEY(room_id) REFERENCES chat(id)
-)''')
+# Định nghĩa bảng ChatMessage
+class ChatMessage(Base):
+    __tablename__ = 'chat_messages'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    content = Column(Text, nullable=False)
+    timestamp = Column(TIMESTAMP, nullable=False)
+    sender_id = Column(Integer, nullable=False)
+    sender_username = Column(String(50), nullable=False)
+    room_id = Column(String(50), ForeignKey("messages.room_id"), nullable=False)
 
+# Định nghĩa bảng Notification
+class Notification(Base):
+    __tablename__ = 'notification'
+    
+    count = Column(Integer, primary_key=True, autoincrement=True)
+    myid = Column(Integer, nullable=False)
+    content = Column(Text, nullable=False)
+    timestamp = Column(TIMESTAMP, nullable=False)
+    from_id = Column(String(50), nullable=False)
+    ischat = Column(Boolean)
 
-conn.execute('''CREATE TABLE chat_messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    content TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    sender_id INTEGER NOT NULL,
-    sender_username VARCHAR(50) NOT NULL,
-    room_id VARCHAR(50) NOT NULL,
-    FOREIGN KEY(room_id) REFERENCES messages(room_id)
-)''')
+# Định nghĩa bảng LikedBlog
+class LikedBlog(Base):
+    __tablename__ = 'likedBlogs'
+    
+    title = Column(String(100), ForeignKey("blogPosts.title"), nullable=False)
+    userID = Column(String(36), ForeignKey("user.id"), nullable=False)
+    liked = Column(Boolean)
 
-
-conn.execute('''CREATE TABLE notification (
-    count INTEGER PRIMARY KEY AUTOINCREMENT,
-    myid INTEGER  NOT NULL,
-    content TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    from_id VARCHAR(50) NOT NULL,
-    ischat BOOLEAN
-)''')
-
-
-conn.execute('''CREATE TABLE likedBlogs (
-    title VARCHAR(100) NOT NULL,
-    userID TEXT NOT NULL,
-    liked BOOLEAN,
-    FOREIGN KEY(title) REFERENCES blogPosts(title),
-    FOREIGN KEY(userID) REFERENCES user(id)
-)''')
-
-
-
-# Close the connection
-conn.close()
+# Hàm khởi tạo database
+def init_db():
+    Base.metadata.create_all(bind=engine)
