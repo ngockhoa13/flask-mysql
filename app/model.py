@@ -1,21 +1,21 @@
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Text, ForeignKey, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship
 import os
 
-# Tạo URI kết nối MySQL
-DATABASE_USER = os.getenv("DB_USER", "your_mysql_username")
-DATABASE_PASSWORD = os.getenv("DB_PASSWORD", "your_mysql_password")
-DATABASE_HOST = os.getenv("DB_HOST", "localhost")  # Hoặc địa chỉ IP server MySQL
+# Lấy thông tin kết nối từ biến môi trường
+DATABASE_USER = os.getenv("DB_USER", "your_postgres_username")
+DATABASE_PASSWORD = os.getenv("DB_PASSWORD", "your_postgres_password")
+DATABASE_HOST = os.getenv("DB_HOST", "localhost")
 DATABASE_NAME = os.getenv("DB_NAME", "openu_db")
 
-DATABASE_URI = f"mysql+pymysql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}"
+# URI kết nối PostgreSQL
+DATABASE_URI = f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}"
 
-# Khởi tạo engine SQLAlchemy và session
+# Khởi tạo engine SQLAlchemy
 engine = create_engine(DATABASE_URI, echo=True)
-SessionLocal = sessionmaker(bind=engine)
 
-# Khởi tạo base model
+# Khởi tạo base model cho các bảng
 Base = declarative_base()
 
 # Định nghĩa bảng User
@@ -105,3 +105,4 @@ class LikedBlog(Base):
 # Hàm khởi tạo database
 def init_db():
     Base.metadata.create_all(bind=engine)
+m
