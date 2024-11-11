@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Boolean, Text, TIMESTAMP
 from sqlalchemy.orm import relationship, validates
-from run import db
+from app.extensions import db
 
 # Định nghĩa bảng User
 class User(db.Model):

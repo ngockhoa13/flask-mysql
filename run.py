@@ -4,17 +4,16 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog  # Đảm bảo các model đã được định nghĩa trong file model.py
+from app.extensions import db, migrate, csrf, socketio  # Import các tiện ích mở rộng từ extensions.py
 
+# Khởi tạo ứng dụng Flask
 app = Flask(__name__, static_folder='static')
-csrf = CSRFProtect(app)
 
-# WEBSITE_HOSTNAME exists only in production environment
+# Cấu hình môi trường
 if 'WEBSITE_HOSTNAME' not in os.environ:
-    # local development, where we'll use environment variables
     print("Loading config.development and environment variables from .env file.")
     app.config.from_object('azureproject.development')
 else:
-    # production
     print("Loading config.production.")
     app.config.from_object('azureproject.production')
 
@@ -23,14 +22,11 @@ app.config.update(
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
 )
 
-# Initialize the database connection
-db = SQLAlchemy(app)
-
-# Enable Flask-Migrate commands "flask db init/migrate/upgrade" to work
-migrate = Migrate(app, db)
-
-# Khởi tạo Flask-SocketIO
-socketio = SocketIO(app, async_mode='eventlet')  # Thêm async_mode nếu cần thiết
+# Liên kết các tiện ích mở rộng với app
+db.init_app(app)
+migrate.init_app(app, db)
+csrf.init_app(app)
+socketio.init_app(app)
 
 @socketio.on("add_stack_noti")
 def handle_add_stack_noti(data):
