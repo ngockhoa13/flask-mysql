@@ -23,7 +23,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
-from model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog
+from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog
 
 # Register route
 @app.route("/register", methods=["GET", "POST"])
