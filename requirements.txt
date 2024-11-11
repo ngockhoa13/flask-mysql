@@ -8,3 +8,4 @@ SQLAlchemy
 flask_socketio
 flask-bcrypt
 flask_cors
+eventlet
