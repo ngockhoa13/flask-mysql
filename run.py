@@ -1,177 +1,99 @@
-from app import app, socket
 import os
-from flask_socketio import emit, join_room, leave_room
-import sqlite3  
+from flask_socketio import SocketIO, emit, join_room, leave_room
+from app import app, db
+from model import Notification, Chat, ChatMessage, User  # Đảm bảo các model đã được định nghĩa trong file model.py
 
-curr_dir = os.path.dirname(os.path.abspath(__file__))
-print(curr_dir)
-# ConnectDB
-def getDB():
-    conn = sqlite3.connect(os.path.join(curr_dir, "app/openu.db"))
-    cursor = conn.cursor()
-    return cursor, conn
+# Khởi tạo Flask-SocketIO
+socketio = SocketIO(app)
 
-@socket.on("add_stack_noti")
-def hehe(data):
+@socketio.on("add_stack_noti")
+def handle_add_stack_noti(data):
     to_id = data["to"]
     from_id = data["from"]
-    time = data['timestamp']
-    content = data['message']
-    
-    
-    cursor, conn = getDB()
-    # cursor.execute("INSERT into username FROM user WHERE id = ?", (id2,))
-    query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 0)"
-    cursor.execute(query, (to_id, content, time, from_id))
-    conn.commit()
+    time = data["timestamp"]
+    content = data["message"]
 
-# Join room using flask_sockerIO by adding user in room and return messages
-@socket.on("join-chat")
+    # Thêm thông báo mới vào cơ sở dữ liệu PostgreSQL
+    new_notification = Notification(
+        myid=to_id,
+        content=content,
+        timestamp=time,
+        from_id=from_id,
+        ischat=False
+    )
+    db.session.add(new_notification)
+    db.session.commit()
+
+@socketio.on("join-chat")
 def join_private_chat(data):
     room = data["rid"]
-    myid = data['myid']
+    myid = data["myid"]
     join_room(room=room)
-    cursor, conn = getDB()  
-    userID = cursor.execute("SELECT userID1,userID2 FROM chat WHERE id = ?", (room,)).fetchone()
-    id1, id2 = userID
+
+    # Lấy thông tin về người dùng trong phòng chat từ PostgreSQL
+    chat = Chat.query.filter_by(id=room).first()
+    if not chat:
+        return
+
+    id1, id2 = chat.userID1, chat.userID2
+    add_friend_info = None
+
     if myid == id1:
-        add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id2,)).fetchone()
+        add_friend_info = User.query.filter_by(id=id2).first().username
     else:
-        add_friend_info = cursor.execute("SELECT username FROM user WHERE id = ?", (id1,)).fetchone()
+        add_friend_info = User.query.filter_by(id=id1).first().username
 
-    conn.commit()
-    arr_data =[]
-    arr_data.append(add_friend_info)
-    arr_data.append(room)
-    socket.emit(
-        "joined-chat",
-        arr_data,
-        room = data["rid"]
-    )
+    arr_data = [add_friend_info, room]
+    socketio.emit("joined-chat", arr_data, room=data["rid"])
 
-
-
-# Outgoing event handler
-@socket.on("outgoing")
-def chatting_event(json, methods=["GET", "POST"]):
+@socketio.on("outgoing")
+def chatting_event(data, methods=["GET", "POST"]):
     """
-    handles saving messages and sending messages to all clients
-    :param json: json
-    :param methods: POST GET
-    :return: None
+    Handles saving messages and sending messages to all clients
     """
-    room_id = json["rid"]
-    timestamp = json["timestamp"]
-    message = json["message"]
-    sender_id = json["sender_id"]
-    sender_username = json["sender_username"]
+    room_id = data["rid"]
+    timestamp = data["timestamp"]
+    message = data["message"]
+    sender_id = data["sender_id"]
+    sender_username = data["sender_username"]
 
     try:
         # Thêm tin nhắn mới vào bảng chat_messages
-        cursor, conn = getDB()
-        cursor.execute(
-                """
-                INSERT INTO chat_messages (content, timestamp, sender_id, sender_username, room_id)
-                VALUES (?, ?, ?, ?, ?)
-                """,
-                (message, timestamp, sender_id, sender_username, room_id)
+        new_message = ChatMessage(
+            content=message,
+            timestamp=timestamp,
+            sender_id=sender_id,
+            sender_username=sender_username,
+            room_id=room_id
+        )
+        db.session.add(new_message)
+        db.session.commit()
+
+        chat = Chat.query.filter_by(id=room_id).first()
+        if not chat:
+            return
+
+        des_id = chat.userID2 if chat.userID1 == sender_id else chat.userID1
+
+        # Kiểm tra xem đã có thông báo từ người gửi chưa
+        existing_notification = Notification.query.filter_by(myid=des_id, from_id=sender_id).first()
+        if not existing_notification:
+            new_notification = Notification(
+                myid=des_id,
+                content=message,
+                timestamp=timestamp,
+                from_id=sender_id,
+                ischat=True
             )
-        conn.commit()
-        get_desit = cursor.execute(f"SELECT id, userID1, userID2 FROM chat WHERE id = ? ", (room_id, )).fetchone()
-        roomid, id1, id2 = get_desit
-        des_id = id1 
-        if id1 == sender_id:
-            des_id = id2
-        checker = cursor.execute("select * from notification where myid = ? and from_id = ?", (des_id,sender_id, )).fetchall()
-        if checker:
-            # donothing
-            a = 1
-        else:
-            query = "INSERT INTO notification (myid, content, timestamp, from_id, ischat) VALUES (?, ?, ?, ?, 1)"
-            cursor.execute(query, (des_id, message, timestamp, sender_id))
-            conn.commit()
-        # Lưu tin nhắn mới vào cơ sở dữ liệu
-        # (Do bạn không sử dụng SQLAlchemy, nên phần này không cần thiết)
+            db.session.add(new_notification)
+            db.session.commit()
 
     except Exception as e:
-        # Xử lý lỗi cơ sở dữ liệu, ví dụ: ghi log lỗi hoặc gửi phản hồi lỗi cho client.
         print(f"Error saving message to the database: {str(e)}")
 
-    # Phát tin nhắn đã gửi tới các người dùng khác trong phòng
+    # Phát tin nhắn tới các người dùng khác trong phòng
     join_room(room=room_id)
-    socket.emit(
-        "message",
-        json,
-        room=room_id,
-        include_self=False,
-    )
-
+    socketio.emit("message", data, room=room_id, include_self=False)
 
 if __name__ == "__main__":
-    socket.run(app, allow_unsafe_werkzeug=True, debug=True)
-
-# @socket.on("outgoing")
-# def chatting_event(json, methods=["GET", "POST"]):
-#     """
-#     handles saving messages and sending messages to all clients
-#     :param json: json
-#     :param methods: POST GET
-#     :return: None
-#     """
-#     cursor, conn = getDB()
-
-
-
-#     room_id = json["rid"]
-#     timestamp = json["timestamp"]
-#     message = json["message"]
-#     sender_id = json["sender_id"]
-#     sender_username = json["sender_username"]
-
-#     # Get the message entry for the chat room
-#     # Liệu có cần trong code cũ ko vì nó dựa vào mối quan hệ nên mới phải query ------------------
-#     message_entry =  cursor.execute("SELECT id, userID1, userID2 FROM chat WHERE userID1 = ? OR userID2 = ?", (id, id)).fetchall()
-#     print(message_entry)
-#     #---------------------------------------------------------------------------------------------
-
-#     # Add the new message to the conversation
-#     '''
-#     chat_message = ChatMessage(
-#         content=message,
-#         timestamp=timestamp,
-#         sender_id=sender_id,
-#         sender_username=sender_username,
-#         room_id=room_id,
-#     )
-#     '''
-#     try:
-#         query = "INSERT INTO chat_messages (content, timestamp, sender_id, sender_username, room_id) VALUES (?, ?, ?, ?)"
-#         cursor.execute(query, (message, timestamp, sender_id, sender_username, room_id))
-#         conn.commit()
-#     except Exception as e:
-#         # Handle the database error, e.g., log the error or send an error response to the client.
-#         print(f"Error saving message to the database: {str(e)}")
-# # Đoạn này cần check lại có thể sẽ ko cần -----------------------------------------------------------------------
-#     # Add the new chat message to the messages relationship of the message
-#     #message_entry.messages.append(chat_message)
-#     #query = "INSERT INTO chat_messages (content, timestamp, sender_id, sender_username, room_id) VALUES (?, ?, ?, ?)"
-#     #cursor.execute(query, (message, timestamp, sender_id, sender_username, room_id))
-#     #conn.commit()
-
-#     # Updated the database with the new message
-#     #try:
-#     #    chat_message.save_to_db()
-#     #    message_entry.save_to_db()
-#     #except Exception as e:
-#     #    # Handle the database error, e.g., log the error or send an error response to the client.
-#     #    print(f"Error saving message to the database: {str(e)}")
-#     #    db.session.rollback()
-# #---------------------------------------------------------------------------------------------------------------
-#     # Emit the message(s) sent to other users in the room
-#     socket.emit(
-#         "message",
-#         json,
-#         room=room_id,
-#         include_self=False,
-#     )
-# #--------------------------------------------------------------------------------------------------------
+    socketio.run(app, host="0.0.0.0", port=8000, debug=True)
