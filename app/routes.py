@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
+from functools import wraps
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -24,6 +25,17 @@ migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
 from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog
+
+
+
+
+def check_session(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'loggedin' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Register route
 @app.route("/register", methods=["GET", "POST"])
