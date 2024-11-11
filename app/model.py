@@ -1,25 +1,9 @@
-from sqlalchemy import create_engine, Column, String, Integer, Boolean, Text, ForeignKey, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-import os
-
-# Lấy thông tin kết nối từ biến môi trường
-DATABASE_USER = os.getenv("DB_USER", "your_postgres_username")
-DATABASE_PASSWORD = os.getenv("DB_PASSWORD", "your_postgres_password")
-DATABASE_HOST = os.getenv("DB_HOST", "localhost")
-DATABASE_NAME = os.getenv("DB_NAME", "openu_db")
-
-# URI kết nối PostgreSQL
-DATABASE_URI = f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}"
-
-# Khởi tạo engine SQLAlchemy
-engine = create_engine(DATABASE_URI, echo=True)
-
-# Khởi tạo base model cho các bảng
-Base = declarative_base()
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Boolean, Text, TIMESTAMP
+from sqlalchemy.orm import relationship, validates
+from app import db
 
 # Định nghĩa bảng User
-class User(Base):
+class User(db.Model):
     __tablename__ = 'user'
     
     id = Column(String(36), primary_key=True, unique=True, nullable=False)
@@ -31,8 +15,11 @@ class User(Base):
     blog_posts = relationship("BlogPost", back_populates="user")
     liked_blogs = relationship("LikedBlog", back_populates="user")
 
+    def __str__(self):
+        return self.username
+
 # Định nghĩa bảng BlogPost
-class BlogPost(Base):
+class BlogPost(db.Model):
     __tablename__ = 'blogPosts'
     
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -48,8 +35,11 @@ class BlogPost(Base):
     comments = relationship("Comment", back_populates="blog_post")
     liked_blogs = relationship("LikedBlog", back_populates="blog_post")
 
+    def __str__(self):
+        return self.title
+
 # Định nghĩa bảng Comment
-class Comment(Base):
+class Comment(db.Model):
     __tablename__ = 'commentsBlog'
     
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -59,23 +49,32 @@ class Comment(Base):
     
     blog_post = relationship("BlogPost", back_populates="comments")
 
+    def __str__(self):
+        return f"{self.username}: {self.comment}"
+
 # Định nghĩa bảng Chat
-class Chat(Base):
+class Chat(db.Model):
     __tablename__ = 'chat'
     
     id = Column(String(36), primary_key=True, unique=True, nullable=False)
     userID1 = Column(String(36), ForeignKey("user.id"), nullable=False)
     userID2 = Column(String(36), ForeignKey("user.id"), nullable=False)
 
-# Định nghĩa bảng Messages
-class Message(Base):
+    def __str__(self):
+        return f"Chat between {self.userID1} and {self.userID2}"
+
+# Định nghĩa bảng Message
+class Message(db.Model):
     __tablename__ = 'messages'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     room_id = Column(String(50), ForeignKey("chat.id"), nullable=False)
 
+    def __str__(self):
+        return f"Message in chat room {self.room_id}"
+
 # Định nghĩa bảng ChatMessage
-class ChatMessage(Base):
+class ChatMessage(db.Model):
     __tablename__ = 'chat_messages'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -85,8 +84,11 @@ class ChatMessage(Base):
     sender_username = Column(String(50), nullable=False)
     room_id = Column(String(50), ForeignKey("messages.room_id"), nullable=False)
 
+    def __str__(self):
+        return f"{self.sender_username}: {self.content}"
+
 # Định nghĩa bảng Notification
-class Notification(Base):
+class Notification(db.Model):
     __tablename__ = 'notification'
     
     count = Column(Integer, primary_key=True, autoincrement=True)
@@ -96,8 +98,11 @@ class Notification(Base):
     from_id = Column(String(50), nullable=False)
     ischat = Column(Boolean)
 
+    def __str__(self):
+        return f"Notification for user {self.myid}: {self.content}"
+
 # Định nghĩa bảng LikedBlog
-class LikedBlog(Base):
+class LikedBlog(db.Model):
     __tablename__ = 'likedBlogs'
     
     title = Column(String(100), ForeignKey("blogPosts.title", ondelete="CASCADE"), primary_key=True, nullable=False)
@@ -107,6 +112,9 @@ class LikedBlog(Base):
     blog_post = relationship("BlogPost", back_populates="liked_blogs")
     user = relationship("User", back_populates="liked_blogs")
 
-# Hàm khởi tạo database
+    def __str__(self):
+        return f"User {self.userID} liked blog {self.title}"
+
+# Hàm khởi tạo database (nếu cần thiết, thông qua SQLAlchemy)
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    db.create_all()

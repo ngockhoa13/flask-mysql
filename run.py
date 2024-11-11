@@ -5,11 +5,28 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog  # Đảm bảo các model đã được định nghĩa trong file model.py
 
-# Khởi tạo Flask và các extension
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost/dbname'
-app.config['SECRET_KEY'] = os.urandom(24)
+app = Flask(__name__, static_folder='static')
+csrf = CSRFProtect(app)
+
+# WEBSITE_HOSTNAME exists only in production environment
+if 'WEBSITE_HOSTNAME' not in os.environ:
+    # local development, where we'll use environment variables
+    print("Loading config.development and environment variables from .env file.")
+    app.config.from_object('azureproject.development')
+else:
+    # production
+    print("Loading config.production.")
+    app.config.from_object('azureproject.production')
+
+app.config.update(
+    SQLALCHEMY_DATABASE_URI=app.config.get('DATABASE_URI'),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+)
+
+# Initialize the database connection
 db = SQLAlchemy(app)
+
+# Enable Flask-Migrate commands "flask db init/migrate/upgrade" to work
 migrate = Migrate(app, db)
 
 # Khởi tạo Flask-SocketIO
