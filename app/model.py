@@ -29,6 +29,7 @@ class User(Base):
     password = Column(String(60), nullable=False)
     
     blog_posts = relationship("BlogPost", back_populates="user")
+    liked_blogs = relationship("LikedBlog", back_populates="user")
 
 # Định nghĩa bảng BlogPost
 class BlogPost(Base):
@@ -45,6 +46,7 @@ class BlogPost(Base):
     
     user = relationship("User", back_populates="blog_posts")
     comments = relationship("Comment", back_populates="blog_post")
+    liked_blogs = relationship("LikedBlog", back_populates="blog_post")
 
 # Định nghĩa bảng Comment
 class Comment(Base):
@@ -70,7 +72,7 @@ class Message(Base):
     __tablename__ = 'messages'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    room_id = Column(String(50), ForeignKey("chat.id"), unique=True, nullable=False)
+    room_id = Column(String(50), ForeignKey("chat.id"), nullable=False)
 
 # Định nghĩa bảng ChatMessage
 class ChatMessage(Base):
@@ -98,9 +100,12 @@ class Notification(Base):
 class LikedBlog(Base):
     __tablename__ = 'likedBlogs'
     
-    title = Column(String(100), ForeignKey("blogPosts.title"), nullable=False)
-    userID = Column(String(36), ForeignKey("user.id"), nullable=False)
+    title = Column(String(100), ForeignKey("blogPosts.title"), primary_key=True, nullable=False)
+    userID = Column(String(36), ForeignKey("user.id"), primary_key=True, nullable=False)
     liked = Column(Boolean)
+    
+    blog_post = relationship("BlogPost", back_populates="liked_blogs")
+    user = relationship("User", back_populates="liked_blogs")
 
 # Hàm khởi tạo database
 def init_db():
