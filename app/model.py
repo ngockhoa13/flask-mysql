@@ -100,8 +100,8 @@ class Notification(Base):
 class LikedBlog(Base):
     __tablename__ = 'likedBlogs'
     
-    title = Column(String(100), ForeignKey("blogPosts.title"), primary_key=True, nullable=False)
-    userID = Column(String(36), ForeignKey("user.id"), primary_key=True, nullable=False)
+    title = Column(String(100), ForeignKey("blogPosts.title", ondelete="CASCADE"), primary_key=True, nullable=False)
+    userID = Column(String(36), ForeignKey("user.id", ondelete="CASCADE"), primary_key=True, nullable=False)
     liked = Column(Boolean)
     
     blog_post = relationship("BlogPost", back_populates="liked_blogs")
