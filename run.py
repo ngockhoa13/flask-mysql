@@ -3,7 +3,7 @@ from flask import Flask
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from model import Notification, Chat, ChatMessage, User  # Đảm bảo các model đã được định nghĩa trong file model.py
+from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notification, LikedBlog  # Đảm bảo các model đã được định nghĩa trong file model.py
 
 # Khởi tạo Flask và các extension
 app = Flask(__name__)
