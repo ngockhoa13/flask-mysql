@@ -1,10 +1,19 @@
 import os
+from flask import Flask
 from flask_socketio import SocketIO, emit, join_room, leave_room
-from app import app, db
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from model import Notification, Chat, ChatMessage, User  # Đảm bảo các model đã được định nghĩa trong file model.py
 
+# Khởi tạo Flask và các extension
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost/dbname'
+app.config['SECRET_KEY'] = os.urandom(24)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 # Khởi tạo Flask-SocketIO
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')  # Thêm async_mode nếu cần thiết
 
 @socketio.on("add_stack_noti")
 def handle_add_stack_noti(data):
@@ -47,7 +56,7 @@ def join_private_chat(data):
     socketio.emit("joined-chat", arr_data, room=data["rid"])
 
 @socketio.on("outgoing")
-def chatting_event(data, methods=["GET", "POST"]):
+def chatting_event(data):
     """
     Handles saving messages and sending messages to all clients
     """
