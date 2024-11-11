@@ -1,5 +1,5 @@
 # Sử dụng image Python 3.10 từ Dev Containers của VSCode
-FROM mcr.microsoft.com/vscode/devcontainers/python:0-3.10
+FROM mcr.microsoft.com/vscode/devcontainers/python:0-3.12
 
 # Cài đặt PostgreSQL client
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
