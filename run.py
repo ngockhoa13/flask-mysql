@@ -5,7 +5,7 @@ from app import socket_events  # Import file chứa các event handler của Soc
 import app.routes  # Import các route
 
 # Khởi tạo ứng dụng Flask
-app = Flask(__name__, static_folder='app.templates')
+app = Flask(__name__, static_folder='app.assests')
 
 # Cấu hình môi trường
 if 'WEBSITE_HOSTNAME' not in os.environ:
