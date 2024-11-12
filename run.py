@@ -7,7 +7,7 @@ from app.model import User, BlogPost, Comment, Chat, Message, ChatMessage, Notif
 from app.extensions import db, migrate, csrf, socketio  # Import các tiện ích mở rộng từ extensions.py
 
 # Khởi tạo ứng dụng Flask
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='app.templates')
 
 # Cấu hình môi trường
 if 'WEBSITE_HOSTNAME' not in os.environ:
